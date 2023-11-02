@@ -2,7 +2,7 @@
 session_start(); // Démarrer la session (si ce n'est pas déjà fait)
 
 // Vérifier si le formulaire de déconnexion a été soumis
-// git test
+// git test unitaires
 if (isset($_POST['deconnect_account'])) {
     // Supprimer toutes les variables de session
     session_unset();
