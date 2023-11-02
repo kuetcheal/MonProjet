@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="facture.css"> -->
+    <title>facture</title>
+</head>
+
+<body>
+	<div class="container">
+		<h1>FACTURE D'ACHAT</h1>
+        <hr>
+		<form>
+			<label for="num-facture">Numéro de facture :</label>
+			<input type="text" id="num-facture" name="num-facture">
+			<label for="date">Date :</label>
+			<input type="date" id="date" name="date">
+			<label for="fournisseur">Fournisseur :</label>  
+			<input type="text" id="fournisseur" name="fournisseur">
+            <hr>
+            <h2>Détails des produits</h2>
+			<table border="1" width="340px">
+				<thead>
+					<tr>
+						<th>Produit</th>
+						<th>Quantité</th>
+						<th>Prix unitaire</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><input type="text" name="nom-produit-1"></td>
+						<td><input type="number" name="quantite-1"></td>
+						<td><input type="number" name="prix-unitaire-1"></td>
+						<td><input type="number" name="total-1"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="nom-produit-2"></td>
+						<td><input type="number" name="quantite-2"></td>
+						<td><input type="number" name="prix-unitaire-2"></td>
+						<td><input type="number" name="total-2"></td>
+					</tr>
+					<!-- Ajouter des lignes pour plus de produits -->
+				</tbody>
+			</table>
+            <hr>
+			<label for="sous-total">Net à payer :</label>
+			<input type="number" id="sous-total" name="sous-total">
+            <p>Merci et à très bientôt <br>Visitez notre site internet sur wwww.sitrabcam.com</p>
+			<!-- <label for="taxes">Taxes :</label>
+			<input type="number" id="taxes" name="taxes">
+			<label for="total">Total :</label>
+			<input type="number" id="total" name="total">
+			<label for="mode-paiement">Mode de paiement :</label>
+			<input type="text" id="mode-paiement" name="mode-paiement">
+			<input type="submit" value="Valider"> -->
+		</form>
+	</div>
+
+
+  <style>
+    body {
+	font-family: Arial, sans-serif;
+	background-color: #f5f5f5;
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	max-width: 800px;
+	 margin: 0 auto; 
+	background-color: #fff;
+	padding: 20px;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    width: 720px;
+    height: 600px;
+}
+
+h1 {
+	text-align: center;
+	margin-top: 0;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+label {
+	display: block;
+	margin-bottom: 10px;
+}
+
+table {
+	/* margin: 10px 0; */
+	border-collapse: collapse;
+	/* width: 100%; */
+}
+
+ /* th, td {  
+	padding: 10px;
+	border: 1px solid #ddd;
+	text-align: center;
+ }  */
+
+  </style>
+
+
+
+</body>
+</html>

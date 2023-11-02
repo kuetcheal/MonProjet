@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mui@5.2.0/dist/mui.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/mui@5.2.0/dist/mui.min.js"></script>
+  </head>
+    <title>Document</title>
+</head>
+
+<body>
+    
+    <div class="info-personnel">
+        <form method="post" action="">
+            <div class="titre"> <p>1</p> 
+                <h3 class="mode"> Passagers</h3></div>
+           
+            <div class="contenaire1">
+                <div class="fisrtName">
+                    <label htmlFor="inputText">Prénom </label><br><br>
+                    <input type="text" name="premom">
+                </div>
+                <div class="name">
+                    <label htmlFor="inputText">Nom </label><br><br>
+                    <input type="text" name="nom">
+                </div>
+            </div>
+        </form>
+    </div>
+    <br><br>
+   
+    <div class="info-personnel">
+        <form method="post" action="">
+            <div class="titre"> <p>2</p> 
+                <h3 class="mode">  Contact</h3>
+            </div>
+            <div class="contenaire1">
+                <div class="fisrtName">
+                    <label htmlFor="inputText">Email</label><br>
+                    <input type="text" name="premom">
+                </div>
+                <div class="name">
+                    <label htmlFor="inputText">Numéro téléphone (facultatif) </label><br>
+                    <input type="text" name="nom" placeholder="+237">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <br><br>
+    <div class="info-paiment">
+    <div class="titre"> <p>3</p> 
+        <h3 class="mode">  Mode de paiement</h3></div>
+    <div> 
+        <form method="post" action="">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <button >
+                                <div class="credit" >
+                                <input type="radio" name="radioGroup" class="custom-radio" />
+                                <p class="paypal"> carte de crédit</p></div>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button>
+                                <div class="credit" >
+                                    <input type="radio" name="radioGroup" class="custom-radio" />
+                                    <p  class="paypal">Paiement Mobile</p></div>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button>
+                                <div class="credit" >
+                                    <input type="radio" name="radioGroup" class="custom-radio" />
+                                    <p class="paypal">Paiement par Paypal</p></div>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div> <br>
+        <div class="option">
+            <i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i>
+        
+       <a href=""> <p class="adresse">Ajouter une adresse de facturaction</p></a>
+
+    </div><br><br>
+    <div>Partenaire contracté poue les services de transport.</div>
+   
+
+
+        <div class="information">
+          <h3>votre commande</h3>
+        </div>
+        <div class="depart">
+            <i class="fa fa-circle-o-notch" aria-hidden="true"></i>
+            <p>10:00</p>
+        </div>
+        <div class="nos-escales">
+          <div class="escale">
+            <ul>
+              <li> <span> Nos escales</span></li>
+            </ul>
+          </div>/9*86
+          <div class="lieu">
+            <ul>
+              <li>DSCHANG : <span>12h30-12h45</span></li>
+              <li>BAMEKA : <span>12h30-12h45</span></li>
+              <li>BANSOA: <span>12h30-12h45</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="nos-escales">
+          <div class="escale">
+            <ul>
+              <li> <span>Arrêt déjeuner</span></li>
+            </ul>
+          </div>
+          <div class="lieu">
+            <ul>
+              <li>KEKEM : <span>30min</span></li>
+              <li>MANDJO : <span>15min</span></li>
+            </ul>
+          </div>
+        </div>
+        <br>
+        <div class="depart">
+            <div class="heure1">08:30</div>
+          <div class="mark"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+          <div class="agence">Douala</div>
+        </div>
+        <div class="depart">
+            <div class="heure1">13:30</div>           
+          <div class="mark"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+          <div class="agence">Bafoussam</div>
+        </div>
+        . <div class="règlement">
+        <div class="genre">  <p class="salut">2 Adulte(s)</p></div>
+        <div class="prix"> 10000F </div>
+        </div>
+        <br>
+        <div class="fisrtName">
+            <label htmlFor="inputText">Saisir le bon d'achat</label><br><br>
+            <input type="text" name="premom">
+        </div><br><br>
+        <button type="submit" name='valider'>Payer maintenant</button>
+       <br> <hr> <br>
+      </div>
+    </div>
+
+    <!-- popup affichant le mode de paiement -->
+    <button type="submit" onclick="openDialog()">Ouvrir la popup</button>
+    <div id="dialog-container">
+        <h1>Bonjour la popup</h1>
+        <p>je suis de retour</p>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <style>
+         .main{
+            display: flex;
+            flex-direction: column;
+         }
+
+
+        .info-personnel {
+            background-color: aliceblue;
+            width: 750px;
+            height: 130px;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border: 1px solid black;
+        }
+
+        .info-paiment {
+            background-color: aliceblue;
+            width: 800px;
+            height: 380px;
+            display: flex;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid black;
+            flex-direction: column;
+        }
+
+        .contenaire1 {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+
+        }
+
+        .name {
+            margin-left: 90px;
+        }
+
+        h3 {
+            margin-left: 9px;
+        }
+
+        input[type="text"] {
+            padding: 5px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+        }
+
+        .custom-radio {
+            transform: scale(1.5);
+            /* Ajustez la valeur selon la taille souhaitée */
+            border: 1px solid #ccc;
+        }
+
+        span {
+            background-color: green;
+            height: 10px;
+            width: 20px;
+        }
+
+        table {
+            width: 650px;
+            height: 130px;
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        button {
+            display: block;
+            margin-bottom: 5px;
+            background-color: #f1f1f1;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .adresse {
+            
+            font-weight: bold;
+            font-size: 18px;
+            margin-left: 10px;
+        }
+
+        .mode {
+            
+            font-weight: bold;
+            font-size: 18px;
+            margin-left: 15px;
+        }
+        .credit{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px;
+        }
+        .paypal{
+            margin-left: 10px;
+        }
+        .option{
+            display: flex;
+            align-items: center;      
+        }
+       
+        .titre{
+            display: flex;
+            align-items: center;  
+        }
+
+
+
+
+
+
+
+
+
+    </style>
+
+    <script>
+        // Sélectionnez tous les boutons
+        const buttons = document.querySelectorAll('button');
+
+        // Ajoutez un écouteur d'événements à chaque bouton
+        buttons.forEach((button) => {
+            button.addEventListener('click', (event) => {
+                // Désactivez tous les autres boutons
+                buttons.forEach((otherButton) => {
+                    if (otherButton !== event.target) {
+                        otherButton.classList.remove('active');
+                    }
+                });
+
+                // Activez le bouton cliqué
+                event.target.classList.toggle('active');
+            });
+        });
+
+
+
+
+
+        function openDialog() {
+    var dialog = mui.dialog({
+      title: "Mon dialogue",
+      content: "Contenu du dialogue",
+      buttons: [{ text: "Fermer", onClick: function() { dialog.close(); } }]
+    });
+    dialog.open();
+  }
+    </script>
+
+
+
+
+
+
+</body>
+
+
+</html>
+
+
+<!-- style="position: fixed; top: 588px; left: 65px; transform: translate(-50%, -50%);" -->

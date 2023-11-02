@@ -1,0 +1,31 @@
+
+.container {
+    border: 1px solid #ccc; /* bordure grise de 1 pixel */
+    padding: 10px; /* marges intérieures de 10 pixels */
+    max-width: 500px; /* largeur maximale de 500 pixels */
+    margin: 0 auto; /* centrage horizontal */
+    height: 200px;
+    margin-top: 50px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  h2 {
+    font-size: 1.5rem; /* taille de police de 1,5 fois la taille par défaut */
+    margin-bottom: 10px; /* espace de 10 pixels en dessous */
+  }
+  
+  input[type="text"] {
+    padding: 5px;
+    font-size: 1rem; 
+    border: 1px solid #ccc;
+    border-radius: 5px; 
+    width: 50%; /* largeur de 100% du conteneur */
+  }
+  button[type="submit"] {
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  }

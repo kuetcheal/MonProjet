@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="reservation.css">
+  
+  <title>Document</title>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div class="header-picture">
+        <img src="logo général.jpg" alt="logo site" />
+      </div>
+      <div class="nav-bar">
+        <ul>
+          <li class="items">
+            <select id="select" name="select" aria-placeholder="2 places">
+              <option value="option1">Français</option>
+              <option value="option2">Anglais</option>
+
+            </select>
+          </li>
+          <li class="items"><a href="#"><i class="fa fa-user-circle-o fa-6x" aria-hidden="true"></i></a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+
+  <main>
+    <div class="box">
+      <form>
+        <div class="radio-buttons">
+          <input type="radio" id="radio1" name="radio" value="option1">
+          <label for="radio1">Aller</label>
+
+          <input type="radio" id="radio2" name="radio" value="option2">
+          <label for="radio2">Aller-retour</label>
+        </div>
+
+        <div class="form-group">
+          <label for="input1">DE:</label>
+          <input type="text" id="input1" name="input1" placeholder="Douala">
+        </div>
+
+        <div class="form-group">
+          <label for="input2">A:</label>
+          <input type="text" id="input2" name="input2" placeholder="Yaoundé">
+        </div>
+
+        <div class="form-group">
+          <label for="input3">Départ:</label>
+          <input type="text" id="input3" name="input3" placeholder=" lu,20 Avril.">
+        </div>
+
+        <div class="form-group">
+          <label for="input4">Passage:</label>
+          <input type="text" id="input4" name="input4" placeholder="1 adulte">
+        </div>
+
+        <div class="form-group">
+          <label for="select">Select:</label>
+          <select id="select" name="select" aria-placeholder="2 places">
+            <option value="option1">Adultes</option>
+            <option value="option2">Enfants</option>
+
+          </select>
+        </div>
+
+        <div class="form-group">
+          <imput type="submit" value="Rechercher" class="butt 
+            ">Rechercher</i>
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fa fa-search"></i> Valider
+            </button>
+        </div>
+
+      </form>
+    </div>
+    <br>
+    <div id="conteneur1">
+      lundi, le 15 Juillet 2023
+    </div>
+    <br>
+    <div class="filtre">
+      <div>
+        <button type="submit" class="filt">
+          <i class="fa fa-sliders" aria-hidden="true"></i> filtre
+        </button>
+      </div>
+      <div class="text">15 voyages disponibles</div>
+    </div>
+    <br>
+
+
+    <div id="conteneur2">
+      <div class="bloc1">
+        <div class="depart">5:30 </div>
+        <div class="arrivée"> 9:30 </div>
+        <div class="prix">5000f</div>
+      </div> <br>
+      <div class="bloc2">
+        <div class="lieu1">Douala </div>
+        <div class="lieu2"> Mbouda </div>
+        <div class="vip">
+          <button type="submit" class="bus">
+            <i class="fa fa-bus" aria-hidden="true"></i>Bus VIP
+          </button>
+        </div>
+      </div>
+      <br>
+      <div class="bloc3">
+        <div class="Infos">
+          <button   id="ouvrirPopup">  Détails du trajet </button> 
+        </div>
+        <div class="icone">
+          <i class="fa fa-wifi" aria-hidden="true"></i>
+          <i class="fa fa-television" aria-hidden="true"></i>
+          <i class="fa fa-beer" aria-hidden="true"></i>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="continuer">
+            Continuer<i class="fa fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+     
+
+    <br>
+    <div id="conteneur3">
+      <div class="bloc1">
+        <div class="depart">6:30 </div>
+        <div class="arrivée"> 11:00 </div>
+        <div class="prix">4000f</div>
+      </div> <br>
+      <div class="bloc2">
+        <div class="lieu1">Douala </div>
+        <div class="lieu2"> Bafoussam </div>
+        <div class="vip">
+          <button type="submit" class="bus">
+            <i class="fa fa-bus" aria-hidden="true"></i>Bus classique
+          </button>
+        </div>
+      </div>
+      <br>
+      <div class="bloc3">
+        <div class="Infos">
+          <button type="submit" class="trajet">
+            Détails sur le trajet
+          </button>
+        </div>
+        <div class="icone">
+          <i class="fa fa-wifi" aria-hidden="true"></i>
+          <i class="fa fa-television" aria-hidden="true"></i>
+          <i class="fa fa-beer" aria-hidden="true"></i>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="continuer">
+            Continuer<i class="fa fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <br>
+    <div id="conteneur4">
+      <div class="bloc1">
+        <div class="depart">7:00 </div>
+        <div class="arrivée"> 11:30 </div>
+        <div class="prix">6000f</div>
+      </div> <br>
+      <div class="bloc2">
+        <div class="lieu1">Douala </div>
+        <div class="lieu2"> Baganté </div>
+        <div class="vip">
+          <button type="submit" class="bus">
+            <i class="fa fa-bus" aria-hidden="true"></i>Bus VIP
+          </button>
+        </div>
+      </div>
+      <br>
+      <div class="bloc3">
+        <div class="Infos">
+          <button type="submit" class="trajet">
+            Détails sur le trajet
+          </button>
+        </div>
+        <div class="icone">
+          <i class="fa fa-wifi" aria-hidden="true"></i>
+          <i class="fa fa-television" aria-hidden="true"></i>
+          <i class="fa fa-beer" aria-hidden="true"></i>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="continuer">
+            Continuer<i class="fa fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+
+    <br>
+    <div id="conteneur5">
+      <div class="bloc1">
+        <div class="depart">10:00 </div>
+        <div class="arrivée"> 15:00 </div>
+        <div class="prix">3000f</div>
+      </div> <br>
+      <div class="bloc2">
+        <div class="lieu1">Douala </div>
+        <div class="lieu2"> Bafang </div>
+        <div class="vip">
+          <button type="submit" class="bus">
+            <i class="fa fa-bus" aria-hidden="true"></i>Bus classique
+          </button>
+        </div>
+      </div>
+      <br>
+      <div class="bloc3">
+        <div class="Infos">
+          <button type="submit" class="trajet">
+            Détails sur le trajet
+          </button>
+        </div>
+        <div class="icone">
+          <i class="fa fa-wifi" aria-hidden="true"></i>
+          <i class="fa fa-television" aria-hidden="true"></i>
+          <i class="fa fa-beer" aria-hidden="true"></i>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="continuer">
+            Continuer<i class="fa fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+
+    <br>
+    <div id="conteneur6">
+      <div class="bloc1">
+        <div class="depart">07:30 </div>
+        <div class="arrivée"> 10:30 </div>
+        <div class="prix">3000f</div>
+      </div> <br>
+      <div class="bloc2">
+        <div class="lieu1">Douala </div>
+        <div class="lieu2"> Dschang </div>
+        <div class="vip">
+          <button type="submit" class="bus">
+            <i class="fa fa-bus" aria-hidden="true"></i>Bus classique
+          </button>
+        </div>
+      </div>
+      <br>
+      <div class="bloc3">
+        <div class="Infos">
+          <button type="submit" class="trajet" >
+            Détails sur le trajet
+          </button>
+        </div>
+        <div class="icone">
+          <i class="fa fa-wifi" aria-hidden="true"></i>
+          <i class="fa fa-television" aria-hidden="true"></i>
+          <i class="fa fa-beer" aria-hidden="true"></i>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="continuer">
+            Continuer<i class="fa fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    
+    <!-- <button   id="ouvrirPopup">  Détails </button>  -->
+    <div id="popup" style="display: none;">
+      <button id="fermerPopup"><i class="fa fa-window-close" aria-hidden="true"></i></button>
+      <div class="information">
+        <h3>Infos sur le trajet</h3>
+      </div>
+      <div class="depart">
+        <div class="mark"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+        <div class="agence">Départ...........Bepanda-Tonerre: <span>9h00</span></div>
+      </div>
+      <div class="nos-escales">
+        <div class="escale">
+          <ul>
+            <li> <span> Nos escales</span></li>
+          </ul>
+        </div>
+        <div class="lieu">
+          <ul>
+            <li>DSCHANG : <span>12h30-12h45</span></li>
+            <li>BAMEKA : <span>12h30-12h45</span></li>
+            <li>BANSOA: <span>12h30-12h45</span></li>
+          </ul>
+        </div>
+      </div>
+
+
+      <div class="nos-escales">
+        <div class="escale">
+          <ul>
+            <li> <span>Arrêt déjeuner</span></li>
+          </ul>
+        </div>
+        <div class="lieu">
+          <ul>
+            <li>KEKEM : <span>30min</span></li>
+            <li>MANDJO : <span>15min</span></li>
+          </ul>
+        </div>
+      </div>
+      <br>
+      <div class="depart">
+        <div class="mark"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+        <div class="agence">Arrivée.................Bafoussam: <span>14h00</span></div>
+      </div>
+      <p class="salut">Merci de nous faire confiance</p>
+    </div>
+
+
+
+  </main>
+
+
+   <style>
+    body{
+    background-color: aliceblue;
+}
+
+header{
+    width: 100%;
+    background-color: green;
+    height: 70px;
+}
+nav{
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+img{
+    width: 120px;
+    height: 80px;
+    margin-top: 20px;
+}
+.items a{
+    text-decoration: none;
+    color: whitesmoke;
+    font-size: 20px;
+   margin-right: 40PX;
+   padding: 0 15px; 
+}
+
+ 
+.nav-bar ul{
+    display: flex;
+   
+    list-style-type: none;
+}
+.header-picture{
+    margin-left: 40px;
+  
+  }
+  img{
+    
+    height: 40px;
+    width: 80px;
+  }
+  .nav-bar {
+    margin-right: 30px;
+}
+   </style>
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    function afficherPopup() {
+  document.getElementById("popup").style.display = "block";
+}
+
+// function afficherPopup() {
+//   document.getElementById("popup1").style.display = "block";
+// }
+// function afficherPopup() {
+//   document.getElementById("popup2").style.display = "block";
+// }
+
+function fermerPopup() {
+  document.getElementById("popup").style.display = "none";
+}
+
+// function fermerPopup() {
+//   document.getElementById("popup1").style.display = "none";
+// }
+
+// function fermerPopup() {
+//   document.getElementById("popup2").style.display = "none";
+// }
+document.getElementById("ouvrirPopup").addEventListener("click", afficherPopup);
+document.getElementById("fermerPopup").addEventListener("click", fermerPopup);
+
+// document.getElementById("ouvrirPopup1").addEventListener("click", afficherPopup1);
+// document.getElementById("fermerPopup1").addEventListener("click", fermerPopup1);
+
+// document.getElementById("ouvrirPopup2").addEventListener("click", afficherPopup2);
+// document.getElementById("fermerPopup2").addEventListener("click", fermerPopup2);
+
+  </script>   
+</body>
+
+</html>

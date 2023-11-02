@@ -1,0 +1,81 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin: 0 auto;
+    width: 380px;
+    height: 415px;
+    background-color: aliceblue;
+}
+.information{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.depart1{
+    display: flex;
+    justify-content: space-between;
+    margin-left: 40px;
+    height: 30px;
+    width: 80px;  
+    background-color: white; 
+    padding: 15px;
+}
+.ittinéraire{
+    display: flex;
+    height: 80px;
+    width: 290px;
+    background-color: white;
+    padding: 15px;
+    flex-direction: column;
+}
+.agence{
+    margin-left: 20px;
+}
+.depart{
+    display: flex;
+   align-items: center;    
+}
+.règlement{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.salut{
+    font-size: 19px;
+    font-weight: bold;
+    margin-right: 85px;
+}
+.prix{
+    font-size: 19px;
+    font-weight: bold;
+    margin-left: 85px;
+}
+.ligne{
+    width: 83%;
+    color: black;
+}
+
+button[type="submit"] {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="text"] {
+    padding: 5px; 
+    font-size: 1rem; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    width: 50%; 
+  }
+span{
+    color: #4CAF50;
+    font-size: 18px;
+    font-weight: bold;
+}

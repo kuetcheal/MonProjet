@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div class="header-picture">
+        <img src="logo général.jpg" alt="logo site" />
+      </div>
+      <div class="nav-bar">
+        <ul>
+          <li class="items"> <a href="inventaire.php">Acceuil</a></li>
+          <li class="items"><a href="ajoutarticle.php">Reservations</a></li>
+          <li class="items"><a href="ajoutclient.php">Nos services clients</a></li>
+          <li class="items"><a href="achatarticle.php">nos achats</a></li>
+        </ul>
+      </div>
+      <div class="public">
+        <ul>
+          <li class="items">
+            <select id="select" name="select" aria-placeholder="2 places">
+              <option value="option1">Français</option>
+              <option value="option2">Anglais</option>
+
+            </select>
+          </li>
+          <li class="items"><a href="#"><i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i></a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <br><br><br><br><br><br>
+  <table>
+    <thead>
+      <tr>
+        <th>Colonne 1</th>
+        <th>Colonne 2</th>
+        <th>Colonne 3</th>
+        <th>Colonne 4</th>
+        <th>Colonne 5</th>
+        <th>Colonne 6</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Ligne 1, Colonne 1</td>
+        <td>Ligne 1, Colonne 2</td>
+        <td>Ligne 1, Colonne 3</td>
+        <td>Ligne 1, Colonne 4</td>
+        <td>Ligne 1, Colonne 5</td>
+        <td rowspan="2">
+          <div class="colonne-divisee">
+            <div class="colonne-gauche">Ligne 1, Colonne 6 (partie gauche)</div>
+            <div class="colonne-droite">Ligne 1, Colonne 6 (partie droite)</div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Ligne 2, Colonne 1</td>
+        <td>Ligne 2, Colonne 2</td>
+        <td>Ligne 2, Colonne 3</td>
+        <td>Ligne 2, Colonne 4</td>
+        <td>Ligne 2, Colonne 5</td>
+      </tr>
+      <!-- Ajoutez les autres lignes ici -->
+    </tbody>
+  </table>
+
+  <button onclick="openModal()">Ouvrir la modal</button>
+
+  <!-- Modal -->
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2>Titre de la modal</h2>
+      <p>Contenu de la modal...</p>
+      <!-- Ajoutez ici le contenu souhaité pour votre modal -->
+      <button onclick="deleteItem()">Supprimer</button>
+    </div>
+  </div>
+
+
+<br> 
+
+  <ul class="links">
+    <li><a href="#">Lien 1</a></li>
+    <li><a href="#">Lien 2</a></li>
+    <li><a href="#">Lien 3</a></li>
+    <li><a href="#">Lien 4</a></li>
+  </ul>
+
+
+
+
+  <style>
+    header nav {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .nav-bar,
+    .header-picture,
+    .public {
+      flex: 1;
+    }
+
+    header {
+      height: 100px;
+      width: 1200px;
+      background-color: green;
+    }
+
+    nav {
+      display: flex;
+      align-items: flex-start;
+      height: 100%;
+    }
+
+    .nav-bar,
+    .header-picture,
+    .public {
+      flex: 1;
+      height: 100%;
+      width: 80%;
+    }
+
+    ul {
+      display: flex;
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-right: 10px;
+    }
+
+    .items {
+      display: inline;
+    }
+
+
+
+
+    /* Style du container */
+    .select-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Style de l'en-tête */
+    .select-header {
+      background-color: #fff;
+      /* border: 2px solid #ccc; */
+      /* border-radius: 5px; */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      cursor: pointer;
+
+    }
+
+    /* Style de la valeur sélectionnée */
+    .selected-value {
+      font-weight: bold;
+    }
+
+    /* Style de l'icône de la flèche */
+    .arrow-icon {
+      font-size: 14px;
+      color: #333;
+    }
+
+    /* Style de la liste déroulante */
+    .select-options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #fff;
+      border: 2px solid #ccc;
+      border-top: none;
+      border-radius: 5px;
+      display: none;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      z-index: 1;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 600px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+
+    .date-input {
+      appearance: none;
+      padding: 8px;
+      border: 1px solid green;
+      border-radius: 4px;
+      font-size: 14px;
+      border-color: green;
+      width: 200px;
+      height: 40px;
+      font-size: 20px;
+    }
+
+
+
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid black;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .colonne-divisee {
+      display: flex;
+    }
+
+    .colonne-gauche,
+    .colonne-droite {
+      flex: 1;
+      padding: 5px;
+    }
+
+    .links {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.links li {
+  position: relative;
+}
+
+.links li a {
+  padding: 10px;
+  text-decoration: none;
+  color: #000;
+}
+
+.links li a:hover {
+  background-color: #f0f0f0;
+}
+
+.links li a:active {
+  background-color: #ccc;
+}
+
+.links li a:active::after {
+  content: '';
+  position: relative;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: #000;
+}
+
+  </style>
+
+
+  <script>
+    // Fonction pour ouvrir la modal
+    function openModal() {
+      document.getElementById("myModal").style.display = "block";
+    }
+
+    // Fonction pour fermer la modal
+    function closeModal() {
+      document.getElementById("myModal").style.display = "none";
+    }
+
+    // Exemple de fonction pour la suppression
+    function deleteItem() {
+      // Code pour la suppression de l'élément ici...
+      alert("L'élément a été supprimé !");
+      closeModal(); // Fermer la modal après la suppression
+    }
+  </script>
+</body>
+
+</html>
