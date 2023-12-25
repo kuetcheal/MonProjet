@@ -209,37 +209,9 @@ if (isset($_POST['deconnect_account'])) {
                 <input type="text" name="confirmPassword" id="username" placeholder="stephane2000"
                     style="width: 370px; " required><br><br><br>
                 <hr style=" color: green;"><br><br>
-                <button name="delete_account" class="btn-modifier" style="margin-left: 105px;">
-                    Modifier</button>
-
-
+                <button name="delete_account" class="btn-modifier" style="margin-left: 105px;"> Modifier</button>
             </form>
 
-            <!-- <form method="post" action="update.php">
-                <h4 style="font-size: 20px; color: green;">Nom d'utilisateur</h4>
-                <label for="username" style="font-size: 16px;">Veuillez saisir le nom d'utilisateur:</label>
-                <input type="text" name="username" id="username" placeholder="ALEX" style="width: 370px;"
-                    required><br><br>
-
-                <h4 style="font-size: 20px; color: green;">Mot de passe actuel</h4>
-                <label for="password" style="font-size: 16px;">Entrer votre mot de passe actuel:</label>
-                <input type="password" name="password" id="password" placeholder="impact1999" style="width: 370px;"
-                    required><br><br>
-
-                <h4 style="font-size: 20px; color: green;">Nouveau mot de passe</h4>
-                <label for="newPassword" style="font-size: 16px;">Saisir votre nouveau mot de passe:</label>
-                <input type="password" name="newPassword" id="newPassword" placeholder="stephane2000"
-                    style="width: 370px;" required><br><br><br>
-
-                <h4 style="font-size: 20px; color: green;">Confirmer votre nouveau mot de passe</h4>
-                <label for="confirmPassword" style="font-size: 16px;">Confirmer votre nouveau mot de passe:</label>
-                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="stephane2000"
-                    style="width: 370px;" required><br><br><br>
-
-                <hr style="color: green;"><br><br>
-
-                <button name="delete_account" class="btn-modifier" style="margin-left: 105px;">Modifier</button>
-            </form> -->
 
         </div>
     </div>
