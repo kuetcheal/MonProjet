@@ -25,6 +25,8 @@ if (isset($_POST['deconnect_account'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"> -->
+
     <link rel="stylesheet" href="style.css">
 
     <title>Document</title>
@@ -47,16 +49,19 @@ if (isset($_POST['deconnect_account'])) {
                 </ul>
             </div>
             <div class="public">
-
+                <div class="notif">
+                    <i class="fa fa-bell-o" aria-hidden="true"></i>
+                </div>
                 <div class="langue">
-                    <select id="select" name="select" aria-placeholder="2 places">
+                    <!-- <select id="select" name="select" aria-placeholder="2 places">
                         <option value="option1">Français</option>
                         <option value="option2">Anglais</option>
-
-                    </select>
+                    </select> -->
+                    <i class="fa fa-globe" aria-hidden="true"></i>
                 </div>
-                <div class="outils"><i class="fa fa-user-circle-o fa-2x" aria-hidden="true"
-                        onclick="openModal('myModal')"></i></div>
+                <div class="outils">
+                    <img src="pictures/OIP.jpg" id="profil" onclick="openModal('myModal')" alt="image user" />
+                </div>
 
             </div>
         </nav>
@@ -73,9 +78,13 @@ if (isset($_POST['deconnect_account'])) {
             <h2>Mon compte utilisateur</h2> <br><br>
             <hr style=" color: green;"><br><br>
             <div class="profil" style=" display: flex; ">
-                <div class="outils"><i class="fa fa-user-circle-o fa-2x" aria-hidden="true"
-                        style=" color: rgb(128, 128, 128); font-size: 60px; position: fixed; right: 335px; "></i>
+                <div class="outils">
+                    <img src="pictures/OIP.jpg" alt="image user" id="profil-pic" />
+
+                    <input type="file" accept="image/png, image/jpeg, image/jpg" id="input-file" style="display: none">
+                    <label for="input-file" class="import">Download image</label>
                 </div>
+
                 <div class="profil-infos" style=" margin-left: 80px; ">
                     <p>Alex KUETCHE</p>
                     <P style=" color: green; ">alexkuetche@gmail.com</P>
@@ -137,8 +146,8 @@ if (isset($_POST['deconnect_account'])) {
 
     <!-- CODE PHP POUR IMPORTER LES IMAGES DEPUIS LA GALERIE -->
     <?php
-    
-    ?>
+
+?>
 
 
     <!-- AFFICHAGE DU POPUP DE MESSAGE DE DECONNECTION -->
@@ -221,18 +230,17 @@ if (isset($_POST['deconnect_account'])) {
     <?php
 // Vérifier si le formulaire de suppression a été soumis
 if (isset($_POST['delete_account'])) {
-  
-    $host = "localhost"; // nom d'hôte
-    $user = "root"; // nom d'utilisateur
-    $password = ""; // mot de passe
-    $database = "bd_stock"; // nom de la base de données
+    $host = 'localhost'; // nom d'hôte
+    $user = 'root'; // nom d'utilisateur
+    $password = ''; // mot de passe
+    $database = 'bd_stock'; // nom de la base de données
 
     // Connexion à la base de données MySQLi
     $conn = mysqli_connect($host, $user, $password, $database);
-  $id= $_SESSION['Id_compte'];
+    $id = $_SESSION['Id_compte'];
     $query = "DELETE FROM user WHERE id_name =$id";
-    mysqli_query( $conn, $query);
- 
+    mysqli_query($conn, $query);
+
     header('Location: connexion.php');
     exit;
 }
@@ -250,19 +258,24 @@ if (isset($_POST['delete_account'])) {
         </div><br>
         <h1 class="titre"> Rechercher un trajet de voyage </h1><br>
     </div>
-    <div class="box">
+    <div class="box" style=" gap: 48px;">
         <form action="listevoyage.php" method="post">
-            <div class="radio-buttons">
-                <input type="radio" id="radio1" name="radio" value="option1">
-                <label for="radio1">Aller</label>
-
-                <input type="radio" id="radio2" name="radio" value="option2">
-                <label for="radio2">Aller-retour</label>
+            <div class="Voyage" style="display: flex; gap: 25px;">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                        value="option1">
+                    <label class="form-check-label" for="inlineRadio1">Aller</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                        value="option2">
+                    <label class="form-check-label" for="inlineRadio2">Aller-Retour</label>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="select">DE:</label>
-                <select id="input1" name="input1" aria-placeholder="20 places" style="width: 250px; height: 50px;">
+                <label for="select">DE :</label>
+                <select id="input1" name="input1" aria-placeholder="20 places" style="width: 150px; height: 40px;">
                     <option value="Douala">Douala</option>
                     <option value="Yaounde">Yaounde</option>
                     <option value="Bafoussam">Bafoussam</option>
@@ -279,14 +292,9 @@ if (isset($_POST['delete_account'])) {
                 </select>
             </div>
 
-            <!-- <div class="form-group">
-        <label for="input2">A:</label>
-        <input type="text" id="input2" name="input2" placeholder="Yaoundé">
-      </div> -->
-
             <div class="form-group">
-                <label for="select">A:</label>
-                <select id="input2" name="input2" aria-placeholder="20 places" style="width: 250px; height: 50px;">
+                <label for="select">A :</label>
+                <select id="input2" name="input2" aria-placeholder="20 places" style="width: 150px; height: 40px;">
                     <option value="Douala">Douala</option>
                     <option value="Yaounde">Yaounde</option>
                     <option value="Bafoussam">Bafoussam</option>
@@ -303,12 +311,16 @@ if (isset($_POST['delete_account'])) {
                 </select>
             </div>
             <div class="form-group">
-                <label for="input3">Date départ:</label>
-                <input type="date" class="date-input" name="input3">
+                <label for="input3">Date départ :</label>
+                <input type="date" class="date-input" name="input3" style="width: 150px; height: 35px;">
+            </div>
+            <div class="form-group">
+                <label for="input3">Date retour :</label>
+                <input type="date" class="date-input" name="input4" style="width: 150px; height: 35px;">
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value=" Valider"
-                    style="background-color: green; color: white;  width: 200px; height: 50px; ">
+                    style="background-color: green; color: white;  width: 150px; height: 40px; ">
 
 
             </div>
@@ -416,6 +428,58 @@ if (isset($_POST['delete_account'])) {
 
 
     </div>
+
+
+    <div class="chat">
+        <i class="fa fa-comments fa-5x" onclick="openModal('myModal5')"
+            style="color: green; position: fixed; top: 566px; right: 18px; cursor: pointer; font-size: 61px;"></i>
+    </div>
+
+    <form>
+        <div class="modal1" id="myModal5" style="display: none;">
+
+
+            <div class="contente">
+                <div class="modal-header">
+                    <h2 class="modal-title">Contactez l'agence EasyTravel</h2>
+                    <span class="close1" onclick="closeModal('myModal5')"
+                        style="position: fixed; right: 365px; top: 77px;">
+                        <i class="fa fa-times" aria-hidden="true" style="font-size: 25px"></i></span>
+                </div>
+                <br>
+                <span>
+                    <hr>
+                </span> <br>
+                <div class="modal-body">
+                    <div class="mbx">
+                        <label for="exampleInputEmail1" class="form-label">Votre nom</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                            placeholder="Alex KUETCHE">
+                    </div>
+                    <div class="mby">
+                        <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="exampleFormControlInput1"
+                            placeholder="name@example.com">
+                    </div>
+                    <div class="mbz">
+                        <label for="exampleFormControlTextarea1" class="form-label">Rediger votre message</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    </div>
+                </div>
+                <br>
+                <span>
+                    <hr>
+                </span> <br>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary"
+                        style="background-color: green; border-color: green;">Envoyer</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+
 
     <!-- PARIE FOOTER -->
 
@@ -662,6 +726,19 @@ if (isset($_POST['delete_account'])) {
         left: 930px;
     }
 
+    .contente {
+        background-color: white;
+        padding: 20px;
+        border: 2px solid white;
+        border-radius: 5px;
+        height: 450px;
+        width: 600px;
+        position: fixed;
+        bottom: 71px;
+        left: 340px;
+
+    }
+
     .btn {
         display: flex;
         justify-content: space-between;
@@ -734,10 +811,11 @@ if (isset($_POST['delete_account'])) {
         align-items: center;
     }
 
-    .outils i {
-        color: white;
-        font-size: 37px;
-        margin-left: 30px;
+    #profil {
+
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
         cursor: pointer;
     }
 
@@ -750,8 +828,8 @@ if (isset($_POST['delete_account'])) {
         margin-left: 25px;
         margin-top: 65px;
         background-color: #3e8e41;
-        height: 31px;
-        width: 680px;
+        height: 43px;
+        width: 705px;
         padding: 7px;
         border-radius: 20px;
     }
@@ -775,6 +853,53 @@ if (isset($_POST['delete_account'])) {
         color: 'black';
     }
 
+
+    .outils {
+        text-align: center;
+        /* Centre le contenu horizontalement */
+    }
+
+    #profil-pic {
+        position: fixed;
+        top: 145px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        /* Donne une forme circulaire à l'image */
+    }
+
+    #input-file {
+        display: none;
+    }
+
+    .import {
+        cursor: pointer;
+        position: fixed;
+        top: 240px;
+        /* Change le curseur au survol pour indiquer que le label est cliquable */
+        color: green;
+        /* Couleur du texte du label (vous pouvez ajuster selon votre style) */
+        text-decoration: none;
+        /* Souligne le texte du label */
+    }
+
+    /* Style supplémentaire pour améliorer l'aspect du label au survol */
+    .import :hover {
+        color: #0056b3;
+        /* Changement de couleur au survol */
+    }
+
+    .fa-bell-o {
+        color: white;
+        font-size: 21px;
+        cursor: pointer;
+    }
+
+    .fa-globe {
+        color: white;
+        font-size: 21px;
+        cursor: pointer;
+    }
 
 
 
@@ -906,8 +1031,9 @@ if (isset($_POST['delete_account'])) {
         padding: 20px;
         background-color: #ffffff;
         box-shadow: 0 1px 3px rgba(0.2, 0, 0.3, 0.3);
-        width: 1050px;
+        width: 1000px;
         margin-left: 55px;
+        gap: 10px;
     }
 
     .rectangle {
@@ -922,6 +1048,8 @@ if (isset($_POST['delete_account'])) {
     let modalId1 = document.getElementById("myModal1");
     let modalId2 = document.getElementById("myModal2");
     let modalId3 = document.getElementById("myModal3");
+    let modalId5 = document.getElementById("myModal5");
+
 
     function openModal(arg) {
         document.getElementById(arg).style.display = "block";
@@ -931,8 +1059,18 @@ if (isset($_POST['delete_account'])) {
     function closeModal(arg) {
         document.getElementById(arg).style.display = "none";
     }
+
+    let profilPic = document.getElementById("profil-pic");
+    let profilInput = document.getElementById("input-file");
+
+    profilInput.onchange = function() {
+        profilPic.src = URL.createObjectURL(profilInput.files[0]);
+    }
     </script>
 
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
