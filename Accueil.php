@@ -26,6 +26,7 @@ if (isset($_POST['deconnect_account'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"> -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <link rel="stylesheet" href="style.css">
 
@@ -35,9 +36,9 @@ if (isset($_POST['deconnect_account'])) {
 <body>
 
     <!-- PARTIE HEADER -->
-    <header>
-        <nav>
-            <div class="header-picture">
+    <header class="container-fluid">
+        <nav class="container-fluid">
+            <div class=" header-picture">
                 <img src="logo général.jpg" alt="logo site" />
             </div>
             <div class="nav-bar">
@@ -70,29 +71,30 @@ if (isset($_POST['deconnect_account'])) {
     <!-- AFFICHAGE DE LA POPUP DU SETTINGS  -->
     <div id="myModal" class="modal1" style="display: none;">
         <div class="modal-content1">
-            <h2 style=" text-align: center;">Réglages</h2>
-            <span class="close1" onclick="closeModal('myModal')" style="position: fixed; right: 385px; top: 12px;"><i
+            <span class="close1" onclick="closeModal('myModal')" style="position: fixed; right: 365px; top: 12px;"><i
                     class=" fa
                 fa-arrow-left" aria-hidden="true">
-                </i></span><br>
-            <h2>Mon compte utilisateur</h2> <br><br>
+                </i></span>
+            <h2>Mon compte utilisateur</h2> <br>
             <hr style=" color: green;"><br><br>
-            <div class="profil" style=" display: flex; ">
-                <div class="outils">
-                    <img src="pictures/OIP.jpg" alt="image user" id="profil-pic" />
+            <div class="profiler">
+                <div>
+                    <img src=" pictures/OIP.jpg" alt="image user" id="profil-pic" style=" position: fixed; top: 75px" />
 
                     <input type="file" accept="image/png, image/jpeg, image/jpg" id="input-file" style="display: none">
-                    <label for="input-file" class="import">Download image</label>
+                    <label for="input-file"
+                        style=" position: fixed; top: 164px; height: 20px; width:110px; background-color: green; color: white; font-size: 12px; padding 8px:">Download
+                        image</label>
                 </div>
 
-                <div class="profil-infos" style=" margin-left: 80px; ">
+                <div class="profil-infos" style=" margin-left: 145px; ">
                     <p>Alex KUETCHE</p>
                     <P style=" color: green; ">alexkuetche@gmail.com</P>
                 </div>
             </div> <br><br>
             <hr style=" color: green;"><br><br>
-            <h2 style=" color: green; text-align: center; "> Mes connexions</h2>
-            <p style=" font-size: 16px; ">Veuilez accéder au contenu du settings de l'application </p><br>
+            <h2 style=" color: green; text-align: center; "> Mes connexions</h2><br>
+            <p style=" font-size: 16px; ">Veuilez accéder au contenu settings de l'application </p><br>
             <div style=" display: flex; align-items: center; flex-direction: column; gap: 23px; ">
                 <button type=" submit" class="btn-supprimer" style=" width: 350px;" onclick="openModal('myModal1')">
                     Supprimer</button>
@@ -218,7 +220,8 @@ if (isset($_POST['deconnect_account'])) {
                 <input type="text" name="confirmPassword" id="username" placeholder="stephane2000"
                     style="width: 370px; " required><br><br><br>
                 <hr style=" color: green;"><br><br>
-                <button name="delete_account" class="btn-modifier" style="margin-left: 105px;"> Modifier</button>
+                <button name="delete_account" class="btn-modifier" style="margin-left: 105px;">
+                    Modifier</button>
             </form>
 
 
@@ -245,25 +248,19 @@ if (isset($_POST['delete_account'])) {
     exit;
 }
 ?>
-
-
-
-
-
     <!-- PARTIE MAIN -->
     <div class="content">
         <div class="container">
-            <p class="para"> le plaisir de bien voyager à un prix abordable à partir de 5.5euro seulement.
-            </p>
+            <p class="para"> le plaisir de bien voyager à un prix abordable à partir de 5.5euro seulement.</p>
         </div><br>
         <h1 class="titre"> Rechercher un trajet de voyage </h1><br>
     </div>
     <div class="box" style=" gap: 48px;">
-        <form action="listevoyage.php" method="post">
+        <form action="listevoyageretour.php" method="post">
             <div class="Voyage" style="display: flex; gap: 25px;">
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                        value="option1">
+                        value="option1" checked>
                     <label class="form-check-label" for="inlineRadio1">Aller</label>
                 </div>
                 <div class="form-check form-check-inline">
@@ -314,13 +311,13 @@ if (isset($_POST['delete_account'])) {
                 <label for="input3">Date départ :</label>
                 <input type="date" class="date-input" name="input3" style="width: 150px; height: 35px;">
             </div>
-            <div class="form-group">
+            <div class="form-groupe" style="display: none; position: relative; left: 550px; bottom: 76px">
                 <label for="input3">Date retour :</label>
                 <input type="date" class="date-input" name="input4" style="width: 150px; height: 35px;">
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value=" Valider"
-                    style="background-color: green; color: white;  width: 150px; height: 40px; ">
+                    style="background-color: green; color: white;  width: 150px; height: 40px;">
 
 
             </div>
@@ -330,13 +327,13 @@ if (isset($_POST['delete_account'])) {
 
     </div>
     <div class="button-container">
-        <button class="button">Gérer ma réservation</button>
+        <button class="button" id="openModalButton">Gérer ma réservation</button>
         <button class="button">Localiser mon trajet</button>
         <button class="button">Besoin d'aide</button>
     </div>
-    <br>
+
     <hr>
-    <br><br>
+
     <div class="map-box">
         <div class="map-content">
             <div class="map-image">
@@ -366,7 +363,7 @@ if (isset($_POST['delete_account'])) {
             </div>
         </div>
     </div>
-    <br><br>
+    <br>
     <hr><br>
     <div class="rectangle">
         <p> <span> Voyagez sur le plus grand réseau camerounais de bus longue distance !</span> Depuis 2000,
@@ -413,7 +410,7 @@ if (isset($_POST['delete_account'])) {
             coté
             de chaque siège et elles vous seront bien utiles lors des longs trajets !</p>
         <br>
-        <h2>C’est économique et bon pour l'environnement</h2><br><br>
+        <h2>C’est économique et bon pour l'environnement</h2><br>
         <p style='text-align: center;'>
             Avec général voyage, il est facile d'économiser : les prix défiant toute concurrence de nos billets
             soulagent
@@ -435,10 +432,8 @@ if (isset($_POST['delete_account'])) {
             style="color: green; position: fixed; top: 566px; right: 18px; cursor: pointer; font-size: 61px;"></i>
     </div>
 
-    <form>
-        <div class="modal1" id="myModal5" style="display: none;">
-
-
+    <form action="" method="POST">
+        <div class=" modal1" id="myModal5" style="display: none;">
             <div class="contente">
                 <div class="modal-header">
                     <h2 class="modal-title">Contactez l'agence EasyTravel</h2>
@@ -452,18 +447,23 @@ if (isset($_POST['delete_account'])) {
                 </span> <br>
                 <div class="modal-body">
                     <div class="mbx">
-                        <label for="exampleInputEmail1" class="form-label">Votre nom</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                            placeholder="Alex KUETCHE">
+                        <label for="">Votre nom</label>
+                        <input type="text" class="form-control" placeholder="Alex KUETCHE" name="name">
                     </div>
-                    <div class="mby">
-                        <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="exampleFormControlInput1"
-                            placeholder="name@example.com">
+                    <div class="mbx">
+                        <label for="">Numéro téléphone</label>
+                        <input type="text" class="form-control" placeholder="655196254" name="telephone">
+                    </div>
+                    <div class=" mbx">
+                        <label>Email address</label>
+                        <input type="email" class="form-control" id="exampleFormControlInput1" name="gmail" placeholder="
+                            name@example.com">
                     </div>
                     <div class="mbz">
-                        <label for="exampleFormControlTextarea1" class="form-label">Rediger votre message</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        <label for="exampleFormControlTextarea1" class="form-label">Rediger votre
+                            message</label>
+                        <textarea class=" form-control" id="exampleFormControlTextarea1" rows="3"
+                            name="message"></textarea>
                     </div>
                 </div>
                 <br>
@@ -471,7 +471,7 @@ if (isset($_POST['delete_account'])) {
                     <hr>
                 </span> <br>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary"
+                    <button type="submit" class="btn btn-primary" onclick="openModal('myModal6')"
                         style="background-color: green; border-color: green;">Envoyer</button>
                 </div>
             </div>
@@ -479,75 +479,38 @@ if (isset($_POST['delete_account'])) {
         </div>
     </form>
 
+    <div id="myModal6" class="modale" style="display: none;">
+        <div class="modale-contente">
 
+            <h2>Insertion réussie</h2> <br>
+            <p>Votre message a été inséré avec succès.</p> <br>
+            <button onclick="closeModal('myModal6')">Fermer</button>
+        </div>
+    </div>';
+
+    <?php
+ $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+
+if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) && isset($_POST['telephone'])) {
+    try {
+        $a = $_POST['name'];
+        $d = $_POST['telephone'];
+        $b = $_POST['gmail'];
+        // $_SESSION['gmail']=$b;
+        $c = $_POST['message'];
+        // $_SESSION['message']=$c;
+
+        $requete = "insert into admins (nom, email, message, telephone) values ('$a', '$b', '$c', '$d')";
+        $bdd->exec($requete);
+    } catch (Exception $e) {
+        echo 'echec de connexion';
+    }
+}
+?>
 
     <!-- PARIE FOOTER -->
+    <?php include 'footer.php'; ?>
 
-    <footer>
-        <h2 class="slogan">Explorer d'autres façons de voyager au cameroun</h2>
-        <br>
-        <hr>
-        <br>
-        <div class="footer-content">
-
-            <div class="social-media">
-                <h3>Generales :</h3>
-                <ul>
-                    <li><a href="#"></i>A propos</a></li>
-                    <li><a href="#">Conditions générales de reservations</a></li>
-                    <li><a href="#">Conditions générales de transport</a></li>
-                    <li><a href="#">Devenez conducteur à général voyage</a></li>
-                </ul>
-            </div>
-            <div class="contact">
-                <h3>Nous contacter :</h3>
-                <ul>
-                    <li>Email: agencegenerale@gmail.cm</li>
-                    <li>Tel: (+237) 675051899</li>
-                    <li>Adresse postal: 8 rue double-balle-Bepanda</li>
-                    <li>Code postal: 4500</li>
-                </ul>
-            </div>
-            <div class="privacy">
-                <h3>Nos trajets :</h3>
-                <ul>
-                    <li><a href="#">Nos villes</a></li>
-                    <li><a href="#">Connexions transport</a></li>
-                    <li><a href="#">Nos arrêts bus</a></li>
-                    <li><a href="#">Nos bus</a></li>
-                </ul>
-            </div>
-        </div>
-        <br>
-
-        <div class="footer-picture">
-            <div class="social-download">
-                <p>Télécharger l'application sur :</p>
-                <img src="pictures/Appstore.png" alt="logo site" id="apps" style=' font-size: 12px' />
-                <img src="pictures/logo-playstore-ConvertImage.png" alt="logo site" class="playstore"
-                    style=' font-size: 12px' />
-            </div>
-
-            <div class="social-icons">
-
-                <ul>
-                    <li class="liste">Rejoignez-nous sur:</li>
-                    <li class="liste"><a
-                            href="https://m.facebook.com/groups/835886833986349?group_view_referrer=search"><i
-                                class="fa fa-facebook-official" aria-hidden="true"></i></a></li>
-                    <li class="liste"><a href="#"><a href="#"><i class="fa fa-twitter fa-" aria-hidden="true"></i></a>
-                    </li>
-                    <li class="liste"><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="privacye">
-
-            <a href="dossier html/privacy.html">Conditions d'utilisation</a>
-
-        </div>
-    </footer>
 
 
     <style>
@@ -856,6 +819,7 @@ if (isset($_POST['delete_account'])) {
 
     .outils {
         text-align: center;
+
         /* Centre le contenu horizontalement */
     }
 
@@ -901,6 +865,30 @@ if (isset($_POST['delete_account'])) {
         cursor: pointer;
     }
 
+    .modale {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modale-contente {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+        height: 150px;
+        text-align: center;
+        border-radius: 8px;
+    }
+
 
 
     /* PARTIE FOOTER */
@@ -908,7 +896,7 @@ if (isset($_POST['delete_account'])) {
         background-color: rgb(247, 247, 247);
         padding: 40px;
         font-family: Arial, sans-serif;
-        /* width: 1268px; */
+        box-shadow: inset 5px 5px 10px -5px rgba(0, 0, 0, 0.5);
         width: 100%;
     }
 
@@ -1012,6 +1000,11 @@ if (isset($_POST['delete_account'])) {
         cursor: pointer;
     }
 
+    #outillage {
+        /* display: flex; */
+        position: fixed;
+        top: 50px;
+    }
 
 
     /* MAIN */
@@ -1026,6 +1019,107 @@ if (isset($_POST['delete_account'])) {
         background-repeat: no-repeat;
     }
 
+    /* Style de base pour les boutons radio personnalisés */
+    .form-check-input {
+        appearance: none;
+        /* Supprime le style par défaut du navigateur */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-color: transparent;
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        /* Change le curseur pour indiquer un élément cliquable */
+        position: relative;
+        /* Nécessaire pour positionner le pseudo-élément */
+        transition: border-color 0.3s;
+        /* Transition douce pour la couleur de la bordure */
+    }
+
+    /* Style lorsque le radio est sélectionné */
+    .form-check-input:checked {
+        border-color: green;
+        /* Change la couleur de la bordure en vert lorsqu'il est sélectionné */
+    }
+
+    .form-check-input:checked::before {
+        content: '';
+        /* Nécessaire pour générer un cercle à l'intérieur */
+        position: absolute;
+        top: 50%;
+        /* Centre le cercle verticalement */
+        left: 50%;
+        /* Centre le cercle horizontalement */
+        width: 14px;
+        /* Largeur du cercle intérieur */
+        height: 14px;
+        /* Hauteur du cercle intérieur */
+        background-color: green;
+        /* Fond vert pour l'état sélectionné */
+        border-radius: 50%;
+        /* Rend le pseudo-élément circulaire */
+        transform: translate(-50%, -50%);
+        /* Assure que le pseudo-élément est parfaitement centré */
+    }
+
+    /* Amélioration de l'interactivité au survol */
+    .form-check-input:hover:not(:checked) {
+        border-color: #aaa;
+        /* Assombrit légèrement la bordure au survol si non sélectionné */
+    }
+
+    /* Améliorations pour l'accessibilité lors du focus */
+    .form-check-input:focus-visible {
+        outline: 2px solid #5b9dd9;
+        /* Ajoute un contour bleu lors du focus par le clavier */
+        outline-offset: 2px;
+    }
+
+
+
+    .reservation1 {
+        position: relative;
+        text-align: center;
+    }
+
+    .reservation1 img {
+        width: 300px;
+        height: 300px;
+        /* ajustez la hauteur selon vos besoins */
+        display: block;
+        /* pour résoudre l'espace réservé sous l'image */
+        margin: 0 auto;
+        /* centrer l'image horizontalement */
+    }
+
+    .buttonerser {
+        position: absolute;
+        bottom: 10px;
+        /* ajustez la marge inférieure selon vos besoins */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #4CAF50;
+        color: white;
+        padding: 15px 30px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 1;
+        /* pour être en avant-plan */
+        width: 150px;
+        height: 50px;
+        transition: background-color 0.3s;
+        /* effet hover */
+    }
+
+    .buttonerser:hover {
+        background-color: #45a049;
+        /* couleur différente au survol */
+    }
+
     .box {
         border: 2px solid #ccc;
         padding: 20px;
@@ -1034,7 +1128,23 @@ if (isset($_POST['delete_account'])) {
         width: 1000px;
         margin-left: 55px;
         gap: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
+
+
+
+
+    /* 
+    .box {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+
+    } */
+
+
 
     .rectangle {
         text-align: center;
@@ -1049,6 +1159,7 @@ if (isset($_POST['delete_account'])) {
     let modalId2 = document.getElementById("myModal2");
     let modalId3 = document.getElementById("myModal3");
     let modalId5 = document.getElementById("myModal5");
+    let modalId6 = document.getElementById("myModal6");
 
 
     function openModal(arg) {
@@ -1063,15 +1174,62 @@ if (isset($_POST['delete_account'])) {
     let profilPic = document.getElementById("profil-pic");
     let profilInput = document.getElementById("input-file");
 
+
+    // Vérifier s'il y a une image dans le localStorage
+    const savedImage = localStorage.getItem("savedImage");
+    if (savedImage) {
+        profilPic.src = savedImage; // Si une image est enregistrée, l'afficher
+    }
+
     profilInput.onchange = function() {
         profilPic.src = URL.createObjectURL(profilInput.files[0]);
+
+        localStorage.setItem("savedImage", profilPic.src);
     }
+
+    //fontion d 'affichage de aller-retour
+    $(document).ready(function() {
+        $("input[name='inlineRadioOptions']").change(function() {
+            if ($(this).val() === 'option2') {
+                $("div.form-groupe").show();
+            } else {
+                $("div.form-groupe").hide();
+            }
+        });
+    });
+
+
+    //gestion d'ouverture de la popup de gestion de reservation
+    document.getElementById('openModalButton').addEventListener('click', function() {
+        $.ajax({
+            url: 'Reservation/formulaire.php', // Assurez-vous que cela renvoie seulement le code de la modal
+            success: function(response) {
+                document.body.insertAdjacentHTML('beforeend', response);
+                var modal = document.getElementById('exampleModal');
+                var closeButton = document.querySelector('.close-button');
+
+                modal.style.display = "block";
+
+                closeButton.onclick = function() {
+                    modal.style.display = "none";
+                    modal.parentNode.removeChild(modal);
+                }
+
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                        modal.parentNode.removeChild(modal);
+                    }
+                }
+            }
+        });
+    });
     </script>
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </body>
 
 </html>

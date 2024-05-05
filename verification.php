@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 ?>
 
@@ -18,50 +18,57 @@ session_start();
 
     <?php
 // Importation des librairies phpmailer
-use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 
 require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
-//  $mail= new PHPMailer(true);
 
+// Load Composer's autoloader
+require 'vendor/autoload.php';
 
-if( !isset($_POST["verification"])&& isset($_POST["nom"]) && isset($_POST["password"]) && isset($_POST["email"])){
+$mail = new PHPMailer(true);
 
-  $nom=$_POST["nom"];
-  $_SESSION["nom"]=$nom;
-  $motpasse=$_POST["password"];
-  $_SESSION["motpasse"]=$motpasse;
-  $mail1=$_POST["email"];
-  $_SESSION["mail1"]=$mail1;
-   $veri=uniqid();
-   $code=(string)$veri;
-   $code=substr($code, 0, 4);
+if (isset($_POST['verification']) && isset($_POST['nom']) && isset($_POST['password']) && isset($_POST['email'])) {
+    $nom = $_POST['nom'];
+    $_SESSION['nom'] = $nom;
+    $motpasse = $_POST['password'];
+    $_SESSION['motpasse'] = $motpasse;
+    $mail1 = $_POST['email'];
+    $_SESSION['mail1'] = $mail1;
+    $veri = uniqid();
+    $code = (string) $veri;
+    $code = substr($code, 0, 4);
 
-   $_SESSION["code"]=$code;
-   $mail= new PHPMailer();
-//Server settings
- $mail->SMTPDebug = 0; 
-// $mail = new PHPMailer();                     //Enable verbose debug output
-$mail->isSMTP();                                            //Send using SMTP
- $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-$mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-$mail->Username   = 'kuetchealex99@gmail.com';                     //SMTP username
-$mail->Password   = 'gboxarsdnbixrzxr';                               //SMTP password
-$mail->SMTPSecure = 'TLS';            //Enable implicit TLS encryption
-$mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+    $_SESSION['code'] = $code;
+    $mail = new PHPMailer();
+    // Server settings
 
-//Recipients
-$mail->setFrom('kuetchealex99@gmail.com', 'Easy travel');
-$mail->addAddress($mail1, 'Joe User');     //Add a recipient
+    try {
+        $mail->SMTPDebug = 2;
+        // $mail = new PHPMailer();                     //Enable verbose debug output
+        $mail->isSMTP();                                            // Send using SMTP
+        $mail->Host = 'smtp.gmail.com';                     // Set the SMTP server to send through
+        $mail->SMTPAuth = true;                                   // Enable SMTP authentication
+        $mail->Username = 'kuetchealex99@gmail.com';                     // SMTP username
+        $mail->Password = 'bjic aqaj bywp zoab';                               // SMTP password
+        $mail->SMTPSecure = 'TLS';            // Enable implicit TLS encryption
+        $mail->Port = 587;                                    // TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
-$mail->isHTML(true);                                  //Set email format to HTML
-$mail->Subject = 'Confirmation du code';
-$mail->Body    = '<p style="font-size: 15px; font-weight: bold;"> Bravoo '. $nom .'  votre compte est en voie de création, veuillez saisir ce code de confirmation <span style=" height: 80px; width: 160px; background-color:green; font: size 18px;">'. $code .'</span> dans le champs de votre interface utilisateur.</p>'; 
+        // Recipients
+        $mail->setFrom('kuetchealex99@gmail.com', 'Easy travel');
+        $mail->addAddress($mail1, 'Joe User');     // Add a recipient
 
-$mail->send();
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject = 'Confirmation du code';
+        $mail->Body = '<p style="font-size: 15px; font-weight: bold;"> Bravoo '.$nom.'  votre compte est en voie de création, veuillez saisir ce code de confirmation <span style=" height: 80px; width: 160px; background-color:green; font: size 18px;">'.$code.'</span> dans le champs de votre interface utilisateur.</p>';
 
+        $mail->send();
+        echo 'Message has been sent';
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
 }
 ?>
 
@@ -88,7 +95,7 @@ $mail->send();
 
     <div class="container">
         <h3>un code de confirmation a été envoyé dans votre email,veuillez le saisir dans ce champ. </h3>
-        <form method="post" action="#">
+        <form method="post" action="Accueil.php">
             <input type="text" name='verification'><br><br>
             <button type="submit" name='valider'>Valider</button>
         </form>
@@ -97,38 +104,29 @@ $mail->send();
 
     <?php
 
-if(isset($_POST["verification"])){
+if (isset($_POST['verification'])) {
+    if ($_SESSION['code'] == $_POST['verification']) {
+        try {
+            $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
 
-if($_SESSION["code"]==$_POST["verification"]){
-    
-try
-{
-$bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+            $nom = $_SESSION['nom'];
+            $motpasse = $_SESSION['motpasse'];
+            $mail1 = $_SESSION['mail1'];
+            $veri = $_SESSION['code'];
+            $requette = "insert into user (user_name, user_password, user_mail, verification) values ('$nom', '$motpasse', '$mail1', '$veri');";
+            $bdd->exec($requette);
 
-$nom=$_SESSION["nom"];
-$motpasse=$_SESSION["motpasse"];
-$mail1=$_SESSION["mail1"];
-$veri=$_SESSION["code"];
-$requette = "insert into user (user_name, user_password, user_mail, verification) values ('$nom', '$motpasse', '$mail1', '$veri');";
-$bdd->exec($requette);
-
-header("Location: Accueil.php");
-exit;
-// echo ("Inscription réussie.");
-
+            header('Location: Accueil.php');
+            exit;
+            // echo ("Inscription réussie.");
+        } catch (Exception $e) {
+            echo 'echec de connexion';
+        }
+    } else {
+        echo 'incompatibilité du code,veuillez insérer le bon code reçu';
+    }
 }
 
-catch (Exception $e)
-{
-echo("echec de connexion");
-}
-}
-
-else{
-  echo("incompatibilité du code,veuillez insérer le bon code reçu"); 
-}
-}
-;
 ?>
 
 

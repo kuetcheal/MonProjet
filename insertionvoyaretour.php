@@ -45,10 +45,11 @@
             <h3>Veuillez insérer un trajet de voyage</h3>
             <br>
             <hr><br>
+
             <div>
                 <label>Depart</label>
 
-                <select id="input1" name="depart" aria-placeholder="20 places" style="width: 250px; height: 40px;">
+                <select id="input1" name="retour" aria-placeholder="20 places" style="width: 250px; height: 40px;">
                     <option value="Douala">Douala</option>
                     <option value="Yaounde">Yaounde</option>
                     <option value="Bafoussam">Bafoussam</option>
@@ -66,7 +67,7 @@
             </div><br>
             <div>
                 <label>Arrivée</label>
-                <select id="input2" name="arrivee" aria-placeholder="20 places" style="width: 250px; height: 40px;">
+                <select id="input2" name="arrive" aria-placeholder="20 places" style="width: 250px; height: 40px;">
                     <option value="Douala">Douala</option>
                     <option value="Yaounde">Yaounde</option>
                     <option value="Bafoussam">Bafoussam</option>
@@ -83,10 +84,10 @@
                 </select>
             </div> <br><br>
             <div class="form-group">
-                <label for="selectBus">type de bus:</label>
-                <select id="selectBus" name="selectBus" aria-placeholder="2 places" style="width: 250px; height: 40px;">
-                    <option value="classique">Bus classique</option>
-                    <option value="VIP">Bus VIP</option>
+                <label for="select">type de bus:</label>
+                <select id="select" name="selected" aria-placeholder="2 places" style="width: 250px; height: 40px;">
+                    <option value=" classique">Bus classique</option>
+                    <option value=" VIP">Bus VIP</option>
                 </select>
             </div><br><br>
             <div>
@@ -95,16 +96,16 @@
             </div><br>
             <div>
                 <label>heure d'arrivée</label>
-                <input type="time" id="arrivage" name="destination">
+                <input type="time" id="arrivage" name="desti">
             </div><br>
             <div>
-                <label>jour Depart</label>
-                <input type="date" class="date-input" name="date">
+                <label>jour Retour</label>
+                <input type="date" class="date-input" name="dateretour">
             </div><br>
 
             <div>
                 <label>prix</label>
-                <input type="text" id="cni" name="prix" class="class3">
+                <input type="text" id="cni" name="pric" class="class3">
             </div><br>
             <div class="bouton">
                 <div><input type="submit" id="ins" value="insérer"></div>
@@ -123,26 +124,25 @@
             <div> <button type="submit" class="liste-voyage">liste voyages</button> </div>
         </div>
     </form>
-
     <?php
 try {
     $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
 
-    if (isset($_POST["depart"]) && isset($_POST["prix"]) && isset($_POST["destination"]) && isset($_POST["arrivee"]) && isset($_POST["selectBus"]) && isset($_POST["partir"]) && isset($_POST["date"])) {
-        $depart = $_POST["depart"];
-        $arrive = $_POST["arrivee"];
-        $bus = $_POST["selectBus"];
-        $heureDepart = $_POST["partir"];
-        $heureArrivee = $_POST["destination"];
-        $prix = $_POST["prix"];
-        $date = $_POST["date"];
+    if (isset($_POST['retour']) && isset($_POST['pric']) && isset($_POST['desti']) && isset($_POST['arrive']) && isset($_POST['selected']) && isset($_POST['partir']) && isset($_POST['dateretour'])) {
+        $departe = $_POST['retour'];
+        $arrive = $_POST['arrive'];
+        $transport = $_POST['selected'];
+        $heureDeparte = $_POST['partir'];
+        $heureArrive = $_POST['desti'];
+        $pric = $_POST['pric'];
+        $dateretour = $_POST['dateretour'];
 
-        $requete = "INSERT INTO voyage (villeDepart, villeArrivee, typeBus, prix, heureDepart, heureArrivee, jourDepart) VALUES ('$depart', '$arrive', '$bus', '$prix', '$heureDepart', '$heureArrivee', '$date')";
-        $bdd->exec($requete);
-        echo "Insertion réussie";
+        $requette = "INSERT INTO voyageretour (villeRetour, arriver, typebus, prixBillet, heurePartir, heurearrive, jourPartir) VALUES ('$departe', '$arrive', '$transport', '$pric', '$heureDeparte', '$heureArrive', '$dateretour')";
+        $bdd->exec($requette);
+        echo 'Insertion réussie';
     }
 } catch (Exception $e) {
-    echo "Échec de connexion : " . $e->getMessage();
+    echo 'Échec de connexion : ' . $e->getMessage();
 }
 ?>
 

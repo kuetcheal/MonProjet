@@ -71,13 +71,13 @@ echo("<div style='height: 100px; width: 600px; background-color: green; color: w
 
 $mail= new PHPMailer();
 //Server settings
- $mail->SMTPDebug = 0; 
+ $mail->SMTPDebug = 2; 
 
 $mail->isSMTP();                                            //Send using SMTP
  $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
 $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-$mail->Username   = 'kuetchealex99@gmail.com';                     //SMTP username
-$mail->Password   = 'gboxarsdnbixrzxr';                               //SMTP password
+$mail->Username = 'elockfrank4@gmail.com';                     // SMTP username
+    $mail->Password = 'lidf nupy pnap hkbl';                             //SMTP password
 $mail->SMTPSecure = 'TLS';           
 $mail->Port       = 587;                                    
 

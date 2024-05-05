@@ -38,10 +38,25 @@ echo("echec de connexion");
 
 ?>
 
+    <?php
+function generateReservationNumber($length = 8) {
+    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+
+$reservationNumber = generateReservationNumber();
+?>
+
+
 
     <main>
         <form method="post" action="finalisation.php">
-            <h3>1) Informations du passager</h3>
+            <h3> 1) Informations du passager</h3>
             <div class="info-personnel">
 
                 <div class="titre">
@@ -75,7 +90,11 @@ echo("echec de connexion");
                         <label htmlFor="inputText">Numéro téléphone (facultatif) </label><br>
                         <input type="text" name="telephone" placeholder="+237">
                     </div>
+                    <input type="hidden" name="reservationNumber" value="<?php echo $reservationNumber; ?>">
                 </div>
+            </div>
+            <div class="titre">
+                <h2>Total à payer: <span><?php echo($_SESSION["prix"]); ?> FCFA</span></h2>
             </div>
             <br>
             <h3>2). Mode de paiement</h3>
@@ -86,6 +105,8 @@ echo("echec de connexion");
         <div class="col-2">
             <div id="paypal-button-container"></div>
         </div>
+
+
 
     </main>
     <!-- Replace "test" with your own sandbox Business account app client ID -->
@@ -109,28 +130,6 @@ echo("echec de connexion");
                 }]
             });
         },
-        /* Order is created on the server and the order id is returned
-        createOrder() {
-          return fetch("/my-server/create-paypal-order", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // use the "body" param to optionally pass additional order information
-            // like product skus and quantities
-            body: JSON.stringify({
-              cart: [
-                {
-                  sku: "YOUR_PRODUCT_STOCK_KEEPING_UNIT", 
-                  quantity: "YOUR_PRODUCT_QUANTITY",
-                },
-              ],
-            }),
-          })
-          .then((response) => response.json())
-          .then((order) => order.id);
-        },*/
-        // Finalize the transaction on the server after payer approval
         onApprove(data, actions) {
             return actions.order.capture(), then(function(orderData) {
                 // Successful capture! For dev/demo purposes:
