@@ -248,6 +248,8 @@ if (isset($_POST['delete_account'])) {
     exit;
 }
 ?>
+
+
     <!-- PARTIE MAIN -->
     <div class="content">
         <div class="container">
