@@ -28,6 +28,7 @@ $noun=$_POST["nom"];
 $prenoun=$_POST["prenom"];
 $mail2=$_POST["email"];
 $phone=$_POST["telephone"];
+$reservationNumber = $_POST['reservationNumber'];
 
 $etat=0;
 $Depart=$_SESSION["depart"];
@@ -35,6 +36,7 @@ $Arrivee=$_SESSION["arrivee"];
 $date=$_SESSION["date"];
 $idvoyage=$_SESSION['idVoyage'];
 $prix=$_SESSION["prix"];
+
 
 $html2pdf = new Html2Pdf();
 $html=' 
@@ -45,6 +47,7 @@ $html='
      <p>Compagnie : Général voyage</p>
      <p>Passager : '.$noun.' '.$prenoun.'</p>
      <p>Téléphone : '.$phone.'</p>
+     <p>Numero Ref : '.$reservationNumber.'</p>
   </div>
   <div class="header-picture">
      <img src="logo général.jpg" alt="logo site" />
