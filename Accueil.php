@@ -274,41 +274,35 @@ if (isset($_POST['delete_account'])) {
 
             <div class="form-group">
                 <label for="select">DE :</label>
-                <select id="input1" name="input1" aria-placeholder="20 places" style="width: 150px; height: 40px;">
-                    <option value="Douala">Douala</option>
-                    <option value="Yaounde">Yaounde</option>
-                    <option value="Bafoussam">Bafoussam</option>
-                    <option value="Mbouda">Mbouda</option>
-                    <option value="Dschang">Dschang</option>
-                    <option value="Bafang">Bafang</option>
-                    <option value="Edea">Edea</option>
-                    <option value="Bamenda">Bamenda</option>
-                    <option value="Foumbot">Foumbot</option>
-                    <option value="Bagante">Bagante</option>
-                    <option value="Kribi">Kribi</option>
-                    <option value="Ngaoundere">Ngaoundere</option>
-                    <option value="Ebolowa">Ebolowa</option>
-                </select>
+
+                <?php
+                $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+                $query = 'select * from destination order by Nom_ville ASC';
+                $response = $bdd->query($query);
+                echo '<select id="input1" name="input1" aria-placeholder="20 places" style="width: 150px; height: 40px;">';
+                while ($donnee = $response->fetch()) {
+                $destination = $donnee['Nom_ville'];
+                echo '<option value="'.htmlspecialchars($destination).'">'.htmlspecialchars($destination).'</option>';
+                 }
+                echo '</select>';
+                ?>
             </div>
 
             <div class="form-group">
                 <label for="select">A :</label>
-                <select id="input2" name="input2" aria-placeholder="20 places" style="width: 150px; height: 40px;">
-                    <option value="Douala">Douala</option>
-                    <option value="Yaounde">Yaounde</option>
-                    <option value="Bafoussam">Bafoussam</option>
-                    <option value="Mbouda">Mbouda</option>
-                    <option value="Dschang">Dschang</option>
-                    <option value="Bafang">Bafang</option>
-                    <option value="Edea">Edea</option>
-                    <option value="Bamenda">Bamenda</option>
-                    <option value="Foumbot">Foumbot</option>
-                    <option value="Bagante">Bagante</option>
-                    <option value="Kribi">Kribi</option>
-                    <option value="Ngaoundere">Ngaoundere</option>
-                    <option value="Ebolowa">Ebolowa</option>
-                </select>
+                <?php
+                    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+            $query = 'select * from destination order by Nom_ville ASC';
+            $response = $bdd->query($query);
+                 echo '<select id="input1" name="input2" aria-placeholder="20 places" style="width: 150px; height: 40px;">';
+                 while ($donnee = $response->fetch()) {
+                 $destination = $donnee['Nom_ville'];
+                 echo '<option value="'.htmlspecialchars($destination).'">'.htmlspecialchars($destination).'</option>';
+                 }
+                  echo '</select>';
+               ?>
             </div>
+
             <div class="form-group">
                 <label for="input3">Date départ :</label>
                 <input type="date" class="date-input" name="input3" style="width: 150px; height: 35px;">
