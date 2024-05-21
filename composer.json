@@ -1,7 +1,7 @@
 {
     "require": {
-        "spipu/html2pdf": "^5.2",
-        "phpmailer/phpmailer": "^6.9.1"
+        "phpmailer/phpmailer": "^6.9",
+        "mailjet/mailjet-apiv3-php": "^1.6"
     }
    
 }

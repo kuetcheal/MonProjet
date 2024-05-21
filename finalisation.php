@@ -1,107 +1,82 @@
 <?php
 session_start();
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require 'PHPMailer/src/Exception.php';
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
-
-
 require __DIR__.'/vendor/autoload.php';
-use Spipu\Html2Pdf\Html2Pdf;
 
-?>
+use Mailjet\Client;
+use Mailjet\Resources;
+// use PDO;
+// use Exception;
 
+try {
+    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-<?php
+    if (isset($_POST['nom'], $_POST['prenom'], $_POST['email'], $_POST['telephone'], $_POST['reservationNumber'], $_POST['submit'])) {
+        $nom = htmlspecialchars($_POST['nom']);
+        $prenom = htmlspecialchars($_POST['prenom']);
+        $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        $telephone = htmlspecialchars($_POST['telephone']);
+        $reservationNumber = htmlspecialchars($_POST['reservationNumber']);
 
-try
-{
-$bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-if(isset($_POST["nom"]) && isset($_POST["prenom"]) && isset($_POST["email"]) && isset($_POST["telephone"]) && isset($_POST['submit'])){
-// echo("connexion reussie");
+        $etat = 0;
+        $depart = $_SESSION['depart'];
+        $arrivee = $_SESSION['arrivee'];
+        $date = $_SESSION['date'];
+        $idVoyage = $_SESSION['idVoyage'];
+        $prix = $_SESSION['prix'];
 
+        // Insertion dans la base de données
+        $requete = "INSERT INTO reservation (nom, prenom, telephone, email, idVoyage, Etat, Numero_reservation) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $bdd->prepare($requete);
+        $stmt->execute([$nom, $prenom, $email, $telephone, $idVoyage, $etat, $reservationNumber]);
 
-$noun=$_POST["nom"];
-$prenoun=$_POST["prenom"];
-$mail2=$_POST["email"];
-$phone=$_POST["telephone"];
-$reservationNumber = $_POST['reservationNumber'];
+        // Configuration de l'API Mailjet
+        $mj = new Client('f163a8d176afbcb29aae519bf6c5e181', 'bf285777b4d59f84a43855ae1b40f96d', true, ['version' => 'v3.1']);
+        $body = [
+            'Messages' => [
+                [
+                    'From' => [
+                        'Email' => 'akuetche55@gmail.com',
+                        'Name' => 'Easy travel',
+                    ],
+                    'To' => [
+                        [
+                            'Email' => $email,
+                            'Name' => $nom,
+                        ],
+                    ],
+                    'Subject' => 'Confirmation de Réservation',
+                    'HTMLPart' => "<h1>Reçu de réservation</h1>
+                    <div class='voyageur'>
+                        <div class='infos-voyageur'>
+                            <p>Numéro réservation : $idVoyage</p>
+                            <p>Compagnie : Général Voyage</p>
+                            <p>Passager : $nom $prenom</p>
+                            <p>Téléphone : $telephone</p>
+                            <p>Numero Ref : $reservationNumber</p>
+                        </div>
+                        <div class='header-picture'>
+                            <img src='logo général.jpg' alt='logo site' />
+                        </div>
+                    </div>"
+                ],
+            ],
+        ];
 
-$etat=0;
-$Depart=$_SESSION["depart"];
-$Arrivee=$_SESSION["arrivee"];
-$date=$_SESSION["date"];
-$idvoyage=$_SESSION['idVoyage'];
-$prix=$_SESSION["prix"];
+        // Envoi de l'email
+        $response = $mj->post(Resources::$Email, ['body' => $body]);
+        if ($response->success()) {
+            echo 'Email sent successfully.';
+        } else {
+            echo 'Failed to send email: ' . $response->getData()['ErrorMessage'];
+        }
 
-
-$html2pdf = new Html2Pdf();
-$html=' 
-<h1> reçu de reservation </h1> </br>
-</div class="voyageur">
-  <div class="infos-voyageur">
-     <p>Numéro reservation : '.$idvoyage.'</p>
-     <p>Compagnie : Général voyage</p>
-     <p>Passager : '.$noun.' '.$prenoun.'</p>
-     <p>Téléphone : '.$phone.'</p>
-     <p>Numero Ref : '.$reservationNumber.'</p>
-  </div>
-  <div class="header-picture">
-     <img src="logo général.jpg" alt="logo site" />
-  </div>
-</div>
-<p>
-Hello, Votre voyage numéro '.$idvoyage.' allant de '.$Depart.' à '.$Arrivee.' a été effectué avec succès en date du 
-'.$date.'  
-</p></br>
-
-';
-
-$html2pdf->writeHTML('<h1>HelloWorld</h1>This is my first');
-$html2pdf->output('C:/wamp64/www/MonProjet/Alex.pdf', 'F');
-
-
-$requette = "insert into reservation (nom, prenom,	telephone, email, idVoyage, Etat) values ('$noun', '$prenoun', '$mail2', '$phone', '$idvoyage', '$etat');";
-$bdd->exec($requette);
-echo ("<meta http-equiv='refresh' content='10;url=Accueil.php'>");
-echo("<div style='height: 100px; width: 600px; background-color: green; color: white;
- font-size: 20px; padding: 30px; text-align: center; margin: 0 auto; margin-top: 150px; '>
- Hello $noun, vous avez éffectué avec succès votre reservation un code de confirmation comportant votre reçu de reservation  a été envoyé dans votre boîte email. 
-</div>");
-
-$mail= new PHPMailer();
-//Server settings
- $mail->SMTPDebug = 2; 
-
-$mail->isSMTP();                                            //Send using SMTP
- $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-$mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-$mail->Username = 'elockfrank4@gmail.com';                     // SMTP username
-    $mail->Password = 'lidf nupy pnap hkbl';                             //SMTP password
-$mail->SMTPSecure = 'TLS';           
-$mail->Port       = 587;                                    
-
-$mail->setFrom('kuetchealex99@gmail.com', 'Easy travel');
-$mail->addAddress($mail2, 'Joe User');     //Add a recipient
-
-$mail->isHTML(true);                                  //Set email format to HTML
-$mail->Subject = 'Confirmation de reservation';
-$mail->Body    = '<p style="font-size: 15px; font-weight: bold;"> Bravoo '. $noun .'  votre reservation a été effectuée avec succès. Notre agence vous souhaîtes un bon voyage. </p>'; 
-$mail->addAttachment('C:/wamp64/www/MonProjet/reçu.pdf', 'reçu.pdf');
-$mail->send();
-
-exit;
+        echo "<meta http-equiv='refresh' content='10;url=Accueil.php'>";
+        exit;
+    }
+} catch (Exception $e) {
+    echo 'Échec de connexion : ' . $e->getMessage();
 }
-
-}
-catch (Exception $e)
-{
-echo("echec de connexion");
-}
-//  include("footer.php");
 ?>
 
 <style>
@@ -111,6 +86,5 @@ echo("echec de connexion");
     background-color: green;
     color: white;
     font-size: 16px;
-
 }
 </style>

@@ -18,58 +18,65 @@ session_start();
 
 
     <?php
-require 'vendor/autoload.php';  // Assurez-vous que c'est le bon chemin d'accès au chargeur automatique de Composer
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+require 'vendor/autoload.php';
+use Mailjet\Resources;
 
 // Traitement du formulaire d'inscription
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'], $_POST['email'], $_POST['password'])) {
+    // Récupération des données du formulaire
     $nom = $_POST['nom'];
     $email = $_POST['email'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hachage du mot de passe
 
-    $veri = uniqid("", true); // Génération d'un identifiant unique plus complexe
-    $code = substr($veri, -4); // Prendre les quatre derniers caractères
+    // Génération d'un code de vérification
+    $veri = uniqid('', true);
+    $code = substr($veri, -4);
+
+    // Initialisation de la session
 
     $_SESSION['nom'] = $nom;
     $_SESSION['email'] = $email;
     $_SESSION['password'] = $password;
     $_SESSION['code'] = $code;
-    $mail = new PHPMailer(true); // Passage `true` active les exceptions
+
+    // Configuration de l'API Mailjet
+    $mj = new \Mailjet\Client('f163a8d176afbcb29aae519bf6c5e181', 'bf285777b4d59f84a43855ae1b40f96d', true, ['version' => 'v3.1']);
+
+    // Construction du corps de l'email
+    $body = [
+        'Messages' => [
+            [
+                'From' => [
+                    'Email' => 'akuetche55@gmail.com',
+                    'Name' => 'Easy travel',
+                ],
+                'To' => [
+                    [
+                        'Email' => $email,
+                        'Name' => $nom,
+                    ],
+                ],
+                'Subject' => 'Confirmation de votre compte',
+                'TextPart' => "Bonjour $nom, voici votre code de confirmation : $code",
+                'HTMLPart' => "<h3>Bonjour $nom,</h3><p>Votre compte est en cours de création. Veuillez saisir ce code de confirmation <strong>$code</strong> sur le site.</p>",
+            ],
+        ],
+    ];
+
+    // Envoi de l'email
     try {
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'kuetchealex99@gmail.com';
-        $mail->Password = 'bjic aqaj bywp zoab';  // Changez ceci
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
-
-        $mail->setFrom('kuetchealex99@gmail.com', 'Easy travel');
-        $mail->addAddress($email, $nom);
-
-        $mail->isHTML(true);
-        $mail->Subject = 'Confirmation du code';
-        $mail->Body = "<p>Bravo $nom, votre compte est en voie de création, veuillez saisir ce code de confirmation <strong>$code</strong> dans le champ de votre interface utilisateur.</p>";
-
-        $mail->send();
-        echo 'Message has been sent';
+        $response = $mj->post(Resources::$Email, ['body' => $body]);
+        if ($response->success()) {
+            echo 'Email sent successfully.';
+        } else {
+            echo 'Failed to send email: '.$response->getData()['ErrorMessage'];
+        }
     } catch (Exception $e) {
-        echo "Message could not be sent. Mailer Error: " . $mail->ErrorInfo;
-    }
-}
-
-// Traitement de la vérification du code
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verification'])) {
-    // Assurez-vous que cette partie du code est correctement isolée du reste
-    if ($_POST['verification'] === $_SESSION['code']) {
-        // Logique de connexion à la base de données et de stockage des informations
-    } else {
-        echo 'Incompatibilité du code, veuillez insérer le bon code reçu';
+        echo 'Message could not be sent. Mailer Error: '.$e->getMessage();
     }
 }
 ?>
+
 
 
 

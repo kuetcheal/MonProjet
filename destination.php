@@ -27,7 +27,8 @@ session_start();
             <div><input type="reset" id="annu" value="Annuler"></div>
         </div><br><br>
     </form>
-
+    <br>
+    <h1>Le plaisir de bien voyager à moindre coût</h1>
     <?php
     try {
         $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
@@ -43,7 +44,11 @@ session_start();
             // Exécuter la requête
             $requete->execute();
 
-            echo 'Insertion réussie';
+            echo ("<meta http-equiv='refresh' content='5;url=listevoyadmin.php'>");
+            echo("<div style='height: 100px; width: 600px; background-color: green; color: white;
+ font-size: 25px; padding: 30px; text-align: center; position: fixed; top: 150px; '>
+ Voyage insérer avec succès.
+</div>");
         }
     } catch (Exception $e) {
         echo 'Échec de connexion : '.$e->getMessage();
@@ -59,7 +64,7 @@ session_start();
         /* Couleur de fond légère */
         margin: 40px;
         color: #333;
-        /* Couleur de texte */
+
     }
 
     form {
@@ -67,19 +72,20 @@ session_start();
         /* Arrière-plan blanc pour le formulaire */
         padding: 20px;
         border-radius: 8px;
-        /* Bordures arrondies */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        /* Ombre subtile */
         max-width: 500px;
-        /* Largeur maximale du formulaire */
         margin: auto;
-        /* Centrage du formulaire */
+
     }
 
     h3 {
         text-align: center;
-        /* Titre centré */
-        color: #333;
+        color: green;
+    }
+
+    h1 {
+        text-align: center;
+        color: green;
     }
 
     label {
@@ -88,7 +94,7 @@ session_start();
         margin-bottom: 10px;
         /* Espace sous les labels */
         font-weight: bold;
-        /* Texte en gras */
+
     }
 
     input[type="text"],
@@ -108,9 +114,35 @@ session_start();
         /* Bordures légèrement arrondies */
     }
 
-    input[type="submit"],
+    input[type="text"] {
+        width: 95%;
+        /* Largeur complète */
+        padding: 10px;
+        /* Padding confortable */
+        margin-top: 6px;
+        /* Marge au-dessus du champ */
+        margin-bottom: 16px;
+        /* Marge en dessous du champ */
+        border: 1px solid #ccc;
+        /* Bordure subtile */
+        border-radius: 4px;
+        /* Bordures légèrement arrondies */
+    }
+
+    input[type="submit"] {
+        background-color: green;
+        /* Couleur de fond des boutons */
+        color: white;
+        /* Texte blanc */
+        font-size: 16px;
+        /* Taille du texte */
+        cursor: pointer;
+        /* Curseur de pointage */
+    }
+
+
     input[type="reset"] {
-        background-color: #5c67f2;
+        background-color: red;
         /* Couleur de fond des boutons */
         color: white;
         /* Texte blanc */

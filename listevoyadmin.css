@@ -34,6 +34,29 @@
     margin-right: 10px;
 }
 
+.dropdown-menu {
+    display: none; /* Cache le menu déroulant par défaut */
+    position: absolute; /* Positionne le menu déroulant par rapport à son parent */
+    left: 0;
+    top: 100%; /* Place le menu juste en dessous de l'élément parent */
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    width: 200px; /* Largeur du menu déroulant */
+    z-index: 1000; /* S'assure que le menu est au-dessus des autres éléments */
+}
+
+.dropdown-item {
+    color: darkblue;
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-item:hover {
+    background-color: #f2f2f2;
+}
+
 
 /* PARTIE main  */
 .badge {

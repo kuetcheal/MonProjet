@@ -274,7 +274,6 @@ if (isset($_POST['delete_account'])) {
 
             <div class="form-group">
                 <label for="select">DE :</label>
-
                 <?php
                 $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
                 $query = 'select * from destination order by Nom_ville ASC';
@@ -289,11 +288,11 @@ if (isset($_POST['delete_account'])) {
             </div>
 
             <div class="form-group">
-                <label for="select">A :</label>
+              <label for="select">A :</label>
                 <?php
-                    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-            $query = 'select * from destination order by Nom_ville ASC';
-            $response = $bdd->query($query);
+                 $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+                 $query = 'select * from destination order by Nom_ville ASC';
+                 $response = $bdd->query($query);
                  echo '<select id="input1" name="input2" aria-placeholder="20 places" style="width: 150px; height: 40px;">';
                  while ($donnee = $response->fetch()) {
                  $destination = $donnee['Nom_ville'];

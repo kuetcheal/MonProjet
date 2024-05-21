@@ -60,10 +60,23 @@ if ($resultatCount !== false) {
 
     <div class="sidebar">
         <ul>
-            <li><a href="#liste"><i class="fas fa-list"></i> Liste</a></li>
-            <li><a href="#destination"><i class="fas fa-map-marker-alt"></i> Destination</a></li>
-            <li><a href="#utilisateurs"><i class="fas fa-users"></i> Utilisateurs</a></li>
-            <li><a href="#voyages"><i class="fas fa-suitcase-rolling"></i> Mes voyages</a></li>
+            <div class="nav-item">
+                <li><a class="nav-link" href="#liste"><i class="fas fa-list"></i> Liste</a></li>
+            </div>
+            <div class="nav-item">
+                <li><a class="nav-link" href="#destination"> Destination</a></li>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/inscription">ajouter</a>
+                    <a class="dropdown-item" href="/connexion">liste destination</a>
+
+                </div>
+            </div>
+            <div class="nav-item">
+                <li><a class="nav-link" href="#utilisateurs"><i class="fas fa-users"></i> Utilisateurs</a></li>
+            </div>
+            <div class="nav-item">
+                <li><a class="nav-link" href="#voyages"><i class="fas fa-suitcase-rolling"></i> Mes voyages</a></li>
+            </div>
         </ul>
     </div>
     <br>
