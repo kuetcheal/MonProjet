@@ -4,8 +4,30 @@ require __DIR__.'/vendor/autoload.php';
 
 use Mailjet\Client;
 use Mailjet\Resources;
-// use PDO;
-// use Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use TCPDF;
+
+// Fonction pour générer la facture PDF
+function generateInvoice($nom, $prenom, $telephone, $email, $reservationNumber, $depart, $arrivee, $date, $idVoyage, $prix) {
+    $pdf = new TCPDF();
+    $pdf->AddPage();
+    $pdf->SetFont('dejavusans', '', 12);
+    $html = "
+    <h1>Facture de réservation</h1>
+    <p><strong>Nom du passager:</strong> $nom $prenom</p>
+    <p><strong>Date de départ:</strong> $date</p>
+    <p><strong>Ville de départ:</strong> $depart</p>
+    <p><strong>Ville d'arrivée:</strong> $arrivee</p>
+    <p><strong>Numéro de réservation:</strong> $reservationNumber</p>
+    <p><strong>Prix:</strong> $prix FCFA</p>
+    <h1>Merci de nous avoir fait confiance et à très bientôt </h1>
+    ";
+    $pdf->writeHTML($html, true, false, true, false, '');
+    $pdfOutput = $pdf->Output('', 'S'); // S pour retourner le document sous forme de chaîne
+
+    return $pdfOutput;
+}
 
 try {
     $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
@@ -30,6 +52,9 @@ try {
         $stmt = $bdd->prepare($requete);
         $stmt->execute([$nom, $prenom, $email, $telephone, $idVoyage, $etat, $reservationNumber]);
 
+        // Générer la facture PDF
+        $pdfOutput = generateInvoice($nom, $prenom, $telephone, $email, $reservationNumber, $depart, $arrivee, $date, $idVoyage, $prix);
+
         // Configuration de l'API Mailjet
         $mj = new Client('f163a8d176afbcb29aae519bf6c5e181', 'bf285777b4d59f84a43855ae1b40f96d', true, ['version' => 'v3.1']);
         $body = [
@@ -46,6 +71,7 @@ try {
                         ],
                     ],
                     'Subject' => 'Confirmation de Réservation',
+                    'TextPart' => 'Votre facture est attachée à cet email.',
                     'HTMLPart' => "<h1>Reçu de réservation</h1>
                     <div class='voyageur'>
                         <div class='infos-voyageur'>
@@ -58,7 +84,14 @@ try {
                         <div class='header-picture'>
                             <img src='logo général.jpg' alt='logo site' />
                         </div>
-                    </div>"
+                    </div>",
+                    'Attachments' => [
+                        [
+                            'ContentType' => "application/pdf",
+                            'Filename' => "facture.pdf",
+                            'Base64Content' => base64_encode($pdfOutput)
+                        ]
+                    ]
                 ],
             ],
         ];
