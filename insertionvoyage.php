@@ -128,23 +128,23 @@
 try {
     $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
 
-    if (isset($_POST["depart"]) && isset($_POST["prix"]) && isset($_POST["destination"]) && isset($_POST["arrivee"]) && isset($_POST["selectBus"]) && isset($_POST["partir"]) && isset($_POST["date"])) {
-        $depart = $_POST["depart"];
-        $arrive = $_POST["arrivee"];
-        $bus = $_POST["selectBus"];
-        $heureDepart = $_POST["partir"];
-        $heureArrivee = $_POST["destination"];
-        $prix = $_POST["prix"];
-        $date = $_POST["date"];
+    if (isset($_POST['depart']) && isset($_POST['prix']) && isset($_POST['destination']) && isset($_POST['arrivee']) && isset($_POST['selectBus']) && isset($_POST['partir']) && isset($_POST['date'])) {
+        $depart = $_POST['depart'];
+        $arrive = $_POST['arrivee'];
+        $bus = $_POST['selectBus'];
+        $heureDepart = $_POST['partir'];
+        $heureArrivee = $_POST['destination'];
+        $prix = $_POST['prix'];
+        $date = $_POST['date'];
 
         $requete = "INSERT INTO voyage (villeDepart, villeArrivee, typeBus, prix, heureDepart, heureArrivee, jourDepart) VALUES ('$depart', '$arrive', '$bus', '$prix', '$heureDepart', '$heureArrivee', '$date')";
         $bdd->exec($requete);
-        echo "Insertion réussie";
+        echo 'Insertion réussie';
     }
 } catch (Exception $e) {
-    echo "Échec de connexion : " . $e->getMessage();
+    echo 'Échec de connexion : '.$e->getMessage();
 }
-?>
+    ?>
 
 
     <style>

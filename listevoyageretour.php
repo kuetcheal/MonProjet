@@ -11,6 +11,8 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="listevoyage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <title>Document</title>
 </head>
 
@@ -91,15 +93,15 @@ try {
         $_SESSION['dateretour'] = $dateRetour;
 
         // Requête pour compter le nombre de trajets disponibles
-        $countQuery = $bdd->prepare("SELECT COUNT(*) as count FROM voyage WHERE villeDepart = :depart AND villeArrivee = :arrivee AND jourDepart = :date");
+        $countQuery = $bdd->prepare('SELECT COUNT(*) as count FROM voyage WHERE villeDepart = :depart AND villeArrivee = :arrivee AND jourDepart = :date');
         $countQuery->execute([
             'depart' => $Depart,
             'arrivee' => $Arrivee,
-            'date' => $date
+            'date' => $date,
         ]);
         $countResult = $countQuery->fetch();
         $voyagesDisponibles = $countResult['count'];
-        
+
         echo " <br><div id='conteneur1'>
       
 
@@ -121,8 +123,8 @@ $allerSimpleSelected = isset($_POST['inlineRadioOptions']) && $_POST['inlineRadi
 $allerRetourSelected = isset($_POST['inlineRadioOptions']) && $_POST['inlineRadioOptions'] === 'option2';
 
 if ($allerSimpleSelected) {
-   // Afficher le titre pour les trajets aller
-   echo "<h2>Aller: $date</h2>";
+    // Afficher le titre pour les trajets aller
+    echo "<h2>Aller: $date</h2>";
     $requette1 = "select * from voyage  WHERE voyage.villeDepart='$Depart' AND voyage.villeArrivee='$Arrivee' AND voyage.jourDepart='$date'";
     $query = $bdd->query($requette1);
     while ($donne = $query->fetch()) {
@@ -141,11 +143,11 @@ if ($allerSimpleSelected) {
                <hr class='ligne-horizontale'>
               <div class='arrivée'>  $heure2 </div>
                <hr class='ligne-horizontale'>
-              <div class='prix'>$prix</div>
+              <div class='prix'>$prix FCFA</div>
             </div> <br>
             <div class='bloc2'>
-              <div class='lieu1'>$depart </div>
-              <div class='lieu2'> $arrive </div>
+              <div class='lieu1'><i class='bi bi-geo-alt'></i>$depart </div>
+              <div class='lieu2' style='margin-right: 50px;'><i class='bi bi-geo-alt'></i>$arrive </div>
               <div class='vip'>
                 <button type='submit' class='bus'>
                   <i class='fa fa-bus' aria-hidden='true'></i>$bus
@@ -175,8 +177,6 @@ if ($allerSimpleSelected) {
 
     // Ajoutez ici le code supplémentaire que vous souhaitez exécuter pour l'aller simple
 } elseif ($allerRetourSelected) {
-   
-
     $heure3 = $heure4 = $prixretour = $busretour = $idvoyageretour = '';
     // Afficher le titre pour les trajets aller
     echo "<h2> Trajets Aller: $date</h2>";
@@ -202,11 +202,11 @@ if ($allerSimpleSelected) {
                <hr class='ligne-horizontale'>
               <div class='arrivée'>  $heure2 </div>
                <hr class='ligne-horizontale'>
-              <div class='prix'>$prixaller</div>
+              <div class='prix'>$prixaller FCFA</div>
             </div> <br>
             <div class='bloc2'>
-              <div class='lieu1'>$depart </div>
-              <div class='lieu2'> $arrive </div>
+              <div class='lieu1'><i class='bi bi-geo-alt'></i>$depart </div>
+              <div class='lieu2' style='margin-right: 50px;'><i class='bi bi-geo-alt'></i>$arrive </div>
               <div class='vip'>
                 <button type='submit' class='bus'>
                   <i class='fa fa-bus' aria-hidden='true'></i>$bus
@@ -223,11 +223,8 @@ if ($allerSimpleSelected) {
                 <i class='fa fa-television' aria-hidden='true'></i>
                 <i class='fa fa-beer' aria-hidden='true'></i>
             </div>
-            <div class='form-group'>
-                <form method='post' action='payment.php'>
-                    <input type='hidden' value='$idvoyage' name='idVoyage'>
-                    <input type='submit' value='continuer'>
-                </form>
+            <div class='form-group'>  
+                <button class='continuer-btn' data-id='$idvoyage' data-type='aller'>Continuer</button>
             </div>
         </div>
        </hr>
@@ -263,8 +260,8 @@ if ($allerSimpleSelected) {
         </div>
         <br>
         <div class='bloc2'>
-            <div class='lieu1'>$arrive2</div>
-            <div class='lieu2' style='margin-right: 90px;''>$depart1</div>
+            <div class='lieu1'><i class='bi bi-geo-alt'></i>$arrive2</div>
+            <div class='lieu2' style='margin-right: 50px;'><i class='bi bi-geo-alt'></i>$depart1</div>
             <div class='vip'>
                 <button type='submit' class='bus'>
                     <i class='fa fa-bus' aria-hidden='true'></i>$busretour
@@ -281,36 +278,74 @@ if ($allerSimpleSelected) {
                 <i class='fa fa-television' aria-hidden='true'></i>
                 <i class='fa fa-beer' aria-hidden='true'></i>
             </div>
-            <div class='form-group'>
-                <form method='post' action='payment.php'>
-                    <input type='hidden' value='$idvoyageretour' name='idVoyage'>
-                    <input type='submit' value='continuer'>
-                </form>
+            <div class='form-group'>     
+                 <button class='continuer-btn' data-id='$idvoyageretour' data-type='retour'>Continuer</button>                            
             </div>
         </div>
       </div>
          "
-       
-        ;
+
+                ;
             }
         }
     }
 
     echo '</div>';
 }
-
 ?>
 
     <!-- Conteneur pour la popup -->
     <div id="popup" class="popup">
-        <div class="popup-content">
-            <span class="close" onclick="closePopup()">&times;</span>
-            <h2>Détails du trajet</h2>
-            <p><strong>Lieu de départ:</strong> <span id="popupDepart"></span></p>
-            <p><strong>Lieu d'arrivée:</strong> <span id="popupArrivee"></span></p>
-            <p><strong>Prix:</strong> <span id="popupPrix"></span></p>
-        </div>
+        <h2>Détails du Trajet</h2>
+        <span class="popup-close" onclick="document.getElementById('popup').style.display='none';">Fermer</span>
+        <p><strong>Prix Aller:</strong> <span id="popup-price-aller"></span></p>
+        <p><strong>Départ Aller:</strong> <span id="popup-depart-aller"></span></p>
+        <p><strong>Arrivée Aller:</strong> <span id="popup-arrive-aller"></span></p>
+        <p><strong>Escale(s) Aller:</strong> <span id="popup-escales-aller">Loum, Penja, Edea</span></p>
+        <hr>
+        <p><strong>Prix Retour:</strong> <span id="popup-price-retour"></span></p>
+        <p><strong>Départ Retour:</strong> <span id="popup-depart-retour"></span></p>
+        <p><strong>Arrivée Retour:</strong> <span id="popup-arrive-retour"></span></p>
+        <p><strong>Escale(s) Retour:</strong> <span id="popup-escales-retour">Loum, Penja, Edea</span></p>
+        <hr>
+        <p><strong>Total à payer:</strong> <span id="popup-total"></span></p>
+        <button id="popup-continue" class="popup-continue">Continuer</button>
     </div>
+
+    <script>
+    let priceAller = 0;
+    let priceRetour = 0;
+
+    document.querySelectorAll('.continuer-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const type = this.getAttribute('data-type');
+            const id = this.getAttribute('data-id');
+            fetch(`getTrajetDetails.php?id=${id}&type=${type}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (type === 'aller') {
+                        priceAller = data.prix;
+                        document.getElementById('popup-price-aller').innerText = data.prix;
+                        document.getElementById('popup-depart-aller').innerText = data.villeDepart;
+                        document.getElementById('popup-arrive-aller').innerText = data.villeArrivee;
+                    } else {
+                        priceRetour = data.prix;
+                        document.getElementById('popup-price-retour').innerText = data.prix;
+                        document.getElementById('popup-depart-retour').innerText = data.villeDepart;
+                        document.getElementById('popup-arrive-retour').innerText = data
+                            .villeArrivee;
+                    }
+                    document.getElementById('popup-total').innerText = priceAller + priceRetour +
+                        ' FCFA';
+                    document.getElementById('popup').style.display = 'block';
+                });
+        });
+    });
+
+    document.getElementById('popup-continue').addEventListener('click', function() {
+        window.location.href = 'payment.php';
+    });
+    </script>
 
     <style>
     .ligne-horizontale {
@@ -372,16 +407,16 @@ if ($allerSimpleSelected) {
 
 
     <script>
-    function showPopup(depart, arrivee, prix) {
-        document.getElementById('popupDepart').textContent = depart;
-        document.getElementById('popupArrivee').textContent = arrivee;
-        document.getElementById('popupPrix').textContent = prix;
-        document.getElementById('popup').style.display = 'block';
-    }
+    // function showPopup(depart, arrivee, prix) {
+    //     document.getElementById('popupDepart').textContent = depart;
+    //     document.getElementById('popupArrivee').textContent = arrivee;
+    //     document.getElementById('popupPrix').textContent = prix;
+    //     document.getElementById('popup').style.display = 'block';
+    // }
 
-    function closePopup() {
-        document.getElementById('popup').style.display = 'none';
-    }
+    // function closePopup() {
+    //     document.getElementById('popup').style.display = 'none';
+    // }
     </script>
 </body>
 

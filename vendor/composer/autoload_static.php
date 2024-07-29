@@ -25,6 +25,7 @@ class ComposerStaticInitbead67acb9c1875e073d6e4879298cde
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Contracts\\Translation\\' => 30,
             'Symfony\\Component\\Validator\\' => 28,
+            'Stripe\\' => 7,
         ),
         'P' => 
         array (
@@ -64,6 +65,10 @@ class ComposerStaticInitbead67acb9c1875e073d6e4879298cde
         'Symfony\\Component\\Validator\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/validator',
+        ),
+        'Stripe\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
         ),
         'Psr\\Http\\Message\\' => 
         array (

@@ -2,8 +2,6 @@
 session_start();
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,7 +27,6 @@ session_start();
                         <select id="select" name="select" aria-placeholder="2 places">
                             <option value="option1">Français</option>
                             <option value="option2">Anglais</option>
-
                         </select>
                     </li>
                     <li class="items"><a href="#"><i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i></a></li>
@@ -42,74 +39,76 @@ session_start();
         <h1>Connexion</h1>
         <form method="post" action="#">
             <label for="username" style="color: white;">Nom d'utilisateur :</label>
-            <input type=" text" name="username" id="username" placeholder="ALEX" required
+            <input type="text" name="username" id="username" placeholder="ALEX" required
                 style="height: 20px; border-radius: 5px; padding: 10px;"><br>
             <label for="password" style="color: white;">Mot de passe :</label>
             <input type="password" name="password" id="password" placeholder="1000jean" required><br>
-            <button type="submit">se connecter</button>
+            <button type="submit">Se connecter</button>
             <p class="para">Si vous n'avez pas de compte, veuillez vous inscrire ici.<a
-                    href="inscription.php">s'inscrire</a> </p>
+                    href="inscription.php">S'inscrire</a></p>
         </form>
     </div>
     <div class="social-icons">
         <ul>
             <li class="liste">Rejoignez-nous sur:</li>
             <li class="liste"><a href="#"><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i></a></li>
-            <li class="liste"><a href="#"><a href="#"><i class="fa fa-twitter fa-2x" aria-hidden="true"></i></a></li>
+            <li class="liste"><a href="#"><i class="fa fa-twitter fa-2x" aria-hidden="true"></i></a></li>
             <li class="liste"><a href="#"><i class="fa fa-instagram fa-2x" aria-hidden="true"></i></a></li>
             <li class="liste"><a href="#"><i class="fa fa-snapchat-ghost fa-2x" aria-hidden="true"></i></a></li>
         </ul>
     </div>
     <hr id="ligne_bas">
-    </div>
-
 
     <?php
+    // Connexion à la base de données
+    $host = 'localhost'; // nom d'hôte
+$user = 'root'; // nom d'utilisateur
+$password = ''; // mot de passe
+$database = 'bd_stock'; // nom de la base de données
 
-    $host = "localhost"; // nom d'hôte
-    $user = "root"; // nom d'utilisateur
-    $password = ""; // mot de passe
-    $database = "bd_stock"; // nom de la base de données
+// Connexion à la base de données MySQLi
+$conn = new mysqli($host, $user, $password, $database);
 
-    // Connexion à la base de données MySQLi
-    $conn = mysqli_connect($host, $user, $password, $database);
-    if(isset($_POST["username"]) && isset($_POST["password"])){
-    // Vérifier la connexion
-    if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
+if ($conn->connect_error) {
+    exit('Connection failed: '.$conn->connect_error);
+}
 
-    // Récupérer les données du formulaire
+if (isset($_POST['username']) && isset($_POST['password'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
-    
 
-    // Exécuter une requête SELECT pour récupérer les informations d'identification de l'utilisateur
-    $query = "SELECT * FROM user WHERE user_name = '$username' AND user_password = '$password'";
-    $result = mysqli_query($conn, $query);
-  
-    // Vérifier si l'utilisateur existe dans la base de données
-    if (mysqli_num_rows($result) == 1) {
-      while($valeur=mysqli_fetch_assoc($result)){
-        echo($valeur['id_name']); 
-        $_SESSION['Id_compte']=$valeur['id_name'];
-      }
+    // Préparation de la requête pour éviter les injections SQL
+    $stmt = $conn->prepare('SELECT * FROM user WHERE user_name = ?');
+    $stmt->bind_param('s', $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-     header("Location: Accueil.php");
-    } elseif ($username == "GENERAL" && $password == "123general") {
-      header("Location: Accueiladmin.php");
+    // Vérification des résultats
+    if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
+        // Vérification du mot de passe
+        if (password_verify($password, $user['user_password'])) {
+            $_SESSION['Id_compte'] = $user['id'];
+            header('Location: Accueil.php');
+        } else {
+            echo "<p class='para2'>Mot de passe incorrect.</p>";
+        }
+    } elseif ($username == 'GENERAL' && $password == '123general') {
+        header('Location: Accueiladmin.php');
     } else {
-      header("Location: errorconnexion.php");
+        echo "<p class='para2'>Nom d'utilisateur incorrect.</p>";
     }
-  }
-?>
 
+    $stmt->close();
+}
+
+$conn->close();
+?>
 
     <style>
     body {
         background-color: aliceblue;
     }
-
 
     header {
         width: 100%;
@@ -135,24 +134,20 @@ session_start();
         text-decoration: none;
         color: whitesmoke;
         font-size: 20px;
-        margin-right: 40PX;
+        margin-right: 40px;
         padding: 0 15px;
     }
 
-
     .nav-bar ul {
         display: flex;
-
         list-style-type: none;
     }
 
     .header-picture {
         margin-left: 40px;
-
     }
 
     img {
-
         height: 60px;
         width: 100px;
     }
@@ -160,10 +155,6 @@ session_start();
     .nav-bar {
         margin-right: 30px;
     }
-
-
-
-
 
     .container {
         background-color: green;
@@ -173,11 +164,7 @@ session_start();
         max-width: 500px;
         padding: 20px;
         margin-top: 20px;
-
     }
-
-
-
 
     h1 {
         margin-bottom: 20px;
@@ -237,7 +224,6 @@ session_start();
 
     hr {
         color: aqua;
-
     }
 
     #ligne {
@@ -270,16 +256,13 @@ session_start();
 
     .social-icons a {
         display: flex;
-
         margin: 0 10px;
     }
 
     .social-icons li {
-        /* Ajoute un espace de 10 pixels à gauche et à droite de chaque élément de la liste */
         padding-left: 15px;
         padding-right: 15px;
     }
-
 
     .social-icons i {
         font-size: 24px;
@@ -294,13 +277,10 @@ session_start();
         font-size: 32px;
     }
 
-
-
     a {
         color: white;
     }
 
-    /* ECHEC AUTHENTIFICATION */
     .para2 {
         text-align: center;
         color: red;
@@ -316,10 +296,8 @@ session_start();
         padding: 20px;
         margin-top: 20px;
         border-color: 1px red;
-
     }
     </style>
-
 
 </body>
 

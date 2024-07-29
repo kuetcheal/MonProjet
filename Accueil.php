@@ -46,7 +46,7 @@ if (isset($_POST['deconnect_account'])) {
                     <li class="items"> <a href="#">Acceuil</a></li>
                     <li class="items"><a href="ajoutarticle.php">Reservations</a></li>
                     <li class="items"><a href="ajoutclient.php">Nos services clients</a></li>
-                    <li class="items"><a href="achatarticle.php">nos achats</a></li>
+                    <li class="items"><a href="achatarticle.php">Nos contacts</a></li>
                 </ul>
             </div>
             <div class="public">
@@ -54,10 +54,6 @@ if (isset($_POST['deconnect_account'])) {
                     <i class="fa fa-bell-o" aria-hidden="true"></i>
                 </div>
                 <div class="langue">
-                    <!-- <select id="select" name="select" aria-placeholder="2 places">
-                        <option value="option1">Français</option>
-                        <option value="option2">Anglais</option>
-                    </select> -->
                     <i class="fa fa-globe" aria-hidden="true"></i>
                 </div>
                 <div class="outils">
@@ -276,30 +272,30 @@ if (isset($_POST['delete_account'])) {
                 <label for="select">DE :</label>
                 <?php
                 $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-                $query = 'select * from destination order by Nom_ville ASC';
-                $response = $bdd->query($query);
-                echo '<select id="input1" name="input1" aria-placeholder="20 places" style="width: 150px; height: 40px;">';
-                while ($donnee = $response->fetch()) {
-                $destination = $donnee['Nom_ville'];
-                echo '<option value="'.htmlspecialchars($destination).'">'.htmlspecialchars($destination).'</option>';
-                 }
-                echo '</select>';
-                ?>
+$query = 'select * from destination order by Nom_ville ASC';
+$response = $bdd->query($query);
+echo '<select id="input1" name="input1" aria-placeholder="20 places" style="width: 150px; height: 40px;">';
+while ($donnee = $response->fetch()) {
+    $destination = $donnee['Nom_ville'];
+    echo '<option value="'.htmlspecialchars($destination).'">'.htmlspecialchars($destination).'</option>';
+}
+echo '</select>';
+?>
             </div>
 
             <div class="form-group">
                 <label for="select">A :</label>
                 <?php
-                 $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-                 $query = 'select * from destination order by Nom_ville ASC';
-                 $response = $bdd->query($query);
-                 echo '<select id="input1" name="input2" aria-placeholder="20 places" style="width: 150px; height: 40px;">';
-                 while ($donnee = $response->fetch()) {
-                 $destination = $donnee['Nom_ville'];
-                 echo '<option value="'.htmlspecialchars($destination).'">'.htmlspecialchars($destination).'</option>';
-                 }
-                  echo '</select>';
-               ?>
+ $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+$query = 'select * from destination order by Nom_ville ASC';
+$response = $bdd->query($query);
+echo '<select id="input1" name="input2" aria-placeholder="20 places" style="width: 150px; height: 40px;">';
+while ($donnee = $response->fetch()) {
+    $destination = $donnee['Nom_ville'];
+    echo '<option value="'.htmlspecialchars($destination).'">'.htmlspecialchars($destination).'</option>';
+}
+echo '</select>';
+?>
             </div>
 
             <div class="form-group">
@@ -525,7 +521,7 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
     header {
         width: 1400px;
         background-color: green;
-        height: 120px;
+        height: 140px;
     }
 
     nav {
@@ -540,7 +536,6 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
         width: 120px;
         height: 80px;
         margin-top: 20px;
-
     }
 
     .items a {

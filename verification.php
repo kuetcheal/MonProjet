@@ -33,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'], $_POST['email'
     $code = substr($veri, -4);
 
     // Initialisation de la session
-
     $_SESSION['nom'] = $nom;
     $_SESSION['email'] = $email;
     $_SESSION['password'] = $password;
@@ -77,14 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'], $_POST['email'
 }
 ?>
 
-
-
-
-
-
-
-
-
     <header>
         <nav>
             <div class="header-picture">
@@ -107,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'], $_POST['email'
 
     <div class="container">
         <h3>un code de confirmation a été envoyé dans votre email,veuillez le saisir dans ce champ. </h3>
-        <form method="post" action="Accueil.php">
+        <form method="post" action="#">
             <input type="text" name='verification'><br><br>
             <button type="submit" name='valider'>Valider</button>
         </form>
@@ -120,25 +111,34 @@ if (isset($_POST['verification'])) {
     if ($_SESSION['code'] == $_POST['verification']) {
         try {
             $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+            $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $nom = $_SESSION['nom'];
-            $motpasse = $_SESSION['motpasse'];
-            $mail1 = $_SESSION['mail1'];
+            $motpasse = $_SESSION['password'];
+            $email = $_SESSION['email'];
             $veri = $_SESSION['code'];
-            $requette = "insert into user (user_name, user_password, user_mail, verification) values ('$nom', '$motpasse', '$mail1', '$veri');";
-            $bdd->exec($requette);
 
-            header('Location: Accueil.php');
-            exit;
-            // echo ("Inscription réussie.");
-        } catch (Exception $e) {
-            echo 'echec de connexion';
+            $requette = $bdd->prepare('INSERT INTO user (user_name, user_password, user_mail, verification) VALUES (:nom, :motpasse, :email, :veri)');
+            $requette->bindParam(':nom', $nom);
+            $requette->bindParam(':motpasse', $motpasse);
+            $requette->bindParam(':email', $email);
+            $requette->bindParam(':veri', $veri);
+
+            if ($requette->execute()) {
+                // Redirection vers Accueil.php en cas de succès
+                header('Location: Accueil.php');
+                exit;
+            } else {
+                // Message d'erreur si l'insertion échoue
+                echo 'Erreur lors de l\'insertion dans la base de données.';
+            }
+        } catch (PDOException $e) {
+            echo 'Erreur : '.$e->getMessage();
         }
     } else {
-        echo 'incompatibilité du code,veuillez insérer le bon code reçu';
+        echo 'Incompatibilité du code, veuillez insérer le bon code reçu';
     }
 }
-
 ?>
 
 

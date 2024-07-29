@@ -4,12 +4,12 @@ require __DIR__.'/vendor/autoload.php';
 
 use Mailjet\Client;
 use Mailjet\Resources;
-use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use TCPDF;
 
 // Fonction pour générer la facture PDF
-function generateInvoice($nom, $prenom, $telephone, $email, $reservationNumber, $depart, $arrivee, $date, $idVoyage, $prix) {
+function generateInvoice($nom, $prenom, $telephone, $email, $reservationNumber, $depart, $arrivee, $date, $idVoyage, $prix)
+{
     $pdf = new TCPDF();
     $pdf->AddPage();
     $pdf->SetFont('dejavusans', '', 12);
@@ -48,7 +48,7 @@ try {
         $prix = $_SESSION['prix'];
 
         // Insertion dans la base de données
-        $requete = "INSERT INTO reservation (nom, prenom, telephone, email, idVoyage, Etat, Numero_reservation) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $requete = 'INSERT INTO reservation (nom, prenom, telephone, email, idVoyage, Etat, Numero_reservation) VALUES (?, ?, ?, ?, ?, ?, ?)';
         $stmt = $bdd->prepare($requete);
         $stmt->execute([$nom, $prenom, $email, $telephone, $idVoyage, $etat, $reservationNumber]);
 
@@ -72,9 +72,11 @@ try {
                     ],
                     'Subject' => 'Confirmation de Réservation',
                     'TextPart' => 'Votre facture est attachée à cet email.',
-                    'HTMLPart' => "<h1>Reçu de réservation</h1>
+                    'HTMLPart' => "<h1>Details de la réservation</h1>
                     <div class='voyageur'>
                         <div class='infos-voyageur'>
+                        <h1>merci pour votre reservation auprès de notre compagnie de voyage, vous trouverez votre 
+                        reçu de reservation joins à ce mail</h1>
                             <p>Numéro réservation : $idVoyage</p>
                             <p>Compagnie : Général Voyage</p>
                             <p>Passager : $nom $prenom</p>
@@ -83,15 +85,16 @@ try {
                         </div>
                         <div class='header-picture'>
                             <img src='logo général.jpg' alt='logo site' />
-                        </div>
+                        </div> <br>
+                           <p>Cordialement</p>
                     </div>",
                     'Attachments' => [
                         [
-                            'ContentType' => "application/pdf",
-                            'Filename' => "facture.pdf",
-                            'Base64Content' => base64_encode($pdfOutput)
-                        ]
-                    ]
+                            'ContentType' => 'application/pdf',
+                            'Filename' => 'facture.pdf',
+                            'Base64Content' => base64_encode($pdfOutput),
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -101,14 +104,14 @@ try {
         if ($response->success()) {
             echo 'Email sent successfully.';
         } else {
-            echo 'Failed to send email: ' . $response->getData()['ErrorMessage'];
+            echo 'Failed to send email: '.$response->getData()['ErrorMessage'];
         }
 
         echo "<meta http-equiv='refresh' content='10;url=Accueil.php'>";
         exit;
     }
 } catch (Exception $e) {
-    echo 'Échec de connexion : ' . $e->getMessage();
+    echo 'Échec de connexion : '.$e->getMessage();
 }
 ?>
 
@@ -119,5 +122,9 @@ try {
     background-color: green;
     color: white;
     font-size: 16px;
+}
+
+h1 {
+    color: green;
 }
 </style>
