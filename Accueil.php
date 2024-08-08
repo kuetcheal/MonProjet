@@ -1,8 +1,5 @@
 <?php
 session_start(); // Démarrer la session (si ce n'est pas déjà fait)
-
-// Vérifier si le formulaire de déconnexion a été soumis
-// git test unitaires
 if (isset($_POST['deconnect_account'])) {
     // Supprimer toutes les variables de session
     session_unset();
@@ -10,7 +7,7 @@ if (isset($_POST['deconnect_account'])) {
     // Détruire la session
     session_destroy();
 
-    // Rediriger vers la page de connexion
+    
     header('Location: connexion.php');
     exit;
 }
@@ -24,9 +21,13 @@ if (isset($_POST['deconnect_account'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"> -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="style.css">
 
@@ -45,8 +46,10 @@ if (isset($_POST['deconnect_account'])) {
                 <ul>
                     <li class="items"> <a href="#">Acceuil</a></li>
                     <li class="items"><a href="ajoutarticle.php">Reservations</a></li>
-                    <li class="items"><a href="ajoutclient.php">Nos services clients</a></li>
+                    <li class="items"><a href="ajoutclient.php">Services</a></li>
                     <li class="items"><a href="achatarticle.php">Nos contacts</a></li>
+                    <li class="items"><a href="inscription.php">inscription</a></li>
+                    <li class="items"><a href="connexion.php">connexion</a></li>
                 </ul>
             </div>
             <div class="public">
@@ -249,11 +252,11 @@ if (isset($_POST['delete_account'])) {
     <!-- PARTIE MAIN -->
     <div class="content">
         <div class="container">
-            <p class="para"> le plaisir de bien voyager à un prix abordable à partir de 5.5euro seulement.</p>
+            <p class="para"> le plaisir de bien voyager à un prix abordable à partir de 5.5€ seulement.</p>
         </div><br>
         <h1 class="titre"> Rechercher un trajet de voyage </h1><br>
     </div>
-    <div class="box" style=" gap: 48px;">
+    <div class="box">
         <form action="listevoyageretour.php" method="post">
             <div class="Voyage" style="display: flex; gap: 25px;">
                 <div class="form-check form-check-inline">
@@ -269,60 +272,61 @@ if (isset($_POST['delete_account'])) {
             </div>
 
             <div class="form-group">
-                <label for="select">DE :</label>
-                <?php
-                $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-$query = 'select * from destination order by Nom_ville ASC';
-$response = $bdd->query($query);
-echo '<select id="input1" name="input1" aria-placeholder="20 places" style="width: 150px; height: 40px;">';
-while ($donnee = $response->fetch()) {
-    $destination = $donnee['Nom_ville'];
-    echo '<option value="'.htmlspecialchars($destination).'">'.htmlspecialchars($destination).'</option>';
-}
-echo '</select>';
-?>
+                <label for="input1"><i class="bi bi-geo-alt custom-icon"></i> DE :</label>
+                <select id="input1" name="input1" style="width: 150px; height: 40px;" class="select2">
+                    <?php
+        $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+        $query = 'select * from destination order by Nom_ville ASC';
+        $response = $bdd->query($query);
+        while ($donnee = $response->fetch()) {
+            $destination = $donnee['Nom_ville'];
+            echo '<option value="'.htmlspecialchars($destination).'">'.htmlspecialchars($destination).'</option>';
+        }
+        ?>
+                </select>
             </div>
 
             <div class="form-group">
-                <label for="select">A :</label>
-                <?php
- $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-$query = 'select * from destination order by Nom_ville ASC';
-$response = $bdd->query($query);
-echo '<select id="input1" name="input2" aria-placeholder="20 places" style="width: 150px; height: 40px;">';
-while ($donnee = $response->fetch()) {
-    $destination = $donnee['Nom_ville'];
-    echo '<option value="'.htmlspecialchars($destination).'">'.htmlspecialchars($destination).'</option>';
-}
-echo '</select>';
-?>
+                <label for="input2"><i class="bi bi-geo-alt custom-icon"></i> A :</label>
+                <select id="input2" name="input2" style="width: 150px; height: 40px;" class="select2">
+                    <?php
+        $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+        $query = 'select * from destination order by Nom_ville ASC';
+        $response = $bdd->query($query);
+        while ($donnee = $response->fetch()) {
+            $destination = $donnee['Nom_ville'];
+            echo '<option value="'.htmlspecialchars($destination).'">'.htmlspecialchars($destination).'</option>';
+        }
+        ?>
+                </select>
             </div>
 
             <div class="form-group">
                 <label for="input3">Date départ :</label>
                 <input type="date" class="date-input" name="input3" style="width: 150px; height: 35px;">
             </div>
-            <div class="form-groupe" style="display: none; position: relative; left: 550px; bottom: 76px">
-                <label for="input3">Date retour :</label>
-                <input type="date" class="date-input" name="input4" style="width: 150px; height: 35px;">
-            </div>
+
             <div class="form-group">
-                <input type="submit" class="btn btn-primary" value=" Valider"
-                    style="background-color: green; color: white;  width: 150px; height: 40px;">
-
-
+                <label for="input4">Date retour :</label>
+                <input type="date" class="date-input" name="input4" id="input4" style="width: 150px; height: 35px;"
+                    disabled>
             </div>
-    </div>
-    </form>
 
 
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Valider"
+                    style="background-color: green; color: white; width: 150px; height: 40px;">
+            </div>
+        </form>
     </div>
+
     <div class="button-container">
         <button class="button" id="openModalButton">Gérer ma réservation</button>
         <button class="button">Localiser mon trajet</button>
         <button class="button">Besoin d'aide</button>
     </div>
 
+    <div id="modalContainer"></div>
     <hr>
 
     <div class="map-box">
@@ -479,6 +483,9 @@ echo '</select>';
         </div>
     </div>';
 
+
+    <!-- Modal sera inséré ici -->
+    <!-- <div id="modalContainer"></div> -->
     <?php
  $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
 
@@ -530,6 +537,16 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+
+    .nav-bar {
+        margin-left: 25px;
+        margin-top: 65px;
+        background-color: #3e8e41;
+        height: 40px;
+        width: 900px;
+        padding: 7px;
+        border-radius: 20px;
     }
 
     img {
@@ -775,16 +792,7 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
     .nav-bar ul {
         display: flex;
         list-style-type: none;
-    }
-
-    .nav-bar {
-        margin-left: 25px;
-        margin-top: 65px;
-        background-color: #3e8e41;
-        height: 43px;
-        width: 705px;
-        padding: 7px;
-        border-radius: 20px;
+        margin-top: 10px;
     }
 
     a {
@@ -998,7 +1006,7 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
 
 
     /* MAIN */
-    .container {
+    /* .container {
         padding: 20px;
         background-image: linear-gradient(rgba(39, 39, 39, 0.6), rgba(0, 0, 0, 0.6)), url("https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg");
         background-size: cover;
@@ -1007,6 +1015,31 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
         flex-grow: 1;
         width: 100%;
         background-repeat: no-repeat;
+    } */
+
+    .container {
+        padding: 20px;
+        background-size: cover;
+        height: 500px;
+        color: aliceblue;
+        flex-grow: 1;
+        width: 100%;
+        background-repeat: no-repeat;
+        position: relative;
+        transition: background-image 0.1s ease-in-out;
+    }
+
+    .para {
+        position: absolute;
+        bottom: 300px;
+        left: 200px;
+        font-size: 30px;
+    }
+
+    .custom-icon {
+        font-weight: bold;
+        color: #000000;
+        /* Remplacez #000 par la couleur souhaitée */
     }
 
     /* Style de base pour les boutons radio personnalisés */
@@ -1115,25 +1148,19 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
         padding: 20px;
         background-color: #ffffff;
         box-shadow: 0 1px 3px rgba(0.2, 0, 0.3, 0.3);
-        width: 1000px;
-        margin-left: 55px;
-        gap: 10px;
+        width: 910px;
+        margin-left: 205px;
         display: flex;
-        flex-direction: row;
+        gap: 10px;
+        align-items: center;
         justify-content: space-between;
     }
 
-
-
-
-    /* 
-    .box {
+    /* .form-group {
         display: flex;
-        flex-direction: row;
+        align-items: center;
         gap: 10px;
-
     } */
-
 
 
     .rectangle {
@@ -1188,14 +1215,39 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
         });
     });
 
+    //gestion des animations de la page d'acceuil
+    const images = [
+        "https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg",
+        "https://www.sustainable-bus.com/wp-content/uploads/2021/06/CrosswayCNG_Flixbus_inside-1688x1080.jpg",
+        "https://content.presspage.com/uploads/2327/1920_flixbus-treyratcliff-paris-02.jpg?10000"
+    ];
 
-    //gestion d'ouverture de la popup de gestion de reservation
+    let currentIndex = 0;
+    const container = document.querySelector('.container');
+
+    function changeBackground() {
+        currentIndex = (currentIndex + 1) % images.length;
+        container.style.backgroundImage =
+            `linear-gradient(rgba(39, 39, 39, 0.6), rgba(0, 0, 0, 0.6)), url(${images[currentIndex]})`;
+    }
+    setInterval(changeBackground, 4000);
+
+    // gestion du choix du trajet retour ou non
+    document.getElementById('inlineRadio1').addEventListener('change', function() {
+        document.getElementById('input4').disabled = true;
+    });
+    document.getElementById('inlineRadio2').addEventListener('change', function() {
+        document.getElementById('input4').disabled = false;
+    });
+
+
+    // Code pour ouvrir le modal et charger le contenu
     document.getElementById('openModalButton').addEventListener('click', function() {
         $.ajax({
-            url: 'Reservation/formulaire.php', // Assurez-vous que cela renvoie seulement le code de la modal
+            url: './formulaire.php',
             success: function(response) {
-                document.body.insertAdjacentHTML('beforeend', response);
-                var modal = document.getElementById('exampleModal');
+                document.getElementById('modalContainer').innerHTML = response;
+                var modal = document.querySelector('#modalContainer .modal');
                 var closeButton = document.querySelector('.close-button');
 
                 modal.style.display = "block";
@@ -1214,12 +1266,45 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
             }
         });
     });
+
+
+
+    // Code pour gérer la soumission du formulaire de réservation
+    $(document).on('submit', '#reservationForm', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            url: './process_reservation.php', // Mettez à jour l'URL ici
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    window.location.href = response.redirect;
+                } else if (response.status === 'error') {
+                    console.error(response.message ||
+                        'Erreur lors de la vérification de la réservation.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur: ", xhr.responseText);
+                alert('Une erreur est survenue.');
+            }
+        });
+    });
+
+
+
+    // selectionne de la destination
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: 'Sélectionnez une destination',
+            allowClear: true
+        });
+    });
     </script>
 
 
-
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </body>
 
 </html>

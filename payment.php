@@ -53,11 +53,11 @@ session_start();
                 <div class="contenaire1">
                     <div class="fisrtName">
                         <label for="inputText">Prénom </label><br><br>
-                        <input type="text" name="prenom">
+                        <input type="text" name="prenom" required>
                     </div>
                     <div class="name">
                         <label for="inputText">Nom </label><br><br>
-                        <input type="text" name="nom">
+                        <input type="text" name="nom" required>
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@ session_start();
                 <div class="contenaire1">
                     <div class="fisrtName">
                         <label for="inputText">Email</label><br>
-                        <input type="text" name="email">
+                        <input type="text" name="email" required>
                     </div>
                     <div class="name">
                         <label for="inputText">Numéro téléphone (facultatif) </label><br>
@@ -96,7 +96,7 @@ session_start();
     <script>
     var stripe = Stripe(
         'pk_test_51Phsz9DwEke97it4yD8lj7SGiuTeL7yqscNb3S8ZMj8CvzGmOZ6V64Bqgk6uW6vpO7mF24SdHdf9lN6n07V9JV7v00p8mrRvpS'
-        );
+    );
 
     var checkoutButton = document.getElementById('checkout-button');
 

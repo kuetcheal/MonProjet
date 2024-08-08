@@ -81,12 +81,17 @@ session_start();
 
 try {
     $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-    if (isset($_POST['input1']) && isset($_POST['input2']) && isset($_POST['input3']) && isset($_POST['input4'])) {
-        // echo("connexion reussie");
+    $Depart = '';
+    $Arrivee = '';
+    $date = '';
+    $dateRetour = '';
+    
+    if (isset($_POST['input1']) && isset($_POST['input2']) && isset($_POST['input3'])) {
         $Depart = $_POST['input1'];
         $Arrivee = $_POST['input2'];
         $date = $_POST['input3'];
-        $dateRetour = $_POST['input4'];
+        $dateRetour = $_POST['input4'] ?? ''; // Assigner à $dateRetour si disponible, sinon ''
+
         $_SESSION['depart'] = $Depart;
         $_SESSION['arrivee'] = $Arrivee;
         $_SESSION['date'] = $date;
@@ -123,6 +128,10 @@ $allerSimpleSelected = isset($_POST['inlineRadioOptions']) && $_POST['inlineRadi
 $allerRetourSelected = isset($_POST['inlineRadioOptions']) && $_POST['inlineRadioOptions'] === 'option2';
 
 if ($allerSimpleSelected) {
+
+   
+
+    
     // Afficher le titre pour les trajets aller
     echo "<h2>Aller: $date</h2>";
     $requette1 = "select * from voyage  WHERE voyage.villeDepart='$Depart' AND voyage.villeArrivee='$Arrivee' AND voyage.jourDepart='$date'";
@@ -224,7 +233,15 @@ if ($allerSimpleSelected) {
                 <i class='fa fa-beer' aria-hidden='true'></i>
             </div>
             <div class='form-group'>  
-                <button class='continuer-btn' data-id='$idvoyage' data-type='aller'>Continuer</button>
+               <button class='continuer-btn' 
+                        data-id='$idvoyage' 
+                        data-type='aller' 
+                        data-price='$prixaller' 
+                        data-depart='$depart' 
+                        data-arrive='$arrive' 
+                        data-time='$heure'>
+                    Continuer
+                </button>
             </div>
         </div>
        </hr>
@@ -246,9 +263,9 @@ if ($allerSimpleSelected) {
             $prixretour = $donne['prixBillet'];
             $busretour = $donne['typebus'];
             $idvoyageretour = $donne['idVoyageRetour'];
-            if (!$queryRetour) {
-                echo "Erreur lors de l'exécution de la requête aller : ".$bdd->errorInfo()[2];
-            } else {
+            if ($date == $dateRetour && $heure3 <= $heure2) {
+                echo "<div class='error-message'>Erreur: L'heure d'arrivée du trajet retour ($heure3) ne peut pas être avant ou égale à l'heure de départ ($heure2) du trajet aller.</div>";
+            }  else {
                 echo "
       <div id='conteneur2'>
         <div class='bloc1'>
@@ -279,7 +296,15 @@ if ($allerSimpleSelected) {
                 <i class='fa fa-beer' aria-hidden='true'></i>
             </div>
             <div class='form-group'>     
-                 <button class='continuer-btn' data-id='$idvoyageretour' data-type='retour'>Continuer</button>                            
+                <button class='continuer-btn' 
+                            data-id='$idvoyageretour' 
+                            data-type='retour' 
+                            data-price='$prixretour' 
+                            data-depart='$depart1' 
+                            data-arrive='$arrive2' 
+                            data-time='$heure3'>
+                        Continuer
+                    </button>                            
             </div>
         </div>
       </div>
@@ -294,58 +319,6 @@ if ($allerSimpleSelected) {
 }
 ?>
 
-    <!-- Conteneur pour la popup -->
-    <div id="popup" class="popup">
-        <h2>Détails du Trajet</h2>
-        <span class="popup-close" onclick="document.getElementById('popup').style.display='none';">Fermer</span>
-        <p><strong>Prix Aller:</strong> <span id="popup-price-aller"></span></p>
-        <p><strong>Départ Aller:</strong> <span id="popup-depart-aller"></span></p>
-        <p><strong>Arrivée Aller:</strong> <span id="popup-arrive-aller"></span></p>
-        <p><strong>Escale(s) Aller:</strong> <span id="popup-escales-aller">Loum, Penja, Edea</span></p>
-        <hr>
-        <p><strong>Prix Retour:</strong> <span id="popup-price-retour"></span></p>
-        <p><strong>Départ Retour:</strong> <span id="popup-depart-retour"></span></p>
-        <p><strong>Arrivée Retour:</strong> <span id="popup-arrive-retour"></span></p>
-        <p><strong>Escale(s) Retour:</strong> <span id="popup-escales-retour">Loum, Penja, Edea</span></p>
-        <hr>
-        <p><strong>Total à payer:</strong> <span id="popup-total"></span></p>
-        <button id="popup-continue" class="popup-continue">Continuer</button>
-    </div>
-
-    <script>
-    let priceAller = 0;
-    let priceRetour = 0;
-
-    document.querySelectorAll('.continuer-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const type = this.getAttribute('data-type');
-            const id = this.getAttribute('data-id');
-            fetch(`getTrajetDetails.php?id=${id}&type=${type}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (type === 'aller') {
-                        priceAller = data.prix;
-                        document.getElementById('popup-price-aller').innerText = data.prix;
-                        document.getElementById('popup-depart-aller').innerText = data.villeDepart;
-                        document.getElementById('popup-arrive-aller').innerText = data.villeArrivee;
-                    } else {
-                        priceRetour = data.prix;
-                        document.getElementById('popup-price-retour').innerText = data.prix;
-                        document.getElementById('popup-depart-retour').innerText = data.villeDepart;
-                        document.getElementById('popup-arrive-retour').innerText = data
-                            .villeArrivee;
-                    }
-                    document.getElementById('popup-total').innerText = priceAller + priceRetour +
-                        ' FCFA';
-                    document.getElementById('popup').style.display = 'block';
-                });
-        });
-    });
-
-    document.getElementById('popup-continue').addEventListener('click', function() {
-        window.location.href = 'payment.php';
-    });
-    </script>
 
     <style>
     .ligne-horizontale {
@@ -403,21 +376,68 @@ if ($allerSimpleSelected) {
         text-decoration: none;
         cursor: pointer;
     }
+
+    .selected-trip {
+        border: 2px solid green;
+    }
     </style>
 
 
     <script>
-    // function showPopup(depart, arrivee, prix) {
-    //     document.getElementById('popupDepart').textContent = depart;
-    //     document.getElementById('popupArrivee').textContent = arrivee;
-    //     document.getElementById('popupPrix').textContent = prix;
-    //     document.getElementById('popup').style.display = 'block';
-    // }
+    document.addEventListener('DOMContentLoaded', function() {
+        let selectedTrips = {
+            aller: null,
+            retour: null
+        };
 
-    // function closePopup() {
-    //     document.getElementById('popup').style.display = 'none';
-    // }
+        document.querySelectorAll('.continuer-btn').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                const tripType = this.getAttribute('data-type');
+                const tripId = this.closest('#conteneur2').id;
+                const tripPrice = this.getAttribute('data-price');
+                const tripDepart = this.getAttribute('data-depart');
+                const tripArrive = this.getAttribute('data-arrive');
+                const tripTime = this.getAttribute('data-time');
+
+                // Désélectionne le précédent trajet de ce type (aller ou retour)
+                if (selectedTrips[tripType]) {
+                    document.getElementById(selectedTrips[tripType].id).classList.remove(
+                        'selected-trip');
+                }
+
+                // Sélectionne le nouveau trajet
+                selectedTrips[tripType] = {
+                    id: tripId,
+                    price: tripPrice,
+                    depart: tripDepart,
+                    arrive: tripArrive,
+                    time: tripTime
+                };
+                this.closest('#conteneur2').classList.add('selected-trip');
+
+                // Vérifie si les deux trajets (aller et retour) sont sélectionnés
+                if (selectedTrips.aller && selectedTrips.retour) {
+                    // Redirige vers la page recap.php avec les informations
+                    const params = new URLSearchParams({
+                        priceAller: selectedTrips.aller.price,
+                        priceRetour: selectedTrips.retour.price,
+                        departAller: selectedTrips.aller.depart,
+                        arriveAller: selectedTrips.aller.arrive,
+                        timeAller: selectedTrips.aller.time,
+                        departRetour: selectedTrips.retour.depart,
+                        arriveRetour: selectedTrips.retour.arrive,
+                        timeRetour: selectedTrips.retour.time
+                    });
+
+                    window.location.href = 'recap.php?' + params.toString();
+                }
+            });
+        });
+    });
     </script>
+
 </body>
 
 </html>

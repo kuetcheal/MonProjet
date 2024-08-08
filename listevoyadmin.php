@@ -239,28 +239,8 @@ Voyage supprimé avec succès.
         modal.style.display = "none";
     }
     </script>
-
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
 </html>
-
-
-
-<!-- 
-<form method='post' action=''>
-            <input type='hidden' name='id_voyage' value='$idvoyage'>
-            <button type='submit' style='background-color: green; margin-right: 5px;'>Modifier</button>
-            <button type='submit'  name='delete_voyage'  style='background-color: red;'>Supprimer</button>
-        </form> -->
-
-
-<!-- $id= $_POST['id_voyage']; -->
-
-
-<!-- <form method='post' action='supprimer.php'>
-            <input type='hidden' name='id_voyage' value='$idvoyage'> -->
-<!-- </form> -->

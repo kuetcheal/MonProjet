@@ -50,7 +50,7 @@ try {
         // Insertion dans la base de données
         $requete = 'INSERT INTO reservation (nom, prenom, telephone, email, idVoyage, Etat, Numero_reservation) VALUES (?, ?, ?, ?, ?, ?, ?)';
         $stmt = $bdd->prepare($requete);
-        $stmt->execute([$nom, $prenom, $email, $telephone, $idVoyage, $etat, $reservationNumber]);
+        $stmt->execute([$nom, $prenom, $telephone, $email, $idVoyage, $etat, $reservationNumber]);
 
         // Générer la facture PDF
         $pdfOutput = generateInvoice($nom, $prenom, $telephone, $email, $reservationNumber, $depart, $arrivee, $date, $idVoyage, $prix);
