@@ -97,49 +97,111 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'], $_POST['email'
     </header>
 
     <div class="container">
-        <h3>un code de confirmation a été envoyé dans votre email,veuillez le saisir dans ce champ. </h3>
+        <h3>Un code de confirmation a été envoyé dans votre email, veuillez le saisir dans ce champ.</h3>
         <form method="post" action="#">
-            <input type="text" name='verification'><br><br>
-            <button type="submit" name='valider'>Valider</button>
+            <input type="text" name="verification"><br><br>
+            <button type="submit" name="valider">Valider</button>
+            <button type="submit" name="renvoyer">Renvoyer le code</button>
         </form>
     </div>
 
 
-    <?php
 
-if (isset($_POST['verification'])) {
+    <?php
+session_start();
+
+// Fonction pour générer un code de confirmation aléatoire
+function genererCodeVerification() {
+    return rand(100000, 999999); // Génère un code à 6 chiffres
+}
+
+// Vérifier si l'utilisateur a cliqué sur le bouton "Renvoyer"
+if (isset($_POST['renvoyer'])) {
+    // Générer un nouveau code de confirmation
+    $nouveauCode = genererCodeVerification();
+    $_SESSION['code'] = $nouveauCode;
+
+    // Envoyer le nouveau code à l'email de l'utilisateur
+    $to = $_SESSION['email'];
+    $subject = "Votre nouveau code de confirmation";
+    $message = "Votre nouveau code de confirmation est : $nouveauCode";
+    $headers = "From: noreply@votresite.com"; // Modifier l'adresse email de l'expéditeur
+
+    if (mail($to, $subject, $message, $headers)) {
+        echo "Un nouveau code de confirmation a été envoyé à votre adresse email.";
+    } else {
+        echo "Erreur lors de l'envoi du nouveau code.";
+    }
+}
+
+// Vérifier si l'utilisateur a cliqué sur le bouton "Valider"
+if (isset($_POST['valider'])) {
     if ($_SESSION['code'] == $_POST['verification']) {
         try {
+            // Connexion à la base de données locale
             $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
             $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $nom = $_SESSION['nom'];
-            $motpasse = $_SESSION['password'];
+            $prenom = $_SESSION['prenom'];
             $email = $_SESSION['email'];
-            $veri = $_SESSION['code'];
+            $motpasse = $_SESSION['password'];
 
+            // Insérer les informations dans votre base de données locale
             $requette = $bdd->prepare('INSERT INTO user (user_name, user_password, user_mail, verification) VALUES (:nom, :motpasse, :email, :veri)');
             $requette->bindParam(':nom', $nom);
             $requette->bindParam(':motpasse', $motpasse);
             $requette->bindParam(':email', $email);
-            $requette->bindParam(':veri', $veri);
+            $requette->bindParam(':veri', $_SESSION['code']);
 
             if ($requette->execute()) {
-                // Redirection vers Accueil.php en cas de succès
-                header('Location: Accueil.php');
-                exit;
+                // Créer un tiers dans Dolibarr via l'API REST
+                $dolibarr_url = 'http://localhost:100/dolibarr/api/index.php/thirdparties';
+                $api_key = '809d8187e33a2186b77a7b780ee5fe8219554e79';
+                
+                // Préparer les données du tiers à envoyer à l'API
+                $data = array(
+                    'name' => $nom . ' ' . $prenom,
+                    'address' => '', // Ajoutez une adresse si disponible
+                    'zip' => '', // Ajoutez un code postal si disponible
+                    'town' => '', // Ajoutez une ville si disponible
+                    'email' => $email,
+                    'client' => 1 // 1 si c'est un client, 0 sinon
+                );
+
+                $options = array(
+                    'http' => array(
+                        'header'  => "Content-type: application/json\r\n" .
+                                     "DOLAPIKEY: $api_key\r\n",
+                        'method'  => 'POST',
+                        'content' => json_encode($data)
+                    )
+                );
+
+                $context  = stream_context_create($options);
+                $result = file_get_contents($dolibarr_url, false, $context);
+
+                if ($result === FALSE) {
+                    echo 'Erreur lors de la création du tiers dans Dolibarr.';
+                } else {
+                    // Redirection vers Accueil.php en cas de succès
+                    header('Location: Accueil.php');
+                    exit;
+                }
             } else {
-                // Message d'erreur si l'insertion échoue
                 echo 'Erreur lors de l\'insertion dans la base de données.';
             }
         } catch (PDOException $e) {
             echo 'Erreur : '.$e->getMessage();
         }
     } else {
-        echo 'Incompatibilité du code, veuillez insérer le bon code reçu';
+        echo 'Incompatibilité du code, veuillez insérer le bon code reçu.';
     }
 }
 ?>
+
+
+
 
 
     <style>

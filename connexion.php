@@ -44,21 +44,17 @@ session_start();
             <label for="password" style="color: white;">Mot de passe :</label>
             <input type="password" name="password" id="password" placeholder="1000jean" required><br>
             <button type="submit">Se connecter</button>
+            <p class="para">Oupps, un problème ??? <a href="forgetpassword.php">Mot de passe oublié</a>
+            </p>
             <p class="para">Si vous n'avez pas de compte, veuillez vous inscrire ici.<a
                     href="inscription.php">S'inscrire</a></p>
         </form>
     </div>
-    <div class="social-icons">
-        <ul>
-            <li class="liste">Rejoignez-nous sur:</li>
-            <li class="liste"><a href="#"><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i></a></li>
-            <li class="liste"><a href="#"><i class="fa fa-twitter fa-2x" aria-hidden="true"></i></a></li>
-            <li class="liste"><a href="#"><i class="fa fa-instagram fa-2x" aria-hidden="true"></i></a></li>
-            <li class="liste"><a href="#"><i class="fa fa-snapchat-ghost fa-2x" aria-hidden="true"></i></a></li>
-        </ul>
-    </div>
-    <hr id="ligne_bas">
 
+    <!-- <hr id="ligne_bas"> -->
+    <footer>
+        <p>&copy; 2024 EasyTravel. Tous droits réservés.</p>
+    </footer>
     <?php
     // Connexion à la base de données
     $host = 'localhost'; // nom d'hôte
@@ -285,6 +281,14 @@ $conn->close();
         text-align: center;
         color: red;
         font-size: 18px;
+    }
+
+    footer {
+        background-color: #6c757d;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+        width: 100%;
     }
 
     .containere {

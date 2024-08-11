@@ -10,6 +10,14 @@ $arriveRetour = $_GET['arriveRetour'] ?? 'N/A';
 $timeRetour = $_GET['timeRetour'] ?? 'N/A';
 
 $prixTotal = $priceAller + $priceRetour;
+
+// Calculer 15% du prix total
+$montant15 = $prixTotal * 0.15;
+
+// Ajouter 15% au prix total si le bouton est cliqué
+if (isset($_POST['ajouter15'])) {
+    $prixTotal += $montant15;
+}
 ?>
 
 <!DOCTYPE html>
@@ -54,7 +62,8 @@ $prixTotal = $priceAller + $priceRetour;
         margin: 5px 0;
     }
 
-    h3 {
+    h3,
+    h4 {
         color: #28a745;
     }
 
@@ -64,6 +73,7 @@ $prixTotal = $priceAller + $priceRetour;
         margin-top: 20px;
     }
 
+    .add-button,
     .continue-button {
         display: block;
         width: 100%;
@@ -77,12 +87,14 @@ $prixTotal = $priceAller + $priceRetour;
         font-weight: bold;
         margin-top: 20px;
         transition: background-color 0.3s ease;
+        border: none;
+        cursor: pointer;
     }
 
+    .add-button:hover,
     .continue-button:hover {
         background-color: #0056b3;
     }
-
 
     p {
         font-weight: bold;
@@ -107,12 +119,21 @@ $prixTotal = $priceAller + $priceRetour;
             <li>Prix: <?= htmlspecialchars($priceRetour) ?> FCFA</li>
         </ul>
 
+        <!-- Montant calculé pour 15% -->
+        <h5>Réserver avec la possibilité d'annuler ou de modifier pour seulement: <?= htmlspecialchars($montant15) ?>
+            FCFA</h5>
+
+        <!-- Formulaire pour ajouter 15% -->
+        <form method="post">
+            <button type="submit" name="ajouter15" class="add-button">Ajouter</button>
+        </form>
+
+        <!-- Prix total avec ou sans les 15% ajoutés -->
         <h3 class="total-price">Prix total: <?= htmlspecialchars($prixTotal) ?> FCFA</h3>
 
         <!-- Bouton pour continuer vers la page de paiement -->
         <a href="payment-double.php?totalPrice=<?= htmlspecialchars($prixTotal) ?>" class="continue-button">Continuer
-            vers le
-            paiement</a>
+            vers le paiement</a>
     </div>
 </body>
 

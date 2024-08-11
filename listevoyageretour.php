@@ -146,7 +146,7 @@ if ($allerSimpleSelected) {
         $idvoyage = $donne['idVoyage'];
 
         echo "
-        <div id='conteneur2'>       
+        <div id='conteneur'>       
             <div class='bloc1'>
               <div class='depart'>$heure</div>
                <hr class='ligne-horizontale'>
@@ -205,7 +205,7 @@ if ($allerSimpleSelected) {
             echo "Erreur lors de l'exécution de la requête aller : ".$bdd->errorInfo()[2];
         } else {
             echo " 
-      <div id='conteneur2'>
+      <div id='conteneur2_$idvoyage' class='conteneur2'>
             <div class='bloc1'>
               <div class='depart'>$heure</div>
                <hr class='ligne-horizontale'>
@@ -267,7 +267,7 @@ if ($allerSimpleSelected) {
                 echo "<div class='error-message'>Erreur: L'heure d'arrivée du trajet retour ($heure3) ne peut pas être avant ou égale à l'heure de départ ($heure2) du trajet aller.</div>";
             }  else {
                 echo "
-      <div id='conteneur2'>
+      <div id='conteneur3_$idvoyageretour' class='conteneur3'>
         <div class='bloc1'>
             <div class='depart'>$heure3</div>
             <hr class='ligne-horizontale'>
@@ -295,17 +295,17 @@ if ($allerSimpleSelected) {
                 <i class='fa fa-television' aria-hidden='true'></i>
                 <i class='fa fa-beer' aria-hidden='true'></i>
             </div>
-            <div class='form-group'>     
-                <button class='continuer-btn' 
-                            data-id='$idvoyageretour' 
-                            data-type='retour' 
-                            data-price='$prixretour' 
-                            data-depart='$depart1' 
-                            data-arrive='$arrive2' 
-                            data-time='$heure3'>
-                        Continuer
-                    </button>                            
-            </div>
+           <div class='form-group'>
+                        <button class='continuer-btn'
+                                data-id='$idvoyageretour'
+                                data-type='retour'
+                                data-price='$prixretour'
+                                data-depart='$depart1'
+                                data-arrive='$arrive2'
+                                data-time='$heure3'>
+                            Continuer
+                        </button>
+             </div>
         </div>
       </div>
          "
@@ -327,7 +327,29 @@ if ($allerSimpleSelected) {
         margin: 3px auto;
     }
 
-    #conteneur2 {
+    .conteneur2 {
+        background-color: #ffffff;
+        padding: 16px;
+        margin-bottom: 30px;
+        border: none;
+        width: 810px;
+        margin-left: 250px;
+        height: 130px;
+        box-shadow: 0 1px 3px rgba(0.2, 0, 0.3, 0.3);
+    }
+
+    .conteneur {
+        background-color: #ffffff;
+        padding: 16px;
+        margin-bottom: 30px;
+        border: none;
+        width: 810px;
+        margin-left: 250px;
+        height: 130px;
+        box-shadow: 0 1px 3px rgba(0.2, 0, 0.3, 0.3);
+    }
+
+    .conteneur3 {
         background-color: #ffffff;
         padding: 16px;
         margin-bottom: 30px;
@@ -378,7 +400,15 @@ if ($allerSimpleSelected) {
     }
 
     .selected-trip {
-        border: 2px solid green;
+        border: 4px solid #90EE90;
+        /* Couleur vert clair */
+        padding: 10px;
+        /* box-shadow: 0 0 10px rgba(144, 238, 144, 0.5); */
+        /* Optionnel : ajoute une ombre légère */
+        background-color: #f0fff0;
+        /* Optionnel : un fond légèrement vert clair */
+        border-radius: 5px;
+        /* Optionnel : pour arrondir les angles */
     }
     </style>
 
@@ -395,7 +425,10 @@ if ($allerSimpleSelected) {
                 event.preventDefault();
 
                 const tripType = this.getAttribute('data-type');
-                const tripId = this.closest('#conteneur2').id;
+                const containerSelector = tripType === 'aller' ? 'div[id^="conteneur2_"]' :
+                    'div[id^="conteneur3_"]';
+                const tripContainer = this.closest(containerSelector);
+                const tripId = tripContainer.id;
                 const tripPrice = this.getAttribute('data-price');
                 const tripDepart = this.getAttribute('data-depart');
                 const tripArrive = this.getAttribute('data-arrive');
@@ -415,7 +448,7 @@ if ($allerSimpleSelected) {
                     arrive: tripArrive,
                     time: tripTime
                 };
-                this.closest('#conteneur2').classList.add('selected-trip');
+                tripContainer.classList.add('selected-trip');
 
                 // Vérifie si les deux trajets (aller et retour) sont sélectionnés
                 if (selectedTrips.aller && selectedTrips.retour) {

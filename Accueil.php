@@ -35,6 +35,8 @@ if (isset($_POST['deconnect_account'])) {
 </head>
 
 <body>
+    <?php include_once 'Cookies/cookies.php'; ?>
+
 
     <!-- PARTIE HEADER -->
     <header class="container-fluid">
@@ -47,7 +49,7 @@ if (isset($_POST['deconnect_account'])) {
                     <li class="items"> <a href="#">Acceuil</a></li>
                     <li class="items"><a href="ajoutarticle.php">Reservations</a></li>
                     <li class="items"><a href="ajoutclient.php">Services</a></li>
-                    <li class="items"><a href="achatarticle.php">Nos contacts</a></li>
+                    <li class="items"><a href="Contact/page-contact.php">Nos contacts</a></li>
                     <li class="items"><a href="inscription.php">inscription</a></li>
                     <li class="items"><a href="connexion.php">connexion</a></li>
                 </ul>
@@ -67,125 +69,105 @@ if (isset($_POST['deconnect_account'])) {
         </nav>
     </header>
 
-    <!-- AFFICHAGE DE LA POPUP DU SETTINGS  -->
+    <!-- Popup de settings -->
     <div id="myModal" class="modal1" style="display: none;">
         <div class="modal-content1">
-            <span class="close1" onclick="closeModal('myModal')" style="position: fixed; right: 365px; top: 12px;"><i
-                    class=" fa
-                fa-arrow-left" aria-hidden="true">
-                </i></span>
-            <h2>Mon compte utilisateur</h2> <br>
-            <hr style=" color: green;"><br><br>
+            <span class="close1" onclick="closeModal('myModal')" style="position: fixed; right: 373px; top: 16px;">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            </span>
+            <h2 style="margin-left: 60px;">Mon compte utilisateur</h2><br>
+            <hr style="color: green;"><br><br>
             <div class="profiler">
                 <div>
-                    <img src=" pictures/OIP.jpg" alt="image user" id="profil-pic" style=" position: fixed; top: 75px" />
-
+                    <img src="pictures/OIP.jpg" alt="image user" id="profil-pic" style="position: fixed; top: 75px" />
                     <input type="file" accept="image/png, image/jpeg, image/jpg" id="input-file" style="display: none">
                     <label for="input-file"
-                        style=" position: fixed; top: 164px; height: 20px; width:110px; background-color: green; color: white; font-size: 12px; padding 8px:">Download
+                        style="position: fixed; top: 164px; height: 20px; width:110px; background-color: green; color: white; font-size: 12px; padding 8px:">Download
                         image</label>
                 </div>
-
-                <div class="profil-infos" style=" margin-left: 145px; ">
+                <div class="profil-infos" style="margin-left: 145px;">
                     <p>Alex KUETCHE</p>
-                    <P style=" color: green; ">alexkuetche@gmail.com</P>
+                    <p style="color: green;">alexkuetche@gmail.com</p>
                 </div>
-            </div> <br><br>
-            <hr style=" color: green;"><br><br>
-            <h2 style=" color: green; text-align: center; "> Mes connexions</h2><br>
-            <p style=" font-size: 16px; ">Veuilez accéder au contenu settings de l'application </p><br>
-            <div style=" display: flex; align-items: center; flex-direction: column; gap: 23px; ">
-                <button type=" submit" class="btn-supprimer" style=" width: 350px;" onclick="openModal('myModal1')">
-                    Supprimer</button>
-                <button type="submit" class="btn-deconnecter" style=" width: 350px;" onclick="openModal('myModal2')">Se
+            </div><br><br>
+            <hr style="color: green;"><br><br>
+            <h2 style="color: green; text-align: center;">Mes connexions</h2><br>
+            <p style="font-size: 16px;">Veuillez accéder au contenu settings de l'application</p><br>
+            <div style="display: flex; align-items: center; flex-direction: column; gap: 23px;">
+                <button type="submit" class="btn-supprimer" style="width: 350px;"
+                    onclick="openModal('myModal1')">Supprimer</button>
+                <button type="submit" class="btn-deconnecter" style="width: 350px;" onclick="openModal('myModal2')">Se
                     déconnecter</button>
-                <button type="submit" class="btn-modifier" style=" width: 350px;"
+                <button type="submit" class="btn-modifier" style="width: 350px;"
                     onclick="openModal('myModal3')">Modifier</button>
             </div><br><br>
             <div>
-                <img src="logo général.jpg" alt="logo site" style=" height: 60px; width: 110px; margin-left: 140px;" />
+                <img src="logo général.jpg" alt="logo site" style="height: 60px; width: 110px; margin-left: 140px;" />
             </div>
         </div>
     </div>
 
-    <!-- AFFICHAGE DU POPUP DE MESSAGE DE SUPPRESSION -->
+    <!-- Popup de suppression -->
     <div id="myModal1" class="modal1">
         <div class="modal-content1">
-            <h2 style=" text-align: center;">Réglages</h2>
-            <span class="close1" onclick="closeModal('myModal1')" style="position: fixed; right: 385px; top: 12px;"><i
-                    class=" fa
-                fa-arrow-left" aria-hidden="true">
-                </i></span><br>
-            <h2>Suppression du compte</h2> <br><br>
-            <hr style=" color: green;"><br><br>
-            <div class="profil" style=" display: flex; ">
-                <div class="outils"><i class="fa fa-user-circle-o fa-2x" aria-hidden="true"
-                        style=" color: rgb(128, 128, 128); font-size: 60px; position: fixed; right: 335px; "></i>
-                </div>
-                <div class="profil-infos" style=" margin-left: 80px; ">
+            <h2 style="text-align: center;">Réglages</h2>
+            <span class="close1" onclick="closeModal('myModal1')" style="position: fixed; right: 385px; top: 12px;">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            </span><br>
+            <h2>Suppression du compte</h2><br><br>
+            <hr style="color: green;"><br><br>
+            <div class="profil" style="display: flex;">
+                <img src="pictures/OIP.jpg" alt="image user" class="profil-pic-global"
+                    style="position: fixed; top: 148px; height: 60px; width: 60px; border-radius: 50%; object-fit: cover;" />
+                <div class="profil-infos" style="margin-left: 80px;">
                     <p>Alex KUETCHE</p>
-                    <P style=" color: green; ">alexkuetche@gmail.com</P>
+                    <p style="color: green;">alexkuetche@gmail.com</p>
                 </div>
-            </div> <br><br>
-            <hr style=" color: green;"><br><br><br>
-            <p style=" text-align: center; ">Attention !!! cette action effacera définitivement votre compte
-                de
-                l'application.
-                êtes-vous sûr de vouloir supprimer votre compte ? </p> <br><br><br>
+            </div><br><br>
+            <hr style="color: green;"><br><br><br>
+            <p style="text-align: center;">Attention !!! cette action effacera définitivement votre compte de
+                l'application. Êtes-vous sûr de vouloir supprimer votre compte ?</p><br><br><br>
             <form method="post" action="">
                 <button name="delete_account" class="btn-supprimer"
-                    style=" background-color: green; color: white; border: none; border-radius: 5px;
-       border-color: 2px solid green; font-size: 20px; height: 30px; width: 120px; margin-left: 135px;">Supprimer</button>
-                <br><br><br><br><br><br>
+                    style="background-color: green; color: white; border: none; border-radius: 5px; border-color: 2px solid green; font-size: 20px; height: 30px; width: 120px; margin-left: 135px;">Supprimer</button><br><br><br><br><br><br>
                 <div>
                     <img src="logo général.jpg" alt="logo site"
-                        style=" height: 60px; width: 110px; margin-left: 140px;" />
+                        style="height: 60px; width: 110px; margin-left: 140px; margin-bottom: 40px" />
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- CODE PHP POUR IMPORTER LES IMAGES DEPUIS LA GALERIE -->
-    <?php
-
-?>
-
-
-    <!-- AFFICHAGE DU POPUP DE MESSAGE DE DECONNECTION -->
+    <!-- Popup de déconnexion -->
     <div id="myModal2" class="modal1">
         <div class="modal-content1">
-            <h2 style=" text-align: center;">Réglages</h2>
-            <span class="close1" onclick="closeModal('myModal2')" style="position: fixed; right: 385px; top: 12px;"><i
-                    class=" fa
-                fa-arrow-left" aria-hidden="true">
-                </i></span><br>
-            <h2>Deconnexion du compte</h2> <br><br>
-            <hr style=" color: green;"><br><br>
-            <div class="profil" style=" display: flex; ">
-                <div class="outils"><i class="fa fa-user-circle-o fa-2x" aria-hidden="true"
-                        style=" color: rgb(128, 128, 128); font-size: 60px; position: fixed; right: 335px; "></i>
-                </div>
-                <div class="profil-infos" style=" margin-left: 80px; ">
+            <h2 style="text-align: center;">Réglages</h2>
+            <span class="close1" onclick="closeModal('myModal2')" style="position: fixed; right: 385px; top: 12px;">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            </span><br>
+            <h2>Déconnexion du compte</h2><br><br>
+            <hr style="color: green;"><br><br>
+            <div class="profil" style="display: flex;">
+                <img src="pictures/OIP.jpg" alt="image user" class="profil-pic-global"
+                    style="position: fixed; top: 148px; height: 60px; width: 60px; border-radius: 50%; object-fit: cover;" />
+                <div class="profil-infos" style="margin-left: 80px;">
                     <p>Alex KUETCHE</p>
-                    <P style=" color: green; ">alexkuetche@gmail.com</P>
+                    <p style="color: green;">alexkuetche@gmail.com</p>
                 </div>
-            </div> <br><br>
-            <hr style=" color: green;"><br><br><br>
-            <p style=" text-align: center; ">Attention !!! cette action déconnectera votre compte de
-                l'application.
-                êtes-vous sûr de vouloir vous déconnecter votre compte ? </p> <br><br><br>
+            </div><br><br>
+            <hr style="color: green;"><br><br><br>
+            <p style="text-align: center;">Attention !!! cette action déconnectera votre compte de l'application.
+                Êtes-vous sûr de vouloir vous déconnecter votre compte ?</p><br><br><br>
             <form method="post" action="">
                 <button name="delete_account" class="btn-deconnecter" style="margin-left: 105px;">Se
-                    déconnecter</button>
-                <br><br><br><br>
+                    déconnecter</button><br><br><br><br>
                 <div>
-                    <img src=" logo général.jpg" alt="logo site"
-                        style=" height: 60px; width: 110px; margin-left: 140px;" />
+                    <img src="logo général.jpg" alt="logo site"
+                        style="height: 60px; width: 110px; margin-left: 140px;" />
                 </div>
             </form>
         </div>
     </div>
-
 
     <!-- AFFICHAGE DU POPUP DE MESSAGE DE MODIFICATION -->
 
@@ -327,37 +309,12 @@ if (isset($_POST['delete_account'])) {
     </div>
 
     <div id="modalContainer"></div>
-    <hr>
 
-    <div class="map-box">
-        <div class="map-content">
-            <div class="map-image">
-                <img src="pictures/carte.jpg" alt="Carte du Cameroun" id="carte">
-                <div class="city-marker douala">
-                    <span>Douala</span>
-                </div>
-                <div class="city-marker yaounde">
-                    <span>Yaoundé</span>
-                </div>
-                <div class="city-marker bamenda">
-                    <span>Bamenda</span>
-                </div>
-            </div>
-            <br>
-            <hr><br>
-            <div class="map-infos">
-                <a
-                    href="https://www.google.com/maps/d/viewer?mid=1EYecAk1HDlJM2-XAEl5KQzJgsbQ&hl=en&ll=3.871870776159668%2C11.490017499999983&z=12">
-                    <h2 class="indication">Découvrez toutes nos destinations</h2>
-                </a>
-                <p>Notre agence possède plus de 30 destinations dans toutes les grandes villes en allant du sud
-                    vers
-                    le
-                    nord en
-                    passant par l'Est et l'ouest du pays.</p>
-            </div>
-        </div>
-    </div>
+    <h1 style="color: green; text-align: center;">Profitez de toutes nos destinations pour vos besoins de deplacement
+    </h1><br>
+    <!-- PARIE MAP -->
+    <?php include 'map.php'; ?>
+
     <br>
     <hr><br>
     <div class="rectangle">
@@ -417,94 +374,27 @@ if (isset($_POST['delete_account'])) {
             un
             bilan CO2
             exemplaire. « Roulez vert » est notre devise !</p>
-
-
     </div>
 
 
     <div class="chat">
-        <i class="fa fa-comments fa-5x" onclick="openModal('myModal5')"
-            style="color: green; position: fixed; top: 566px; right: 18px; cursor: pointer; font-size: 61px;"></i>
+        <i class="fa fa-comments fa-5x" id="openModalMessage"
+            style=" color: green; position: fixed; top: 566px; right: 18px; cursor: pointer; font-size: 61px;"></i>
     </div>
+    <div id="modalMessage"></div>
 
-    <form action="" method="POST">
-        <div class=" modal1" id="myModal5" style="display: none;">
-            <div class="contente">
-                <div class="modal-header">
-                    <h2 class="modal-title">Contactez l'agence EasyTravel</h2>
-                    <span class="close1" onclick="closeModal('myModal5')"
-                        style="position: fixed; right: 365px; top: 77px;">
-                        <i class="fa fa-times" aria-hidden="true" style="font-size: 25px"></i></span>
-                </div>
-                <br>
-                <span>
-                    <hr>
-                </span> <br>
-                <div class="modal-body">
-                    <div class="mbx">
-                        <label for="">Votre nom</label>
-                        <input type="text" class="form-control" placeholder="Alex KUETCHE" name="name">
-                    </div>
-                    <div class="mbx">
-                        <label for="">Numéro téléphone</label>
-                        <input type="text" class="form-control" placeholder="655196254" name="telephone">
-                    </div>
-                    <div class=" mbx">
-                        <label>Email address</label>
-                        <input type="email" class="form-control" id="exampleFormControlInput1" name="gmail" placeholder="
-                            name@example.com">
-                    </div>
-                    <div class="mbz">
-                        <label for="exampleFormControlTextarea1" class="form-label">Rediger votre
-                            message</label>
-                        <textarea class=" form-control" id="exampleFormControlTextarea1" rows="3"
-                            name="message"></textarea>
-                    </div>
-                </div>
-                <br>
-                <span>
-                    <hr>
-                </span> <br>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" onclick="openModal('myModal6')"
-                        style="background-color: green; border-color: green;">Envoyer</button>
-                </div>
-            </div>
 
-        </div>
-    </form>
-
-    <div id="myModal6" class="modale" style="display: none;">
+    <!-- <div id="myModal6" class="modale" style="display: none;">
         <div class="modale-contente">
-
             <h2>Insertion réussie</h2> <br>
             <p>Votre message a été inséré avec succès.</p> <br>
             <button onclick="closeModal('myModal6')">Fermer</button>
         </div>
-    </div>';
+    </div>'; -->
 
 
-    <!-- Modal sera inséré ici -->
-    <!-- <div id="modalContainer"></div> -->
-    <?php
- $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
 
-if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) && isset($_POST['telephone'])) {
-    try {
-        $a = $_POST['name'];
-        $d = $_POST['telephone'];
-        $b = $_POST['gmail'];
-        // $_SESSION['gmail']=$b;
-        $c = $_POST['message'];
-        // $_SESSION['message']=$c;
 
-        $requete = "insert into admins (nom, email, message, telephone) values ('$a', '$b', '$c', '$d')";
-        $bdd->exec($requete);
-    } catch (Exception $e) {
-        echo 'echec de connexion';
-    }
-}
-?>
 
     <!-- PARIE FOOTER -->
     <?php include 'footer.php'; ?>
@@ -1004,19 +894,6 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
         top: 50px;
     }
 
-
-    /* MAIN */
-    /* .container {
-        padding: 20px;
-        background-image: linear-gradient(rgba(39, 39, 39, 0.6), rgba(0, 0, 0, 0.6)), url("https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg");
-        background-size: cover;
-        height: 500px;
-        color: aliceblue;
-        flex-grow: 1;
-        width: 100%;
-        background-repeat: no-repeat;
-    } */
-
     .container {
         padding: 20px;
         background-size: cover;
@@ -1175,8 +1052,8 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
     let modalId1 = document.getElementById("myModal1");
     let modalId2 = document.getElementById("myModal2");
     let modalId3 = document.getElementById("myModal3");
-    let modalId5 = document.getElementById("myModal5");
-    let modalId6 = document.getElementById("myModal6");
+    // let modalId5 = document.getElementById("myModal5");
+    // let modalId6 = document.getElementById("myModal6");
 
 
     function openModal(arg) {
@@ -1188,20 +1065,37 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
         document.getElementById(arg).style.display = "none";
     }
 
+
+
+
+    // Vérifier s'il y a une image dans le localStorage
     let profilPic = document.getElementById("profil-pic");
     let profilInput = document.getElementById("input-file");
+    const profilPics = document.querySelectorAll(".profil-pic-global");
+    const profilOutils = document.getElementById("profil");
 
 
     // Vérifier s'il y a une image dans le localStorage
     const savedImage = localStorage.getItem("savedImage");
     if (savedImage) {
-        profilPic.src = savedImage; // Si une image est enregistrée, l'afficher
+        profilPic.src = savedImage; // Affiche l'image dans la popup de settings
+        profilPics.forEach(img => img.src = savedImage); // Affiche l'image dans les autres popups
+        profilOutils.src = savedImage; // Affiche l'image dans la section "outils"
     }
-
+    // Gérer le changement d'image
     profilInput.onchange = function() {
-        profilPic.src = URL.createObjectURL(profilInput.files[0]);
+        const newImageUrl = URL.createObjectURL(profilInput.files[0]);
+        profilPic.src = newImageUrl;
 
-        localStorage.setItem("savedImage", profilPic.src);
+
+        // Mettre à jour toutes les images dans les popups
+        profilPics.forEach(img => img.src = newImageUrl);
+
+        // Mettre à jour l'image dans la section "outils"
+        profilOutils.src = newImageUrl;
+
+        // Stocker l'image dans le localStorage
+        localStorage.setItem("savedImage", newImageUrl);
     }
 
     //fontion d 'affichage de aller-retour
@@ -1293,6 +1187,61 @@ if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) 
         });
     });
 
+
+    // Code pour ouvrir le modal d'envoi de message
+    document.getElementById('openModalMessage').addEventListener('click', function() {
+        $.ajax({
+            url: './Contact/contact.php',
+            success: function(response) {
+                document.getElementById('modalMessage').innerHTML = response;
+                var modal = document.querySelector('#modalMessage .modalitisation');
+                var closeButton = document.querySelector('.close1');
+
+                modal.style.display = "block";
+
+                closeButton.onclick = function() {
+                    modal.style.display = "none";
+                    modal.parentNode.removeChild(modal);
+                }
+
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                        modal.parentNode.removeChild(modal);
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error loading modal: ", status, error);
+            }
+        });
+    });
+
+    // Code pour gérer la soumission du formulaire de message
+    $(document).on('submit', '#contactForm', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            url: './Contact/contact-ajax.php',
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function(response) {
+                console.log(response);
+                if (response.status === 'success') {
+                    window.location.href = response.redirect;
+                } else if (response.status === 'error') {
+                    console.error(response.message ||
+                        'Erreur lors de la soumission du formulaire.');
+                    alert(response.message || 'Erreur lors de la soumission du formulaire.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur: ", xhr.responseText);
+                alert('Une erreur est survenue.');
+            }
+        });
+    });
 
 
     // selectionne de la destination

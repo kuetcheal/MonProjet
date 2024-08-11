@@ -52,7 +52,9 @@
         </form>
     </div>
 
-
+    <footer>
+        <p>&copy; 2024 EasyTravel. Tous droits réservés.</p>
+    </footer>
 
     <style>
     body {
@@ -154,6 +156,14 @@
 
         height: 60px;
         width: 100px;
+    }
+
+    footer {
+        background-color: #6c757d;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+        width: 100%;
     }
 
     .nav-bar {

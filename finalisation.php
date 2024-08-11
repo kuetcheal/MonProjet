@@ -107,8 +107,55 @@ try {
             echo 'Failed to send email: '.$response->getData()['ErrorMessage'];
         }
 
-        echo "<meta http-equiv='refresh' content='10;url=Accueil.php'>";
-        exit;
+      // Générer une facture dans Dolibarr via l'API REST
+      $dolibarr_url = 'http://localhost:100/dolibarr/api/index.php/invoices';
+      $api_key = '809d8187e33a2186b77a7b780ee5fe8219554e79';
+      
+      // Préparer les données de la facture à envoyer à l'API
+      $data = array(
+          'socid' => 1, // ID du tiers dans Dolibarr
+          'lines' => array(
+              array(
+                  'desc' => 'Réservation pour le voyage de ' . $depart . ' à ' . $arrivee,
+                  'subprice' => $prix,
+                  'qty' => 1,
+                  'tva_tx' => 0,
+                  'total_ht' => $prix,
+                  'total_tva' => 0,
+                  'total_ttc' => $prix,
+              ),
+          ),
+          'date' => time(),
+          'cond_reglement_id' => 1, // ID de la condition de règlement (par ex., 1 pour paiement comptant)
+          'mode_reglement_id' => 1, // ID du mode de règlement (par ex., 1 pour chèque)
+          'fk_account' => 1, // ID du compte bancaire
+          'note_private' => 'Facture générée automatiquement après réservation',
+      );
+
+      $options = array(
+          'http' => array(
+              'header'  => "Content-type: application/json\r\n" .
+                           "DOLAPIKEY: $api_key\r\n",
+              'method'  => 'POST',
+              'content' => json_encode($data)
+          )
+      );
+
+      $result = file_get_contents($dolibarr_url, false, $context);
+      $responseData = json_decode($result, true);
+      
+      if ($result === FALSE || !empty($responseData['error'])) {
+          echo 'Erreur lors de la création de la facture dans Dolibarr.';
+          echo '<pre>';
+          print_r($responseData); // Affichez la réponse pour comprendre le problème
+          echo '</pre>';
+      } else {
+          echo 'Facture créée avec succès dans Dolibarr.';
+      }
+
+      echo "<meta http-equiv='refresh' content='10;url=Accueil.php'>";
+      exit;
+  
     }
 } catch (Exception $e) {
     echo 'Échec de connexion : '.$e->getMessage();
