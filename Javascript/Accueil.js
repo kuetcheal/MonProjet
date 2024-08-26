@@ -3,8 +3,7 @@
  let modalId1 = document.getElementById("myModal1");
  let modalId2 = document.getElementById("myModal2");
  let modalId3 = document.getElementById("myModal3");
- let modalId5 = document.getElementById("myModal5");
- let modalId6 = document.getElementById("myModal6");
+ 
 
 
  function openModal(arg) {
@@ -16,20 +15,37 @@
      document.getElementById(arg).style.display = "none";
  }
 
+
+
+
+ // Vérifier s'il y a une image dans le localStorage
  let profilPic = document.getElementById("profil-pic");
  let profilInput = document.getElementById("input-file");
+ const profilPics = document.querySelectorAll(".profil-pic-global");
+ const profilOutils = document.getElementById("profil");
 
 
  // Vérifier s'il y a une image dans le localStorage
  const savedImage = localStorage.getItem("savedImage");
  if (savedImage) {
-     profilPic.src = savedImage; // Si une image est enregistrée, l'afficher
+     profilPic.src = savedImage; // Affiche l'image dans la popup de settings
+     profilPics.forEach(img => img.src = savedImage); // Affiche l'image dans les autres popups
+     profilOutils.src = savedImage; // Affiche l'image dans la section "outils"
  }
-
+ // Gérer le changement d'image
  profilInput.onchange = function() {
-     profilPic.src = URL.createObjectURL(profilInput.files[0]);
+     const newImageUrl = URL.createObjectURL(profilInput.files[0]);
+     profilPic.src = newImageUrl;
 
-     localStorage.setItem("savedImage", profilPic.src);
+
+     // Mettre à jour toutes les images dans les popups
+     profilPics.forEach(img => img.src = newImageUrl);
+
+     // Mettre à jour l'image dans la section "outils"
+     profilOutils.src = newImageUrl;
+
+     // Stocker l'image dans le localStorage
+     localStorage.setItem("savedImage", newImageUrl);
  }
 
  //fontion d 'affichage de aller-retour
@@ -60,21 +76,20 @@
  }
  setInterval(changeBackground, 4000);
 
-
+ // gestion du choix du trajet retour ou non
  document.getElementById('inlineRadio1').addEventListener('change', function() {
      document.getElementById('input4').disabled = true;
  });
-
  document.getElementById('inlineRadio2').addEventListener('change', function() {
      document.getElementById('input4').disabled = false;
  });
 
+
  // Code pour ouvrir le modal et charger le contenu
  document.getElementById('openModalButton').addEventListener('click', function() {
      $.ajax({
-         url: './formulaire.php', // Assurez-vous que cela renvoie seulement le code de la modal
+         url: './formulaire.php',
          success: function(response) {
-             // Charge la réponse dans le conteneur modalContainer
              document.getElementById('modalContainer').innerHTML = response;
              var modal = document.querySelector('#modalContainer .modal');
              var closeButton = document.querySelector('.close-button');
@@ -122,6 +137,61 @@
      });
  });
 
+
+ // Code pour ouvrir le modal d'envoi de message
+ document.getElementById('openModalMessage').addEventListener('click', function() {
+     $.ajax({
+         url: './Contact/contact.php',
+         success: function(response) {
+             document.getElementById('modalMessage').innerHTML = response;
+             var modal = document.querySelector('#modalMessage .modalitisation');
+             var closeButton = document.querySelector('.close1');
+
+             modal.style.display = "block";
+
+             closeButton.onclick = function() {
+                 modal.style.display = "none";
+                 modal.parentNode.removeChild(modal);
+             }
+
+             window.onclick = function(event) {
+                 if (event.target == modal) {
+                     modal.style.display = "none";
+                     modal.parentNode.removeChild(modal);
+                 }
+             }
+         },
+         error: function(xhr, status, error) {
+             console.error("Error loading modal: ", status, error);
+         }
+     });
+ });
+
+ // Code pour gérer la soumission du formulaire de message
+ $(document).on('submit', '#contactForm', function(e) {
+     e.preventDefault();
+
+     $.ajax({
+         type: 'POST',
+         url: './Contact/contact-ajax.php',
+         data: $(this).serialize(),
+         dataType: 'json',
+         success: function(response) {
+             console.log(response);
+             if (response.status === 'success') {
+                 window.location.href = response.redirect;
+             } else if (response.status === 'error') {
+                 console.error(response.message ||
+                     'Erreur lors de la soumission du formulaire.');
+                 alert(response.message || 'Erreur lors de la soumission du formulaire.');
+             }
+         },
+         error: function(xhr, status, error) {
+             console.error("Erreur: ", xhr.responseText);
+             alert('Une erreur est survenue.');
+         }
+     });
+ });
 
 
  // selectionne de la destination

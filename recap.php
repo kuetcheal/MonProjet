@@ -35,8 +35,7 @@ if (isset($_POST['ajouter15'])) {
         background-color: #f4f4f4;
         color: #333;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-direction: column;
         min-height: 100vh;
     }
 
@@ -47,6 +46,8 @@ if (isset($_POST['ajouter15'])) {
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         max-width: 600px;
         width: 100%;
+        flex-grow: 1;
+        /* Permet à la container de prendre le reste de l'espace disponible */
     }
 
     h2 {
@@ -96,6 +97,16 @@ if (isset($_POST['ajouter15'])) {
         background-color: #0056b3;
     }
 
+    footer {
+        background-color: #6c757d;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+        width: 100%;
+        position: relative;
+        bottom: 0;
+    }
+
     p {
         font-weight: bold;
     }
@@ -132,9 +143,14 @@ if (isset($_POST['ajouter15'])) {
         <h3 class="total-price">Prix total: <?= htmlspecialchars($prixTotal) ?> FCFA</h3>
 
         <!-- Bouton pour continuer vers la page de paiement -->
-        <a href="payment-double.php?totalPrice=<?= htmlspecialchars($prixTotal) ?>" class="continue-button">Continuer
-            vers le paiement</a>
+        <a href="payment.php?totalPrice=<?= htmlspecialchars($prixTotal) ?>" class="continue-button">Continuer vers le
+            paiement</a>
+
     </div>
+
+    <footer>
+        <p>&copy; 2024 EasyTravel. Tous droits réservés.</p>
+    </footer>
 </body>
 
 </html>

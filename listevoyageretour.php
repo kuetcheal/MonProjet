@@ -133,7 +133,7 @@ if ($allerSimpleSelected) {
 
     
     // Afficher le titre pour les trajets aller
-    echo "<h2>Aller: $date</h2>";
+    echo "<h2 style='text-align: center; color: green;'>Aller: " . date("d M Y", strtotime($date)) . "</h2>";
     $requette1 = "select * from voyage  WHERE voyage.villeDepart='$Depart' AND voyage.villeArrivee='$Arrivee' AND voyage.jourDepart='$date'";
     $query = $bdd->query($requette1);
     while ($donne = $query->fetch()) {
@@ -146,7 +146,7 @@ if ($allerSimpleSelected) {
         $idvoyage = $donne['idVoyage'];
 
         echo "
-        <div id='conteneur'>       
+        <div id='conteneur' class='conteneur'>       
             <div class='bloc1'>
               <div class='depart'>$heure</div>
                <hr class='ligne-horizontale'>
@@ -188,7 +188,8 @@ if ($allerSimpleSelected) {
 } elseif ($allerRetourSelected) {
     $heure3 = $heure4 = $prixretour = $busretour = $idvoyageretour = '';
     // Afficher le titre pour les trajets aller
-    echo "<h2> Trajets Aller: $date</h2>";
+    echo "<h2 style='text-align: center; color: green;'> Trajets Aller: " . date("d M Y", strtotime($date)) . "</h2>";
+
 
     $requetteAller = "select * from voyage  WHERE voyage.villeDepart='$Depart' AND voyage.villeArrivee='$Arrivee' AND voyage.jourDepart='$date'";
     $query = $bdd->query($requetteAller);
@@ -245,13 +246,13 @@ if ($allerSimpleSelected) {
             </div>
         </div>
        </hr>
-      </div>
+      </div><br>
         ";
         }
     }
-
+   
     // Afficher le titre pour les trajets retour
-    echo "<h2>Trajets Retour: $dateRetour</h2>";
+  echo "<h2 style='text-align: center; color: green;'>Trajets Retour : " . date("d M Y", strtotime($dateRetour)) . "</h2>";
     $requetteRetour = "select * FROM voyageretour  WHERE voyageretour.villeRetour='$Depart' AND voyageretour.arriver='$Arrivee' AND voyageretour.jourPartir='$dateRetour'";
     $queryRetour = $bdd->query($requetteRetour);
     if ($queryRetour && $queryRetour->rowCount() > 0) {
@@ -295,7 +296,7 @@ if ($allerSimpleSelected) {
                 <i class='fa fa-television' aria-hidden='true'></i>
                 <i class='fa fa-beer' aria-hidden='true'></i>
             </div>
-           <div class='form-group'>
+           <div class='form-group' >
                         <button class='continuer-btn'
                                 data-id='$idvoyageretour'
                                 data-type='retour'
@@ -303,6 +304,7 @@ if ($allerSimpleSelected) {
                                 data-depart='$depart1'
                                 data-arrive='$arrive2'
                                 data-time='$heure3'>
+                               
                             Continuer
                         </button>
              </div>
@@ -319,12 +321,22 @@ if ($allerSimpleSelected) {
 }
 ?>
 
-
+    <footer>
+        <p>&copy; 2024 EasyTravel. Tous droits réservés.</p>
+    </footer>
     <style>
     .ligne-horizontale {
         border-top: 1px solid #ccc;
         width: 250px;
         margin: 3px auto;
+    }
+
+    footer {
+        background-color: #6c757d;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+        width: 100%;
     }
 
     .conteneur2 {

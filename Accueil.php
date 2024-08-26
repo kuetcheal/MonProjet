@@ -6,8 +6,6 @@ if (isset($_POST['deconnect_account'])) {
 
     // Détruire la session
     session_destroy();
-
-    
     header('Location: connexion.php');
     exit;
 }
@@ -21,9 +19,7 @@ if (isset($_POST['deconnect_account'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" /> -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -316,7 +312,7 @@ if (isset($_POST['delete_account'])) {
     <?php include 'map.php'; ?>
 
     <br>
-    <hr><br>
+
     <div class="rectangle">
         <p> <span> Voyagez sur le plus grand réseau camerounais de bus longue distance !</span> Depuis 2000,
             général
@@ -338,7 +334,7 @@ if (isset($_POST['delete_account'])) {
             complète de
             nos destinations.</p>
         <br>
-        <h2>C’est simple et confortable</h2><br>
+        <h2 style="color: green; text-align:center;">C’est simple et confortable</h2><br>
         <p>
             Voyager n’a jamais été aussi simple avec gGénéral voyage car nous vous accompagnons de la première à
             la
@@ -362,7 +358,7 @@ if (isset($_POST['delete_account'])) {
             coté
             de chaque siège et elles vous seront bien utiles lors des longs trajets !</p>
         <br>
-        <h2>C’est économique et bon pour l'environnement</h2><br>
+        <h2 style="color: green; text-align:center;">C’est économique et bon pour l'environnement</h2><br>
         <p style='text-align: center;'>
             Avec général voyage, il est facile d'économiser : les prix défiant toute concurrence de nos billets
             soulagent
@@ -377,7 +373,7 @@ if (isset($_POST['delete_account'])) {
     </div>
 
 
-    <div class="chat">
+    <div class=" chat">
         <i class="fa fa-comments fa-5x" id="openModalMessage"
             style=" color: green; position: fixed; top: 566px; right: 18px; cursor: pointer; font-size: 61px;"></i>
     </div>
@@ -1253,7 +1249,7 @@ if (isset($_POST['delete_account'])) {
     });
     </script>
 
-
+    <script src="Accueil.js"></script>
 </body>
 
 </html>

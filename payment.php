@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+// Récupérer le prix total depuis l'URL
+$prixTotal = isset($_GET['totalPrice']) ? $_GET['totalPrice'] : 0;
+
+// Stocker le prix total dans la session pour utilisation ultérieure
+$_SESSION['prix'] = $prixTotal;
 ?>
 
 <!DOCTYPE html>
@@ -78,18 +84,49 @@ session_start();
                     </div>
                     <input type="hidden" name="reservationNumber" value="<?php echo $reservationNumber; ?>">
                 </div>
+            </div><br>
+            <h3>2) selectionnez votre chaise</h3><br>
+            <div class="bus">
+                <div class="driver-row">
+                    <div class="driver-seat">Conducteur</div>
+                    <div class="droite">
+                        <div class="seat" id="seat1" onclick="selectSeat(1)">1</div>
+                        <div class="seat" id="seat2" onclick="selectSeat(2)">2</div>
+                    </div>
+                </div>
+                <div class="seats">
+                    <!-- Generating 68 seats for the grid (2 front seats + 68 = 70 total seats) -->
+                    <script>
+                    let seatNumber = 3;
+                    for (let row = 0; row < 13; row++) {
+                        for (let col = 0; col < 6; col++) {
+                            if (col === 3) {
+                                document.write('<div class="spacer"></div>');
+                            } else {
+                                document.write(
+                                    `<div class="seat" id="seat${seatNumber}" onclick="selectSeat(${seatNumber})">${seatNumber}</div>`
+                                );
+                                seatNumber++;
+                            }
+                        }
+                    }
+                    </script>
+                </div>
             </div>
+            <!-- Hidden input to store the selected seat number -->
+            <input type="hidden" name="selectedSeat" id="selectedSeat" value="">
+
             <div class="titre">
                 <h2>Total à payer: <span><?php echo($_SESSION["prix"]); ?> FCFA</span></h2>
             </div>
             <br>
-            <h3>2) Mode de paiement</h3>
+            <h3>3) Mode de paiement</h3>
             <div> <input type="submit" name="submit" value="Payer à l'agence"> </div>
+            <div id="stripe-button-container"><br>
+                <button type="button" id="checkout-button">Payer avec Stripe</button>
+            </div>
+
         </form>
-        <br>
-        <div id="stripe-button-container">
-            <button id="checkout-button">Payer avec Stripe</button>
-        </div>
     </main>
 
     <script src="https://js.stripe.com/v3/"></script>
@@ -101,8 +138,14 @@ session_start();
     var checkoutButton = document.getElementById('checkout-button');
 
     checkoutButton.addEventListener('click', function() {
+        // Récupérer les données du formulaire
+        var form = document.querySelector('form');
+        var formData = new FormData(form);
+
+        // Envoyer les données du formulaire à create-checkout-session.php
         fetch('create-checkout-session.php', {
                 method: 'POST',
+                body: formData // Inclure les données du formulaire dans la requête
             })
             .then(function(response) {
                 return response.json();
@@ -121,7 +164,24 @@ session_start();
                 console.error('Error:', error);
             });
     });
+
+    // fonction de selection de la chaise du client
+    function selectSeat(seatNumber) {
+        const seats = document.getElementsByClassName('seat');
+        for (let seat of seats) {
+            seat.classList.remove('selected');
+        }
+
+        const selectedSeat = document.getElementById(`seat${seatNumber}`);
+        selectedSeat.classList.add('selected');
+
+        // Mettre à jour le champ caché avec le numéro du siège sélectionné
+        document.getElementById('selectedSeat').value = seatNumber;
+
+        console.log(`Seat ${seatNumber} selected`);
+    }
     </script>
+
 
 
     <style>
@@ -191,6 +251,72 @@ session_start();
         height: 60px;
         cursor: pointer;
         text-align: center;
+    }
+
+
+    .bus {
+        display: grid;
+        grid-template-columns: repeat(6, 50px);
+        gap: 10px;
+        background-color: #ccc;
+        padding: 20px;
+        border-radius: 10px;
+        width: 370px;
+    }
+
+    .driver-row {
+        grid-column: 1 / span 6;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .driver-seat {
+        background-color: orange;
+        text-align: center;
+        line-height: 50px;
+        font-weight: bold;
+        color: white;
+        border-radius: 5px;
+        width: 120px;
+    }
+
+    .seats {
+        grid-column: 1 / span 6;
+        display: grid;
+        grid-template-columns: repeat(6, 50px);
+        gap: 10px;
+    }
+
+    .seat {
+        background-color: #007bff;
+        color: white;
+        text-align: center;
+        line-height: 30px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 40px;
+        height: 35px;
+    }
+
+    .seat.selected {
+        background-color: #28a745;
+    }
+
+    .seat:hover {
+        background-color: #0056b3;
+    }
+
+    .spacer {
+        width: 30px;
+        height: 30px;
+    }
+
+    .droite {
+        display: flex;
+        margin-left: 110px;
+        gap: 20px;
     }
     </style>
 </body>

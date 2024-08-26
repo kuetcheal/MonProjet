@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'], $_POST['email'
 
 
     <?php
-session_start();
+
 
 // Fonction pour générer un code de confirmation aléatoire
 function genererCodeVerification() {

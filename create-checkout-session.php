@@ -17,13 +17,14 @@ $checkout_session = \Stripe\Checkout\Session::create([
             'product_data' => [
                 'name' => 'Voyage Payment',
             ],
-            'unit_amount' => $_SESSION["prix"] * 100, // Le montant doit être en cents
+            'unit_amount' => $_SESSION["prix"] * 100,
         ],
         'quantity' => 1,
     ]],
     'mode' => 'payment',
-    'success_url' => $YOUR_DOMAIN . '/success.html',
+    'success_url' => $YOUR_DOMAIN . '/finalisation.php?session_id={CHECKOUT_SESSION_ID}', // Utilisation correcte de {CHECKOUT_SESSION_ID}
     'cancel_url' => $YOUR_DOMAIN . '/cancel.html',
 ]);
+
 
 echo json_encode(['id' => $checkout_session->id]);
