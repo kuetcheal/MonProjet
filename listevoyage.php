@@ -148,7 +148,7 @@ try {
             $bus = $donne['typeBus'];
             $heure2 = $donne['heureArrivee'];
             $idvoyage = $donne['idVoyage'];
-            console.log('insertion reussi');
+            
             // Affichage des résultats en HTML
             echo "
         <div id='conteneur2'>

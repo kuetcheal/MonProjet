@@ -1,45 +1,45 @@
 <?php
-session_start();
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "bd_stock";
+// session_start();
+// $host = "localhost";
+// $user = "root";
+// $password = "";
+// $database = "bd_stock";
 
-$conn = mysqli_connect($host, $user, $password, $database);
-if (!$conn) {
-    die("Échec de la connexion à la base de données.");
-}
+// $conn = mysqli_connect($host, $user, $password, $database);
+// if (!$conn) {
+//     die("Échec de la connexion à la base de données.");
+// }
 
-if (isset($_GET['id_reservation'])) {
-    $id_reservation = $_GET['id_reservation'];
+// if (isset($_GET['id_reservation'])) {
+//     $id_reservation = $_GET['id_reservation'];
 
-    // Récupérer les détails de la réservation
-    $query = "SELECT reservation.Numero_reservation, reservation.nom, reservation.prenom, reservation.telephone, 
-                     voyage.villeDepart, voyage.villeArrivee, voyage.heureDepart, voyage.heureArrivee, voyage.jourDepart
-              FROM reservation
-              JOIN voyage ON reservation.idVoyage = voyage.idVoyage
-              WHERE reservation.id_reservation = ?";
-    $stmt = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param($stmt, "i", $id_reservation);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+//     // Récupérer les détails de la réservation
+//     $query = "SELECT reservation.Numero_reservation, reservation.nom, reservation.prenom, reservation.telephone, 
+//                      voyage.villeDepart, voyage.villeArrivee, voyage.heureDepart, voyage.heureArrivee, voyage.jourDepart
+//               FROM reservation
+//               JOIN voyage ON reservation.idVoyage = voyage.idVoyage
+//               WHERE reservation.id_reservation = ?";
+//     $stmt = mysqli_prepare($conn, $query);
+//     mysqli_stmt_bind_param($stmt, "i", $id_reservation);
+//     mysqli_stmt_execute($stmt);
+//     $result = mysqli_stmt_get_result($stmt);
 
-    if ($row = mysqli_fetch_assoc($result)) {
-        $numero_reservation = $row['Numero_reservation'];
-        $nom_passager = $row['nom'] . " " . $row['prenom'];
-        $telephone = $row['telephone'];
-        $trajet = $row['villeDepart'] . " - " . $row['villeArrivee'];
-        $heureDepart = $row['heureDepart'];
-        $heureArrivee = $row['heureArrivee'];
-        $jourDepart = $row['jourDepart'];
-    } else {
-        echo "Aucune réservation trouvée.";
-        exit;
-    }
-} else {
-    echo "ID de réservation non spécifié.";
-    exit;
-}
+//     if ($row = mysqli_fetch_assoc($result)) {
+//         $numero_reservation = $row['Numero_reservation'];
+//         $nom_passager = $row['nom'] . " " . $row['prenom'];
+//         $telephone = $row['telephone'];
+//         $trajet = $row['villeDepart'] . " - " . $row['villeArrivee'];
+//         $heureDepart = $row['heureDepart'];
+//         $heureArrivee = $row['heureArrivee'];
+//         $jourDepart = $row['jourDepart'];
+//     } else {
+//         echo "Aucune réservation trouvée.";
+//         exit;
+//     }
+// } else {
+//     echo "ID de réservation non spécifié.";
+//     exit;
+// }
 ?>
 
 <!DOCTYPE html>
@@ -122,17 +122,7 @@ if (isset($_GET['id_reservation'])) {
         animation: fadeIn 0.3s ease-in-out;
     }
 
-    /* @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    } */
 
     .ticket {
         background-color: #f0f9f0;

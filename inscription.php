@@ -12,38 +12,24 @@
 
 <body>
 
-    <header>
-        <nav>
-            <div class="header-picture">
-                <img src="logo général.jpg" alt="logo site" />
-            </div>
-            <div class="nav-bar">
-                <ul>
-                    <li class="items">
-                        <select id="select" name="select" aria-placeholder="2 places">
-                            <option value="option1">Français</option>
-                            <option value="option2">Anglais</option>
+<?php include 'includes/header.php'; ?>
 
-                        </select>
-                    </li>
-                    <li class="items"><a href="#"><i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i></a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
 
     <div class="container">
         <h2>Formulaire d'inscription</h2>
         <hr>
         <form action="verification.php" method="POST">
             <label for="nom">Nom:</label>
-            <input type="text" id="nom" name="nom" placeholder="ALEX" required>
+            <input type="text" id="nom" name="nom" placeholder="KUETCHE" required>
 
             <label for=" prenom">Prénom:</label>
-            <input type="text" id="prenom" name="prenom" placeholder="KUETCHE" required>
+            <input type="text" id="prenom" name="prenom" placeholder="ALEX" required>
 
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" placeholder="nom@gmail.com" required>
+
+            <label for="email">Téléphone:</label>
+            <input type="number" id="phone" name="phone" placeholder="655198412" required>
 
             <label for="password">Mot de passe:</label>
             <input type="password" id="password" name="password" required>
