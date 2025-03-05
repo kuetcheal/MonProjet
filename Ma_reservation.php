@@ -15,10 +15,11 @@ if (isset($_GET['id_reservation'])) {
 
     // Récupérer les détails de la réservation
     $query = "SELECT reservation.Numero_reservation, reservation.nom, reservation.prenom, reservation.telephone, 
-                     voyage.villeDepart, voyage.villeArrivee, voyage.heureDepart, voyage.heureArrivee, voyage.jourDepart
-              FROM reservation
-              JOIN voyage ON reservation.idVoyage = voyage.idVoyage
-              WHERE reservation.id_reservation = ?";
+                 voyage.villeDepart, voyage.villeArrivee, voyage.heureDepart, voyage.heureArrivee, voyage.jourDepart, reservation.prix_reservation
+          FROM reservation
+          JOIN voyage ON reservation.idVoyage = voyage.idVoyage
+          WHERE reservation.id_reservation = ?";
+
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "i", $id_reservation);
     mysqli_stmt_execute($stmt);
@@ -28,16 +29,24 @@ if (isset($_GET['id_reservation'])) {
         $numero_reservation = $row['Numero_reservation'];
         $nom_passager = $row['nom'] . " " . $row['prenom'];
         $telephone = $row['telephone'];
-        $trajet = $row['villeDepart'] . " - " . $row['villeArrivee'];
         $heureDepart = $row['heureDepart'];
         $heureArrivee = $row['heureArrivee'];
+        $prix = $row['prix_reservation'];
         $jourDepart = $row['jourDepart'];
+        $villeDepart = $row['villeDepart'];
+        $villeArrivee = $row['villeArrivee'];
+
+        // Calcul du remboursement
+        $perte = $prix * 0.3; 
+        $remboursement = $prix - $perte;
     } else {
         echo "Aucune réservation trouvée.";
         exit;
     }
 } else {
     echo "ID de réservation non spécifié.";
+
+
     exit;
 }
 ?>
@@ -48,158 +57,116 @@ if (isset($_GET['id_reservation'])) {
 <head>
     <meta charset="UTF-8">
     <title>Ma Réservation</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 0;
-    }
-
-    .container {
-        width: 95%;
-        margin: 20px auto;
-        background: #fff;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h1 {
-        color: #333;
-    }
-
-    .reservation-details {
-        margin-bottom: 20px;
-    }
-
-    .reservation-details p {
-        margin: 10px 0;
-    }
-
-    .details {
-        background-color: #e9e9e9;
-        padding: 10px;
-        border-radius: 5px;
-    }
-
-    .details p {
-        margin: 5px 0;
-    }
-
-    .highlight {
-        color: #d9534f;
-        font-weight: bold;
-    }
-
-    .price-summary {
-        text-align: right;
-        margin-top: 20px;
-        font-size: 18px;
-    }
-
-    .total-price {
-        font-size: 24px;
-        color: #5cb85c;
-    }
-
-    .button-container {
-        margin-top: 30px;
-        text-align: center;
-    }
-
-    .btn {
-        display: inline-block;
-        background-color: #007bff;
-        color: white;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-        border-radius: 5px;
-        margin: 0 10px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        border: none;
-    }
-
-    .btn-danger {
-        background-color: #d9534f;
-    }
-
-    .btn:hover {
-        background-color: #0056b3;
-    }
-
-    .btn-danger:hover {
-        background-color: #c9302c;
-    }
-
-    .footer {
-        margin-top: 20px;
-        text-align: center;
-        font-size: 14px;
-        color: #777;
-    }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
-<body>
-    <div class="container">
-        <h1>Réservation Confirmée</h1>
-        <div class="reservation-details">
+<body class="bg-gray-100 flex flex-col min-h-screen">
+   
+
+    <div class="container mx-auto p-8 bg-white shadow-lg rounded-lg w-3/4">
+        <h1 class="text-2xl font-bold text-center text-gray-700 mb-6">Réservation Confirmée</h1>
+        <div class="border p-4 rounded-lg shadow-md">
             <p><strong>Numéro de réservation :</strong> <?php echo $numero_reservation; ?></p>
             <p><strong>Nom du passager :</strong> <?php echo $nom_passager; ?></p>
             <p><strong>Téléphone :</strong> <?php echo $telephone; ?></p>
             <p><strong>Date d'émission :</strong> <?php echo date("d M Y"); ?></p>
         </div>
 
-        <div class="details">
-            <h2>Itinéraire</h2>
-            <p><strong>Trajet :</strong> <?php echo $trajet; ?></p>
-            <p><?php echo date("d M Y", strtotime($jourDepart)) . ", " . $heureDepart . " - " . $heureArrivee; ?></p>
+        <div class="mt-6 p-4 bg-blue-100 border-l-4 border-blue-500">
+            <h2 class="text-xl font-semibold">Itinéraire</h2>
+            <p><strong>Trajet :</strong> <?php echo "$villeDepart ➔ $villeArrivee"; ?></p>
+            <p><?php echo date("d M Y", strtotime($jourDepart)) . " | " . $heureDepart . " ➔ " . $heureArrivee; ?></p>
         </div>
 
-        <div class="button-container">
-            <button class="btn btn-danger" id="resertForm">Annuler ma réservation</button>
-            <button class=" btn">Modifier ma réservation</button>
-        </div>
-        <div id="modalContainaire"></div>
-        <div class="footer">
-            <p>Merci d'avoir choisi notre service. Nous vous souhaitons un excellent voyage!</p>
+        <div class="flex justify-center mt-6 space-x-4">
+            <button class="bg-red-500 text-white px-6 py-2 rounded shadow-md hover:bg-red-600 transition"
+                onclick="openPopup()">Annuler ma réservation</button>
+
+            <button class="bg-blue-500 text-white px-6 py-2 rounded shadow-md hover:bg-blue-600 transition">
+                Modifier ma réservation
+            </button>
         </div>
     </div>
-</body>
+
+    <!-- Popup d'annulation -->
+    <div id="reservationForm" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+            <!-- Bouton de fermeture -->
+            <button class="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-xl" onclick="closePopup()">
+                &times;
+            </button>
+
+            <div class="bg-green-600 text-white text-center py-3 rounded-t-lg">
+                <h3 class="text-lg font-bold"><?php echo date("d M Y", strtotime($jourDepart)) . " • $villeDepart ➔ $villeArrivee"; ?></h3>
+            </div>
+            <div class="p-4 text-center">
+                <p class="text-xl font-bold text-gray-800"><?php echo date("d M Y"); ?></p>
+
+                <div class="flex justify-between items-center mt-4">
+                    <div>
+                    <i class="fas fa-map-marker-alt text-gray-500"></i> <?php echo $villeDepart; ?>
+                    <br><i class="fas fa-clock text-gray-500"></i> <?php echo $heureDepart; ?>
+                        
+                    </div>
+                    <div class="h-12 border-l-2 border-dashed mx-4"></div>
+                    <div>
+                    <i class="fas fa-map-marker-alt text-gray-500"></i> <?php echo $villeArrivee; ?>
+                    <br> <i class="fas fa-clock text-gray-500"></i> <?php echo $heureArrivee; ?>
+                        
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 p-4 mt-4 rounded">
+                    <p><strong>Total pour 1 passager :</strong> <?php echo $prix; ?> FCFA</p>
+                    <p>Frais d'annulation : 30%</p>
+                    <p><strong>Montant remboursé :</strong> <?php echo number_format($remboursement, 2); ?> FCFA</p>
+                </div>
+
+                <button class="w-full mt-4 bg-red-500 text-white py-2 rounded shadow-md hover:bg-red-600 transition"
+                    onclick="supprimerReservation(<?php echo $id_reservation; ?>)">Annuler le billet</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-auto bg-gray-700 text-white text-center py-4">
+        <p>Merci d'avoir choisi notre service. Nous vous souhaitons un excellent voyage!</p>
+    </footer>
+
+    <script>
+        function openPopup() {
+            document.getElementById('reservationForm').classList.remove('hidden');
+        }
+
+        function closePopup() {
+            document.getElementById('reservationForm').classList.add('hidden');
+        }
 
 
-<script>
-// Code pour ouvrir le modal d'annulation
-// Code pour ouvrir le modal d'annulation
-document.getElementById('resertForm').addEventListener('click', function(event) {
-    event.preventDefault(); // Prévenir le comportement par défaut du bouton
 
-    $.ajax({
-        url: './Annulation_reservation.php',
-        success: function(response) {
-            document.getElementById('modalContainaire').innerHTML = response;
-            var modal = document.querySelector('#modalContainaire .modalisation');
-            var closeButton = document.querySelector('#modalContainaire .close-button');
-
-            modal.style.display = "flex"; // Affichez la modal en utilisant flexbox
-
-            closeButton.onclick = function() {
-                modal.style.display = "none";
-            }
-
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
+        function supprimerReservation(id) {
+            if (confirm("Voulez-vous vraiment annuler cette réservation ?")) {
+                fetch("./Reservation/supprimer_reservation.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: "id_reservation=" + id,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        alert(data.message);
+                        window.location.href = "Accueil.php"; // Redirige après suppression
+                    } else {
+                        alert("Erreur : " + data.message);
+                    }
+                })
+                .catch(error => console.error("Erreur:", error));
             }
         }
-    });
-});
-</script>
+    </script>
+    </script>
+</body>
 
 </html>

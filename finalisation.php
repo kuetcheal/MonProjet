@@ -8,25 +8,118 @@ use PHPMailer\PHPMailer\Exception;
 use TCPDF;
 
 // Fonction pour générer la facture PDF
-function generateInvoice($nom, $prenom, $telephone, $email, $reservationNumber, $depart, $arrivee, $date, $idVoyage, $prix)
+function generateInvoice($nom, $prenom, $telephone, $email, $reservationNumber, $numeroSiege, $depart, $arrivee, $date, $idVoyage, $prix)
 {
     $pdf = new TCPDF();
-    $pdf->AddPage();
-    $pdf->SetFont('dejavusans', '', 12);
-    $html = "
-    <h1>Facture de réservation</h1>
-    <p><strong>Nom du passager:</strong> $nom $prenom</p>
-    <p><strong>Date de départ:</strong> $date</p>
-    <p><strong>Ville de départ:</strong> $depart</p>
-    <p><strong>Ville d'arrivée:</strong> $arrivee</p>
-    <p><strong>Numéro de réservation:</strong> $reservationNumber</p>
-    <p><strong>Prix:</strong> $prix FCFA</p>
-    <h1>Merci de nous avoir fait confiance et à très bientôt </h1>
-    ";
-    $pdf->writeHTML($html, true, false, true, false, '');
-    $pdfOutput = $pdf->Output('', 'S'); // S pour retourner le document sous forme de chaîne
+$pdf->AddPage();
+$pdf->SetFont('dejavusans', '', 12);
 
-    return $pdfOutput;
+$html = "
+<style>
+    body {
+        font-family: 'DejaVu Sans', sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+    }
+    .facture-container {
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 10px;
+        width: 100%;
+    }
+    h1 {
+        text-align: center;
+        color: #4CAF50;
+        font-size: 24px;
+    }
+    .facture-header {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    .facture-details {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    .facture-details th, .facture-details td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    .facture-details th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .total-section {
+        text-align: right;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+    .footer {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 14px;
+        color: #777;
+    }
+</style>
+
+<div class='facture-container'>
+    <h1>Facture de Réservation</h1>
+
+    <p class='facture-header'>Informations du Passager</p>
+    <table class='facture-details'>
+        <tr>
+            <th>Nom</th>
+            <td>$nom $prenom</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>$email</td>
+        </tr>
+        <tr>
+            <th>Téléphone</th>
+            <td>$telephone</td>
+        </tr>
+    </table>
+
+    <p class='facture-header'>Détails du Voyage</p>
+    <table class='facture-details'>
+        <tr>
+            <th>Départ</th>
+            <td>$depart</td>
+        </tr>
+        <tr>
+            <th>Arrivée</th>
+            <td>$arrivee</td>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <td>$date</td>
+        </tr>
+        <tr>
+            <th>Numéro de Réservation</th>
+            <td>$reservationNumber</td>
+        </tr>
+        <tr>
+            <th>Numéro de Siège</th>
+            <td>$numeroSiege</td>
+        </tr>
+    </table>
+
+    <p class='total-section'>Total à Payer : $prix FCFA</p>
+
+    <p class='footer'>Merci de nous avoir fait confiance ! Nous vous souhaitons un excellent voyage.</p>
+</div>
+";
+
+$pdf->writeHTML($html, true, false, true, false, '');
+$pdfOutput = $pdf->Output('', 'S'); // Retourne le document sous forme de chaîne
+
+return $pdfOutput;
+
 }
 
 try {
@@ -84,13 +177,13 @@ try {
          
          
        // Insertion dans la base de données
-        $requete = 'INSERT INTO reservation (nom, prenom, telephone, email, idVoyage, Etat, Numero_reservation, Numero_siege) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        $requete = 'INSERT INTO reservation (nom, prenom, telephone, email, idVoyage, Etat, Numero_reservation, Numero_siege, prix_reservation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $stmt = $bdd->prepare($requete);
-        $stmt->execute([$nom, $prenom, $telephone, $email, $idVoyage, $etat, $reservationNumber, $numeroSiege]);
+        $stmt->execute([$nom, $prenom, $telephone, $email, $idVoyage, $etat, $reservationNumber, $numeroSiege, $prix]);
 
         
         // Générer la facture PDF
-        $pdfOutput = generateInvoice($nom, $prenom, $telephone, $email, $reservationNumber, $depart, $arrivee, $date, $idVoyage, $prix);
+        $pdfOutput = generateInvoice($nom, $prenom, $telephone, $email, $reservationNumber, $numeroSiege, $depart, $arrivee, $date, $idVoyage, $prix);
 
         
         // Configuration de l'API Mailjet

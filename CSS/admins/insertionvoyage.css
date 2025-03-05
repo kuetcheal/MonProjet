@@ -1,0 +1,166 @@
+ /* PARTIE HEADER */
+
+ header {
+    width: 1400px;
+    background-color: green;
+    height: 120px;
+}
+
+nav {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+img {
+    width: 120px;
+    height: 80px;
+}
+
+.items a {
+    text-decoration: none;
+    color: whitesmoke;
+    font-size: 20px;
+    margin-right: 20px;
+    padding: 0 15px;
+}
+
+.public {
+    margin-right: 90px;
+    display: flex;
+    align-items: center;
+}
+
+.outils i {
+    color: white;
+    font-size: 37px;
+    margin-left: 30px;
+    cursor: pointer;
+}
+
+
+
+.header-picture {
+    margin-left: 50px;
+}
+
+.fa {
+    font-size: 15px;
+}
+
+.liste a {
+    color: 'black';
+}
+
+/* PARTIE MAIN */
+
+#box {
+    width: 480px;
+    height: 595px;
+    background-color: green;
+    color: aliceblue;
+    position: absolute;
+    left: 35%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 5px;
+    top: 170px;
+    padding: 15px;
+}
+
+input {
+    justify-content: space-between;
+    margin-left: 15px;
+    width: 250px;
+    height: 35px;
+    border-radius: 7px
+}
+
+button[type="submit"],
+button[type="reset"] {
+    height: 30px;
+    margin-left: 20px;
+    width: 120px;
+    display: inline;
+    align-items: center;
+}
+
+
+label {
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+#ins,
+#annu {
+    width: 100px;
+    color: green;
+    margin-left: 60px;
+}
+
+h2 {
+    text-align: center;
+    font-size: 30px;
+}
+
+.bouton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.date-input {
+    appearance: none;
+    padding: 8px;
+    border: 1px solid green;
+    border-radius: 4px;
+    font-size: 14px;
+    border-color: green;
+    width: 200px;
+    height: 30px;
+    font-size: 20px;
+}
+
+.liste-voyage {
+    color: white;
+    background-color: green;
+    border-color: 2px solid green;
+    font-size: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 24px;
+}
+
+.para {
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 205px;
+}
+
+.end {
+    display: flex;
+    text-align: center;
+}
+
+.class1 {
+    margin-left: 120px;
+}
+
+.class2 {
+    margin-left: 110px;
+}
+
+.class3 {
+    margin-left: 130px;
+}
+
+footer {
+    background-color: #6c757d;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+}

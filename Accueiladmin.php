@@ -331,6 +331,50 @@ echo("echec de connexion");
     .class3 {
         margin-left: 130px;
     }
+
+
+    /* Media queries pour les petits écrans */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-bar ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-bar ul li {
+        margin: 10px 0;
+    }
+
+    .public {
+        flex-direction: column;
+        align-items: center;
+        margin: 10px 0;
+    }
+
+    #box {
+        padding: 15px;
+    }
+
+    input,
+    select,
+    button {
+        width: 100%;
+    }
+
+    .bouton {
+        flex-direction: column;
+    }
+
+    button[type="submit"],
+    button[type="reset"] {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
     </style>
 
 </body>

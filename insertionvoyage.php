@@ -3,27 +3,30 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="CSS/admins/insertionvoyage.css">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Insertion voyage</title>
 
 </head>
 
-<body>
+<body >
     <header>
         <nav>
             <div class="header-picture">
                 <img src="logo général.jpg" alt="logo site" />
             </div>
-            <div class="nav-bar">
+            <!-- <div class="nav-bar">
                 <ul>
                     <li class="items"> <a href="inventaire.php">Acceuil</a></li>
                     <li class="items"><a href="ajoutarticle.php">liste de Reservations</a></li>
                     <li class="items"><a href="ajoutclient.php">Nos services clients</a></li>
                     <li class="items"><a href="achatarticle.php">liste des trajets</a></li>
                 </ul>
-            </div>
+            </div> -->
             <div class="public">
 
                 <div class="langue">
@@ -40,80 +43,99 @@
     </header>
     <br>
     <br>
-    <div id="box">
-        <form action="#" method="POST">
-            <h3>Veuillez insérer un trajet de voyage</h3>
-            <br>
-            <hr><br>
-            <div>
-                <label>Depart</label>
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-2xl mx-auto">
+        <h2 class="text-2xl font-bold text-center text-gray-700 mb-6">Veuillez insérer un trajet de voyage</h2>
 
-                <select id="input1" name="depart" aria-placeholder="20 places" style="width: 250px; height: 40px;">
-                    <option value="Douala">Douala</option>
-                    <option value="Yaounde">Yaounde</option>
-                    <option value="Bafoussam">Bafoussam</option>
-                    <option value="Mbouda">Mbouda</option>
-                    <option value="Dschang">Dschang</option>
-                    <option value="Bafang">Bafang</option>
-                    <option value="Edea">Edea</option>
-                    <option value="Bamenda">Bamenda</option>
-                    <option value="Foumbot">Foumbot</option>
-                    <option value="Bagante">Bagante</option>
-                    <option value="Kribi">Kribi</option>
-                    <option value="Ngaoundere">Ngaoundere</option>
-                    <option value="Ebolowa">Ebolowa</option>
-                </select>
-            </div><br>
+        <form action="#" method="POST" class="space-y-6">
+            <!-- Ligne Départ et Arrivée -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-gray-600 font-semibold mb-2">Départ</label>
+                    <select name="depart" class="w-full border rounded-lg px-3 py-2">
+                        <option>Douala</option>
+                        <option>Yaoundé</option>
+                        <option>Bafoussam</option>
+                        <option>Mbouda</option>
+                        <option>Dschang</option>
+                        <option>Bafang</option>
+                        <option>Edea</option>
+                        <option>Bamenda</option>
+                        <option>Foumbot</option>
+                        <option>Bagante</option>
+                        <option>Kribi</option>
+                        <option>Ngaoundéré</option>
+                        <option>Ebolowa</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-gray-600 font-semibold mb-2">Arrivée</label>
+                    <select name="arrivee" class="w-full border rounded-lg px-3 py-2">
+                        <option>Douala</option>
+                        <option>Yaoundé</option>
+                        <option>Bafoussam</option>
+                        <option>Mbouda</option>
+                        <option>Dschang</option>
+                        <option>Bafang</option>
+                        <option>Edea</option>
+                        <option>Bamenda</option>
+                        <option>Foumbot</option>
+                        <option>Bagante</option>
+                        <option>Kribi</option>
+                        <option>Ngaoundéré</option>
+                        <option>Ebolowa</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Type de bus -->
             <div>
-                <label>Arrivée</label>
-                <select id="input2" name="arrivee" aria-placeholder="20 places" style="width: 250px; height: 40px;">
-                    <option value="Douala">Douala</option>
-                    <option value="Yaounde">Yaounde</option>
-                    <option value="Bafoussam">Bafoussam</option>
-                    <option value="Mbouda">Mbouda</option>
-                    <option value="Dschang">Dschang</option>
-                    <option value="Bafang">Bafang</option>
-                    <option value="Edea">Edea</option>
-                    <option value="Bamenda">Bamenda</option>
-                    <option value="Foumbot">Foumbot</option>
-                    <option value="Bagante">Bagante</option>
-                    <option value="Kribi">Kribi</option>
-                    <option value="Ngaoundere">Ngaoundere</option>
-                    <option value="Ebolowa">Ebolowa</option>
-                </select>
-            </div> <br><br>
-            <div class="form-group">
-                <label for="selectBus">type de bus:</label>
-                <select id="selectBus" name="selectBus" aria-placeholder="2 places" style="width: 250px; height: 40px;">
+                <label class="block text-gray-600 font-semibold mb-2">Type de bus</label>
+                <select name="selectBus" class="w-full border rounded-lg px-3 py-2">
                     <option value="classique">Bus classique</option>
                     <option value="VIP">Bus VIP</option>
                 </select>
-            </div><br><br>
-            <div>
-                <label>heure départ</label>
-                <input type="time" id="departure" name="partir">
-            </div><br>
-            <div>
-                <label>heure d'arrivée</label>
-                <input type="time" id="arrivage" name="destination">
-            </div><br>
-            <div>
-                <label>jour Depart</label>
-                <input type="date" class="date-input" name="date">
-            </div><br>
+            </div>
 
-            <div>
-                <label>prix</label>
-                <input type="text" id="cni" name="prix" class="class3">
-            </div><br>
-            <div class="bouton">
-                <div><input type="submit" id="ins" value="insérer"></div>
-                <div><input type="reset" id="annu" value="Annuler"></div>
-            </div><br><br>
+            <!-- Ligne Heure Départ et Heure Arrivée -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-gray-600 font-semibold mb-2">Heure de départ</label>
+                    <input type="time" name="partir" class="w-full border rounded-lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="block text-gray-600 font-semibold mb-2">Heure d'arrivée</label>
+                    <input type="time" name="destination" class="w-full border rounded-lg px-3 py-2">
+                </div>
+            </div>
+
+            <!-- Ligne Date Départ et Prix -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-gray-600 font-semibold mb-2">Jour de départ</label>
+                    <input type="date" name="date" class="w-full border rounded-lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="block text-gray-600 font-semibold mb-2">Prix</label>
+                    <input type="text" name="prix" placeholder="Ex: 10000" class="w-full border rounded-lg px-3 py-2">
+                </div>
+            </div>
+
+            <!-- Boutons -->
+            <div class="flex justify-center space-x-4">
+                <button type="reset" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600">
+                    Annuler
+                </button>
+                <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+                    Insérer
+                </button>
+            </div>
         </form>
     </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br>
+    
 
     <form action="listevoyadmin.php" method="post">
         <div class="end">
@@ -124,6 +146,9 @@
         </div>
     </form>
 
+    <footer>
+        <p>&copy; 2024 EasyTravel. Tous droits réservés.</p>
+    </footer>
     <?php
 try {
     $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
@@ -148,182 +173,7 @@ try {
 
 
     <style>
-    /* PARTIE HEADER */
-
-    header {
-        width: 1400px;
-        background-color: green;
-        height: 120px;
-    }
-
-    nav {
-        width: 100%;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    img {
-        width: 120px;
-        height: 80px;
-    }
-
-    .items a {
-        text-decoration: none;
-        color: whitesmoke;
-        font-size: 20px;
-        margin-right: 20px;
-        padding: 0 15px;
-    }
-
-    .public {
-        margin-right: 90px;
-        display: flex;
-        align-items: center;
-    }
-
-    .outils i {
-        color: white;
-        font-size: 37px;
-        margin-left: 30px;
-        cursor: pointer;
-    }
-
-    .nav-bar ul {
-        display: flex;
-        list-style-type: none;
-    }
-
-    .nav-bar {
-        margin-left: 25px;
-        margin-top: 70px;
-    }
-
-    a {
-        color: white;
-        text-decoration: none;
-        position: relative;
-    }
-
-    .nav-bar .items a:hover {
-        color: rosybrown;
-    }
-
-    .header-picture {
-        margin-left: 50px;
-    }
-
-    .fa {
-        font-size: 15px;
-    }
-
-    .liste a {
-        color: 'black';
-    }
-
-    /* PARTIE MAIN */
-
-    #box {
-        width: 480px;
-        height: 595px;
-        background-color: green;
-        color: aliceblue;
-        position: absolute;
-        left: 35%;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        border-radius: 5px;
-        top: 170px;
-        padding: 15px;
-    }
-
-    input {
-        justify-content: space-between;
-        margin-left: 15px;
-        width: 250px;
-        height: 35px;
-        border-radius: 7px
-    }
-
-    button[type="submit"],
-    button[type="reset"] {
-        height: 30px;
-        margin-left: 20px;
-        width: 120px;
-        display: inline;
-        align-items: center;
-    }
-
-
-    label {
-        margin-left: 20px;
-        font-size: 20px;
-    }
-
-    #ins,
-    #annu {
-        width: 100px;
-        color: green;
-        margin-left: 60px;
-    }
-
-    h2 {
-        text-align: center;
-        font-size: 30px;
-    }
-
-    .bouton {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .date-input {
-        appearance: none;
-        padding: 8px;
-        border: 1px solid green;
-        border-radius: 4px;
-        font-size: 14px;
-        border-color: green;
-        width: 200px;
-        height: 30px;
-        font-size: 20px;
-    }
-
-    .liste-voyage {
-        color: white;
-        background-color: green;
-        border-color: 2px solid green;
-        font-size: 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 24px;
-    }
-
-    .para {
-        font-size: 24px;
-        font-weight: bold;
-        margin-left: 205px;
-    }
-
-    .end {
-        display: flex;
-        text-align: center;
-    }
-
-    .class1 {
-        margin-left: 120px;
-    }
-
-    .class2 {
-        margin-left: 110px;
-    }
-
-    .class3 {
-        margin-left: 130px;
-    }
+   
     </style>
 
 </body>

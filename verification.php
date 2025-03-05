@@ -22,10 +22,12 @@ require 'vendor/autoload.php';
 use Mailjet\Resources;
 
 // Traitement du formulaire d'inscription
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'], $_POST['email'], $_POST['password'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'], $_POST['prenom'],$_POST['email'], $_POST['phone'], $_POST['password'])) {
     // Récupération des données du formulaire
     $nom = $_POST['nom'];
+    $prenom = $_POST['prenom'];
     $email = $_POST['email'];
+    $phone = $_POST['phone'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hachage du mot de passe
 
     // Génération d'un code de vérification
@@ -34,6 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'], $_POST['email'
 
     // Initialisation de la session
     $_SESSION['nom'] = $nom;
+    $_SESSION['prenom'] = $prenom;
+    $_SESSION['phone'] = $phone;
     $_SESSION['email'] = $email;
     $_SESSION['password'] = $password;
     $_SESSION['code'] = $code;
@@ -146,12 +150,15 @@ if (isset($_POST['valider'])) {
             $prenom = $_SESSION['prenom'];
             $email = $_SESSION['email'];
             $motpasse = $_SESSION['password'];
+            $phone = $_SESSION['phone'];
 
             // Insérer les informations dans votre base de données locale
-            $requette = $bdd->prepare('INSERT INTO user (user_name, user_password, user_mail, verification) VALUES (:nom, :motpasse, :email, :veri)');
+            $requette = $bdd->prepare('INSERT INTO user (user_name, user_firstname, user_password, user_mail, user_phone, verification) VALUES (:nom, :prenom, :motpasse, :email, :phone, :veri)');
             $requette->bindParam(':nom', $nom);
+            $requette->bindParam(':prenom', $prenom);
             $requette->bindParam(':motpasse', $motpasse);
             $requette->bindParam(':email', $email);
+            $requette->bindParam(':phone', $phone);
             $requette->bindParam(':veri', $_SESSION['code']);
 
             if ($requette->execute()) {
