@@ -230,7 +230,15 @@ if (isset($_POST['delete_account'])) {
     <!-- PARTIE MAIN -->
     <div class="content">
         <div class="container">
-            <p class="para"> le plaisir de bien voyager à un prix abordable à partir de 5.5€ seulement.</p>
+
+            <p class="para"> le plaisir de bien voyager à un prix abordable à partir de 5.5€ seulement.</p><br>
+            <div class="promo-banner">
+                <div class="promo-text">
+                    <h1>Profite de tes voyages! jusqu'à -20% sur les billets ainsi que des billets gratuits</h1>
+                    <p>REMISES EXCLUSIVES POUR LES MEMBRES ! <a href="connexion.php">CONNECTEZ-VOUS/INSCRIVEZ-VOUS
+                            ICI</a></p>
+                </div>
+            </div>
         </div><br>
         <h1 class="titre"> Rechercher un trajet de voyage </h1><br>
     </div>
@@ -380,14 +388,7 @@ if (isset($_POST['delete_account'])) {
     <div id="modalMessage"></div>
 
 
-    <!-- <div id="myModal6" class="modale" style="display: none;">
-        <div class="modale-contente">
-            <h2>Insertion réussie</h2> <br>
-            <p>Votre message a été inséré avec succès.</p> <br>
-            <button onclick="closeModal('myModal6')">Fermer</button>
-        </div>
-    </div>'; -->
-
+   
 
 
 
@@ -1029,12 +1030,17 @@ if (isset($_POST['delete_account'])) {
         justify-content: space-between;
     }
 
-    /* .form-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    } */
+    .promo-text h1 {
+        font-size: 48px;
+        margin: 0;
+        font-weight: bold;
+    }
 
+    .promo-text p {
+        font-size: 18px;
+        margin-top: 10px;
+        font-weight: bold;
+    }
 
     .rectangle {
         text-align: center;
@@ -1118,7 +1124,7 @@ if (isset($_POST['delete_account'])) {
     function changeBackground() {
         currentIndex = (currentIndex + 1) % images.length;
         container.style.backgroundImage =
-            `linear-gradient(rgba(39, 39, 39, 0.6), rgba(0, 0, 0, 0.6)), url(${images[currentIndex]})`;
+            linear-gradient(rgba(39, 39, 39, 0.6), rgba(0, 0, 0, 0.6)), url(${images[currentIndex]});
     }
     setInterval(changeBackground, 4000);
 
