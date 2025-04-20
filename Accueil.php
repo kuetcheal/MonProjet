@@ -20,6 +20,10 @@ if (isset($_POST['deconnect_account'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css" />
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -230,83 +234,118 @@ if (isset($_POST['deconnect_account'])) {
 
 
     <!-- PARTIE MAIN -->
-    <div class="content">
-        <div class="container">
+    <!-- SECTION HERO -->
+    <section class="relative bg-cover bg-center h-[500px] md:h-[550px] text-white flex flex-col justify-center items-center"
+        style="background-image: url('https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg');">
 
-            <p class="para"> le plaisir de bien voyager à un prix abordable à partir de 5.5€ seulement.</p><br>
-            <div class="promo-banner">
-                <div class="promo-text">
-                    <h1>Profite de tes voyages! jusqu'à -20% sur les billets ainsi que des billets gratuits</h1>
-                    <p>REMISES EXCLUSIVES POUR LES MEMBRES ! <a href="connexion.php">CONNECTEZ-VOUS/INSCRIVEZ-VOUS
-                            ICI</a></p>
-                </div>
-            </div>
-        </div><br>
-        <h1 class="titre"> Rechercher un trajet de voyage </h1><br>
-    </div>
-    <div class="box">
-        <form action="listevoyageretour.php" method="post">
-            <div class="Voyage" style="display: flex; gap: 25px;">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                        value="option1" checked>
-                    <label class="form-check-label" for="inlineRadio1">Aller</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
-                        value="option2">
-                    <label class="form-check-label" for="inlineRadio2">Aller-Retour</label>
-                </div>
-            </div>
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
 
-            <div class="form-group">
-                <label for="input1"><i class="bi bi-geo-alt custom-icon"></i> DE :</label>
-                <select id="input1" name="input1" style="width: 150px; height: 40px;" class="select2">
-                    <?php
-                    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-                    $query = 'select * from destination order by Nom_ville ASC';
-                    $response = $bdd->query($query);
-                    while ($donnee = $response->fetch()) {
-                        $destination = $donnee['Nom_ville'];
-                        echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
-                    }
-                    ?>
-                </select>
-            </div>
+        <!-- Texte principal -->
+        <div class="relative z-10 text-center px-4">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4">
+                Profite de tes voyages! jusqu'à -20% sur les billets<br>
+                ainsi que des billets gratuits
+            </h1>
+            <p class="text-lg font-bold">
+                REMISES EXCLUSIVES POUR LES MEMBRES !
+                <a href="connexion.php" class="text-green-400 underline hover:text-green-300">
+                    CONNECTEZ-VOUS / INSCRIVEZ-VOUS ICI
+                </a>
+            </p>
+        </div>
 
-            <div class="form-group">
-                <label for="input2"><i class="bi bi-geo-alt custom-icon"></i> A :</label>
-                <select id="input2" name="input2" style="width: 150px; height: 40px;" class="select2">
-                    <?php
-                    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-                    $query = 'select * from destination order by Nom_ville ASC';
-                    $response = $bdd->query($query);
-                    while ($donnee = $response->fetch()) {
-                        $destination = $donnee['Nom_ville'];
-                        echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
-                    }
-                    ?>
-                </select>
-            </div>
+        <!-- Titre secondaire bien visible -->
+        <h3 class="relative z-10 text-2xl md:text-3xl font-bold text-green-400 mt-10 mb-4">
+            Rechercher votre trajet
+        </h3>
 
-            <div class="form-group">
-                <label for="input3">Date départ :</label>
-                <input type="date" class="date-input" name="input3" style="width: 150px; height: 35px;">
-            </div>
+        <!-- FORMULAIRE intégré en bas de l’image -->
+        <div class="relative z-10 w-[90%] max-w-5xl mt-4 ">
+            <div class="bg-white bg-opacity-95 backdrop-blur-md shadow-xl rounded px-6 py-6 text-green-800 text-base font-bold">
+                <form action="listevoyageretour.php" method="post" class="flex flex-col space-y-6">
 
-            <div class="form-group">
-                <label for="input4">Date retour :</label>
-                <input type="date" class="date-input" name="input4" id="input4" style="width: 150px; height: 35px;"
-                    disabled>
+                    <!-- Radios -->
+                    <div class="flex space-x-6 items-center text-lg">
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" name="inlineRadioOptions" value="option1" checked
+                                class="text-green-600 focus:ring-green-500 w-5 h-5">
+                            <span>Aller</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" name="inlineRadioOptions" value="option2"
+                                class="text-green-600 focus:ring-green-500 w-5 h-5">
+                            <span>Aller-Retour</span>
+                        </label>
+                    </div>
+
+                    <!-- Inputs -->
+                    <div class="flex flex-col md:flex-row md:items-end md:space-x-4 space-y-4 md:space-y-0 text-lg font-bold">
+
+                        <!-- DE -->
+                        <div>
+                            <label for="input1" class="block mb-1">
+                                <i class="bi bi-geo-alt text-green-600 mr-1"></i> DE :
+                            </label>
+                            <select id="input1" name="input1" class="w-44 h-11 border border-gray-300 rounded px-2 text-green-700 font-bold">
+                                <?php
+                                $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+                                $query = 'select * from destination order by Nom_ville ASC';
+                                $response = $bdd->query($query);
+                                while ($donnee = $response->fetch()) {
+                                    $destination = $donnee['Nom_ville'];
+                                    echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <!-- A -->
+                        <div>
+                            <label for="input2" class="block mb-1">
+                                <i class="bi bi-geo-alt text-green-600 mr-1"></i> A :
+                            </label>
+                            <select id="input2" name="input2" class="w-44 h-11 border border-gray-300 rounded px-2 text-green-700 font-bold">
+                                <?php
+                                $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+                                $query = 'select * from destination order by Nom_ville ASC';
+                                $response = $bdd->query($query);
+                                while ($donnee = $response->fetch()) {
+                                    $destination = $donnee['Nom_ville'];
+                                    echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <!-- Date départ -->
+                        <div>
+                            <label for="input3" class="block mb-1">Date départ :</label>
+                            <input type="date" name="input3"
+                                class="w-44 h-11 border border-gray-300 rounded px-2 text-green-700 font-bold">
+                        </div>
+
+                        <!-- Date retour -->
+                        <div>
+                            <label for="input4" class="block mb-1">Date retour :</label>
+                            <input type="date" name="input4" id="input4" disabled
+                                class="w-44 h-11 border border-gray-300 rounded px-2 text-green-700 font-bold">
+                        </div>
+
+                        <!-- Bouton -->
+                        <div>
+                            <label class="invisible block h-5">Valider</label>
+                            <input type="submit" value="Valider"
+                                class="w-44 h-11 bg-green-600 hover:bg-green-700 text-white font-bold rounded cursor-pointer">
+                        </div>
+                    </div>
+                </form>
             </div>
+        </div>
+    </section>
 
 
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Valider"
-                    style="background-color: green; color: white; width: 150px; height: 40px;">
-            </div>
-        </form>
-    </div>
+
 
     <div class="button-container">
         <button class="button" id="openModalButton">Gérer ma réservation</button>
@@ -323,64 +362,99 @@ if (isset($_POST['deconnect_account'])) {
 
     <br>
 
-    <div class="rectangle">
-        <p> <span> Voyagez sur le plus grand réseau camerounais de bus longue distance !</span> Depuis 2000,
-            général
-            voyage
-            agrandit continuellement son réseaucamerounais et dessert désormais chaque jour plus de 100
-            destinations
-            dont plus
-            de 30 villes au cameroun.
-            Notre objectif est de rendre le Cameroun verte ! Le réseau de général voyage s’étend déjà du Sud à
-            l'EST-Cameroun ainsi que vers le grand Nord Cameroun.Vous pouvez découvrir l'intégralité de notre
-            réseau
-            de
-            bus
-            longue distance sur notre carte interactive. Réservez dès maintenant votre voyage en bus pour
-            Yaounde,
-            Kribi,
-            ABamenda, Edea, Banga et bien d’autres ! Si vous manquez d'inspiration pour votre prochain voyage,
-            consultez notre page idées de voyages ; pour choisir une destination originale ou consultez la liste
-            complète de
-            nos destinations.</p>
-        <br>
-        <h2 style="color: green; text-align:center;">C’est simple et confortable</h2><br>
-        <p>
-            Voyager n’a jamais été aussi simple avec gGénéral voyage car nous vous accompagnons de la première à
-            la
-            dernière étape.
-            Grâce à des informations détaillées sur notre site web et à notre personnel serviable, vous pouvez
-            parfaitement
-            planifier votre voyage et embarquer sereinement. Vous pouvez<span> acheter votre billet sur notre
-                site
-                internet</span> ou bien même au dernier moment auprès du conducteur. Votre billet Général voyage
-            vous
-            offre <span>la
-                garantie d’une place assise</span> avec beaucoup<span> d’espace pour vos jambes</span>.
-            Si lors du trajet vous avez une petite faim, pas de problème ! Nos conducteurs proposent des snacks
-            et
-            boissons à
-            petit prix. A bord de nos bus, vous aurez <span>accès à notre Wi-fi gratuit</span> afin de lire vos
-            mails,
-            écouter
-            de la musique ou poster des photos sur vos réseaux sociaux. De plus, des prises électriques sont
-            présentes à
-            coté
-            de chaque siège et elles vous seront bien utiles lors des longs trajets !</p>
-        <br>
-        <h2 style="color: green; text-align:center;">C’est économique et bon pour l'environnement</h2><br>
-        <p style='text-align: center;'>
-            Avec général voyage, il est facile d'économiser : les prix défiant toute concurrence de nos billets
-            soulagent
-            votre porte-monnaie tandis que le confort de nos bus épargne vos nerfs, des pauses à repetition et
-            aux
-            demandes
-            des passagers pour satisfaire leur besoin. De plus,
-            voyager en bus longue distance est le mode de transport le plus respectueux de l'environnement, avec
-            un
-            bilan CO2
-            exemplaire. « Roulez vert » est notre devise !</p>
-    </div>
+    <section class="py-12 bg-white">
+        <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-8 items-start">
+
+
+            <div>
+                <img src="https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg"
+                    alt="Bus EasyTravel"
+                    class="rounded-lg shadow-md w-full h-[500px] object-cover">
+            </div>
+
+
+            <div>
+                <h2 class="text-green-700 font-bold text-2xl mb-4">
+                    Voyagez sur le plus grand réseau camerounais de bus longue distance !
+                </h2>
+                <p class="text-gray-700 mb-4">
+                    Depuis 2000, <strong class="text-green-800">Général Voyage</strong> agrandit continuellement son réseau
+                    camerounais et dessert chaque jour plus de 100 destinations dont plus de 30 villes au Cameroun.
+                    Notre objectif est de rendre le Cameroun vert !
+                    Le réseau de Général Voyage s’étend du Sud à l'Est jusqu’au Grand Nord.
+                    Découvrez notre <a href="#" class="text-green-600 font-medium hover:underline">carte interactive</a>
+                    ou réservez dès maintenant pour <strong>Yaoundé, Kribi, Bamenda, Edea, Banga</strong> et bien d’autres.
+                </p>
+
+                <h3 class="text-green-600 font-semibold text-xl mb-2">C’est simple et confortable</h3>
+                <p class="text-gray-700 mb-4">
+                    Voyager n’a jamais été aussi simple avec Général Voyage.
+                    Notre personnel serviable et notre site web détaillé vous accompagnent de la réservation jusqu’à l’arrivée.
+                    Vous pouvez <a href="#" class="text-green-600 font-medium hover:underline">acheter votre billet en ligne</a>
+                    ou même au dernier moment auprès du conducteur.
+                </p>
+
+                <p class="text-gray-700">
+                    Nos bus garantissent <strong class="font-semibold text-green-700">une place assise avec espace pour vos jambes</strong>,
+                    <strong class="font-semibold text-green-700">Wi-fi gratuit</strong>,
+                    <strong class="font-semibold text-green-700">prises électriques</strong> et des snacks à petit prix !
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="text-white text-center py-12">
+        <div class="carousel mx-auto" data-flickity='{ "cellAlign": "left", "contain": true, "wrapAround": false, "pageDots": true }'>
+            <div class="carousel-cell">
+                <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                    <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b" alt="City" />
+                    <div class="px-6 py-4">
+                        <div class="font-bold text-xl mb-2">New York City</div>
+                        <p class="text-gray-700 text-base">The Big Apple, featuring stunning architecture and vibrant culture.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-cell">
+                <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                    <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
+                    <div class="px-6 py-4">
+                        <div class="font-bold text-xl mb-2">Tokyo</div>
+                        <p class="text-gray-700 text-base">A blend of modern technology and traditional culture.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-cell">
+                <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                    <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e" alt="Paris" />
+                    <div class="px-6 py-4">
+                        <div class="font-bold text-xl mb-2">Paris</div>
+                        <p class="text-gray-700 text-base">The City of Light, known for its romance and iconic landmarks.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-cell">
+                <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                    <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b" alt="City" />
+                    <div class="px-6 py-4">
+                        <div class="font-bold text-xl mb-2">New York City</div>
+                        <p class="text-gray-700 text-base">The Big Apple, featuring stunning architecture and vibrant culture.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-cell">
+                <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                    <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
+                    <div class="px-6 py-4">
+                        <div class="font-bold text-xl mb-2">Tokyo</div>
+                        <p class="text-gray-700 text-base">A blend of modern technology and traditional culture.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
 
 
     <div class=" chat">
@@ -777,66 +851,43 @@ if (isset($_POST['deconnect_account'])) {
         }
 
 
+        .carousel {
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 0;
+        }
+
+        .carousel-cell {
+            width: 300px;
+            margin-right: 20px;
+        }
+
+
+        .flickity-page-dots {
+            bottom: -40px;
+            text-align: center;
+        }
+
+        .flickity-page-dots .dot {
+            background: #333;
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            border-radius: 50%;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .flickity-page-dots .dot.is-selected {
+            opacity: 1;
+        }
+
+
+
 
         /* PARTIE FOOTER */
-        footer {
-            background-color: rgb(247, 247, 247);
-            padding: 40px;
-            font-family: Arial, sans-serif;
-            box-shadow: inset 5px 5px 10px -5px rgba(0, 0, 0, 0.5);
-            width: 100%;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
 
 
-        .social-media,
-        .contact,
-        .privacy {
-            flex-basis: 30%;
-            margin-bottom: 20px;
-        }
-
-        .footer-picture {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            flex-basis: 30%;
-            margin-bottom: 70px;
-            margin-right: 50px;
-        }
-
-        .social-icons ul {
-            display: flex;
-            list-style-type: none;
-        }
-
-        .social-icons a {
-            display: flex;
-            justify-content: center;
-            margin: 0 10px;
-        }
-
-        .social-icons i {
-            font-size: 24px;
-            color: black;
-
-        }
-
-        .social-icons i:hover {
-            color: rosybrown;
-        }
 
         .liste a {
             color: 'red';
@@ -881,11 +932,6 @@ if (isset($_POST['deconnect_account'])) {
             margin-right: 30px;
         }
 
-        .social-download img {
-            height: 50px;
-            width: 90px;
-            cursor: pointer;
-        }
 
         #outillage {
             /* display: flex; */
@@ -915,7 +961,6 @@ if (isset($_POST['deconnect_account'])) {
         .custom-icon {
             font-weight: bold;
             color: #000000;
-            /* Remplacez #000 par la couleur souhaitée */
         }
 
         /* Style de base pour les boutons radio personnalisés */
@@ -1042,10 +1087,6 @@ if (isset($_POST['deconnect_account'])) {
             font-size: 18px;
             margin-top: 10px;
             font-weight: bold;
-        }
-
-        .rectangle {
-            text-align: center;
         }
     </style>
 
@@ -1260,7 +1301,7 @@ if (isset($_POST['deconnect_account'])) {
 
 
 
-        
+
 
         document.addEventListener("DOMContentLoaded", function() {
             const radioAller = document.getElementById("inlineRadio1");

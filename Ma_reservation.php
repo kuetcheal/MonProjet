@@ -37,7 +37,7 @@ if (isset($_GET['id_reservation'])) {
         $villeArrivee = $row['villeArrivee'];
 
         // Calcul du remboursement
-        $perte = $prix * 0.3; 
+        $perte = $prix * 0.3;
         $remboursement = $prix - $perte;
     } else {
         echo "Aucune réservation trouvée.";
@@ -62,7 +62,7 @@ if (isset($_GET['id_reservation'])) {
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
-   
+<?php include 'includes/header.php'; ?>
 
     <div class="container mx-auto p-8 bg-white shadow-lg rounded-lg w-3/4">
         <h1 class="text-2xl font-bold text-center text-gray-700 mb-6">Réservation Confirmée</h1>
@@ -105,15 +105,15 @@ if (isset($_GET['id_reservation'])) {
 
                 <div class="flex justify-between items-center mt-4">
                     <div>
-                    <i class="fas fa-map-marker-alt text-gray-500"></i> <?php echo $villeDepart; ?>
-                    <br><i class="fas fa-clock text-gray-500"></i> <?php echo $heureDepart; ?>
-                        
+                        <i class="fas fa-map-marker-alt text-gray-500"></i> <?php echo $villeDepart; ?>
+                        <br><i class="fas fa-clock text-gray-500"></i> <?php echo $heureDepart; ?>
+
                     </div>
                     <div class="h-12 border-l-2 border-dashed mx-4"></div>
                     <div>
-                    <i class="fas fa-map-marker-alt text-gray-500"></i> <?php echo $villeArrivee; ?>
-                    <br> <i class="fas fa-clock text-gray-500"></i> <?php echo $heureArrivee; ?>
-                        
+                        <i class="fas fa-map-marker-alt text-gray-500"></i> <?php echo $villeArrivee; ?>
+                        <br> <i class="fas fa-clock text-gray-500"></i> <?php echo $heureArrivee; ?>
+
                     </div>
                 </div>
 
@@ -147,22 +147,25 @@ if (isset($_GET['id_reservation'])) {
         function supprimerReservation(id) {
             if (confirm("Voulez-vous vraiment annuler cette réservation ?")) {
                 fetch("./Reservation/supprimer_reservation.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    body: "id_reservation=" + id,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        alert(data.message);
-                        window.location.href = "Accueil.php"; // Redirige après suppression
-                    } else {
-                        alert("Erreur : " + data.message);
-                    }
-                })
-                .catch(error => console.error("Erreur:", error));
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            id_reservation: id
+                        }) // Envoyer en JSON
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            alert(data.message);
+                            window.location.href = "Accueil.php"; // Rediriger après suppression
+                        } else {
+                            alert("Erreur : " + data.message);
+                        }
+                    })
+                    .catch(error => console.error("Erreur :", error));
+
             }
         }
     </script>
