@@ -1,4 +1,7 @@
 <?php
+
+header('Content-Type: application/json');
+
 try {
     $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
 
