@@ -24,7 +24,6 @@ if (isset($_POST['deconnect_account'])) {
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
     <link rel="stylesheet" href="style.css">
 
     <title>Document</title>
@@ -32,12 +31,13 @@ if (isset($_POST['deconnect_account'])) {
 
 <body>
     <!-- PARIE HEADER -->
+    <?php include 'includes/header.php'; ?>
 
     <?php include_once 'Cookies/cookies.php'; ?>
 
 
     <!-- PARTIE HEADER -->
-    <header class="container-fluid">
+    <!-- <header class="container-fluid">
         <nav class="container-fluid">
             <div class=" header-picture">
                 <img src="logo général.jpg" alt="logo site" />
@@ -65,169 +65,9 @@ if (isset($_POST['deconnect_account'])) {
 
             </div>
         </nav>
-    </header>
+    </header> -->
 
-    <!-- Popup de settings -->
-    <div id="myModal" class="modal1" style="display: none;">
-        <div class="modal-content1">
-            <span class="close1" onclick="closeModal('myModal')" style="position: fixed; right: 373px; top: 16px;">
-                <i class="fa fa-arrow-left" aria-hidden="true"></i>
-            </span>
-            <h2 style="margin-left: 60px;">Mon compte utilisateur</h2><br>
-            <hr style="color: green;"><br><br>
-            <div class="profiler">
-                <div>
-                    <img src="pictures/OIP.jpg" alt="image user" id="profil-pic" style="position: fixed; top: 75px" />
-                    <input type="file" accept="image/png, image/jpeg, image/jpg" id="input-file" style="display: none">
-                    <label for="input-file"
-                        style="position: fixed; top: 164px; height: 20px; width:110px; background-color: green; color: white; font-size: 12px; padding: 8px">Download
-                        image</label>
-                </div>
-                <div class="profil-infos" style="margin-left: 145px;">
-                    <p>Alex KUETCHE</p>
-                    <p style="color: green;">alexkuetche@gmail.com</p>
-                </div>
-            </div><br><br>
-            <hr style="color: green;"><br><br>
-            <h2 style="color: green; text-align: center;">Mes connexions</h2><br>
-            <p style="font-size: 16px;">Veuillez accéder au contenu settings de l'application</p><br>
-            <div style="display: flex; align-items: center; flex-direction: column; gap: 23px;">
-                <button type="submit" class="btn-supprimer" style="width: 350px;"
-                    onclick="openModal('myModal1')">Supprimer</button>
-                <button type="submit" class="btn-deconnecter" style="width: 350px;" onclick="openModal('myModal2')">Se
-                    déconnecter</button>
-                <button type="submit" class="btn-modifier" style="width: 350px;"
-                    onclick="openModal('myModal3')">Modifier</button>
-            </div><br><br>
-            <div>
-                <img src="logo général.jpg" alt="logo site" style="height: 60px; width: 110px; margin-left: 140px;" />
-            </div>
-        </div>
-    </div>
-
-    <!-- Popup de suppression -->
-    <div id="myModal1" class="modal1">
-        <div class="modal-content1">
-            <h2 style="text-align: center;">Réglages</h2>
-            <span class="close1" onclick="closeModal('myModal1')" style="position: fixed; right: 385px; top: 12px;">
-                <i class="fa fa-arrow-left" aria-hidden="true"></i>
-            </span><br>
-            <h2>Suppression du compte</h2><br><br>
-            <hr style="color: green;"><br><br>
-            <div class="profil" style="display: flex;">
-                <img src="pictures/OIP.jpg" alt="image user" class="profil-pic-global"
-                    style="position: fixed; top: 148px; height: 60px; width: 60px; border-radius: 50%; object-fit: cover;" />
-                <div class="profil-infos" style="margin-left: 80px;">
-                    <p>Alex KUETCHE</p>
-                    <p style="color: green;">alexkuetche@gmail.com</p>
-                </div>
-            </div><br><br>
-            <hr style="color: green;"><br><br><br>
-            <p style="text-align: center;">Attention !!! cette action effacera définitivement votre compte de
-                l'application. Êtes-vous sûr de vouloir supprimer votre compte ?</p><br><br><br>
-            <form method="post" action="">
-                <button name="delete_account" class="btn-supprimer"
-                    style="background-color: green; color: white; border: none; border-radius: 5px; border-color: 2px solid green; font-size: 20px; height: 30px; width: 120px; margin-left: 135px;">Supprimer</button><br><br><br><br><br><br>
-                <div>
-                    <img src="logo général.jpg" alt="logo site"
-                        style="height: 60px; width: 110px; margin-left: 140px; margin-bottom: 40px" />
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Popup de déconnexion -->
-    <div id="myModal2" class="modal1">
-        <div class="modal-content1">
-            <h2 style="text-align: center;">Réglages</h2>
-            <span class="close1" onclick="closeModal('myModal2')" style="position: fixed; right: 385px; top: 12px;">
-                <i class="fa fa-arrow-left" aria-hidden="true"></i>
-            </span><br>
-            <h2>Déconnexion du compte</h2><br><br>
-            <hr style="color: green;"><br><br>
-            <div class="profil" style="display: flex;">
-                <img src="pictures/OIP.jpg" alt="image user" class="profil-pic-global"
-                    style="position: fixed; top: 148px; height: 60px; width: 60px; border-radius: 50%; object-fit: cover;" />
-                <div class="profil-infos" style="margin-left: 80px;">
-                    <p>Alex KUETCHE</p>
-                    <p style="color: green;">alexkuetche@gmail.com</p>
-                </div>
-            </div><br><br>
-            <hr style="color: green;"><br><br><br>
-            <p style="text-align: center;">Attention !!! cette action déconnectera votre compte de l'application.
-                Êtes-vous sûr de vouloir vous déconnecter votre compte ?</p><br><br><br>
-            <form method="post" action="">
-                <button name="delete_account" class="btn-deconnecter" style="margin-left: 105px;">Se
-                    déconnecter</button><br><br><br><br>
-                <div>
-                    <img src="logo général.jpg" alt="logo site"
-                        style="height: 60px; width: 110px; margin-left: 140px;" />
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- AFFICHAGE DU POPUP DE MESSAGE DE MODIFICATION -->
-
-
-    <div id="myModal3" class="modal1">
-        <div class="modal-content1">
-            <h2 style=" text-align: center;">Réglages</h2>
-            <span class="close1" onclick="closeModal('myModal3')" style="position: fixed; right: 385px; top: 12px;"><i
-                    class=" fa
-                fa-arrow-left" aria-hidden="true">
-                </i></span><br>
-            <h2>Modification du compte</h2> <br>
-            <hr style=" color: green;"><br>
-            <form method="post" action="">
-                <h4 style="font-size: 20px; color: green;">Nom d'utilisateur</h4>
-                <label for="username" style="font-size: 16px; ">Veuillez saisir le nom
-                    d'utilisateur:</label>
-                <input type="text" name="username" id="username" placeholder="ALEX" style="width: 370px; "
-                    required><br><br>
-                <h4 style="font-size: 20px; color: green;">Mot de passe actuel</h4>
-                <label for="username" style="font-size: 16px; ">Entrer votre mot de passe actuel:</label>
-                <input type="text" name="password" id="username" placeholder="impact1999" style="width: 370px; "
-                    required><br><br>
-                <h4 style="font-size: 20px; color: green;">Nouveau mot de passe</h4>
-                <label for="password" style="font-size: 16px;">Saisir votre nouveau mot de passe:</label>
-                <input type="text" name="newPassword" id="username" placeholder="stephane2000" style="width: 370px; "
-                    required><br><br><br>
-                <h4 style="font-size: 20px; color: green;">Mot de passe actuel</h4>
-                <label for="username" style="font-size: 16px; ">Confirmer votre nouveu mot de
-                    passe:</label>
-                <input type="text" name="confirmPassword" id="username" placeholder="stephane2000"
-                    style="width: 370px; " required><br><br><br>
-                <hr style=" color: green;"><br><br>
-                <button name="delete_account" class="btn-modifier" style="margin-left: 105px;">
-                    Modifier</button>
-            </form>
-
-
-        </div>
-    </div>
-
-
-    <!-- CODE PHP POUR LA SUPPRESSION DU COMPTE -->
-    <?php
-    // Vérifier si le formulaire de suppression a été soumis
-    if (isset($_POST['delete_account'])) {
-        $host = 'localhost'; // nom d'hôte
-        $user = 'root'; // nom d'utilisateur
-        $password = ''; // mot de passe
-        $database = 'bd_stock'; // nom de la base de données
-
-        // Connexion à la base de données MySQLi
-        $conn = mysqli_connect($host, $user, $password, $database);
-        $id = $_SESSION['Id_compte'];
-        $query = "DELETE FROM user WHERE id_name =$id";
-        mysqli_query($conn, $query);
-
-        header('Location: connexion.php');
-        exit;
-    }
-    ?>
-
+   
 
     <!-- PARTIE MAIN -->
     <div class="content">
@@ -1286,12 +1126,6 @@ if (isset($_POST['deconnect_account'])) {
             // Appeler la fonction au chargement pour s'assurer que l'état est correct
             toggleDateRetour();
         });
-
-
-
-
-
-
 
         // selectionne de la destination
         $(document).ready(function() {
