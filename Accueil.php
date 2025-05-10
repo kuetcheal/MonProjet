@@ -39,42 +39,6 @@ if (isset($_POST['deconnect_account'])) {
 
     <?php include_once 'Cookies/cookies.php'; ?>
 
-
-    <!-- PARTIE HEADER -->
-    <!-- <header class="container-fluid">
-        <nav class="container-fluid">
-            <div class=" header-picture">
-                <img src="logo général.jpg" alt="logo site" />
-            </div>
-            <div class="nav-bar">
-                <ul>
-                    <li class="items"> <a href="#">Acceuil</a></li>
-                    <li class="items"><a href="ajoutarticle.php">Reservations</a></li>
-                    <li class="items"><a href="ajoutclient.php">Services</a></li>
-                    <li class="items"><a href="Contact/page-contact.php">Nos contacts</a></li>
-                    <li class="items"><a href="inscription.php">inscription</a></li>
-                    <li class="items"><a href="connexion.php">connexion</a></li>
-                </ul>
-            </div>
-            <div class="public">
-                <div class="notif">
-                    <i class="fa fa-bell-o" aria-hidden="true"></i>
-                </div>
-                <div class="langue">
-                    <i class="fa fa-globe" aria-hidden="true"></i>
-                </div>
-                <div class="outils">
-                    <img src="pictures/OIP.jpg" id="profil" onclick="openModal('myModal')" alt="image user" />
-                </div>
-
-            </div>
-        </nav>
-    </header> -->
-
-   
-
-    <!-- PARTIE MAIN -->
-    <!-- SECTION HERO -->
     <section class="relative bg-cover bg-center h-[500px] md:h-[550px] text-white flex flex-col justify-center items-center"
         style="background-image: url('https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg');">
 
@@ -183,11 +147,15 @@ if (isset($_POST['deconnect_account'])) {
             </div>
         </div>
     </section>
+    <div class="reste">
+        <div class="reserv">
+        <h1 class="text-green-700 font-bold text-2xl mb-4">
+        Gérer vos trajets et vos reservations sans soucis grâce à vos identfiants de reservation sur votre billet de voyage.
+                </h1>
+           
+        </div>
 
-
-
-
-    <div class="button-container">
+    <div class="button-container max-w-7xl">
         <button class="button" id="openModalButton">Gérer ma réservation</button>
         <button class="button">Localiser mon trajet</button>
         <button class="button">Besoin d'aide</button>
@@ -195,15 +163,16 @@ if (isset($_POST['deconnect_account'])) {
 
     <div id="modalContainer"></div>
 
-    <h1 style="color: green; text-align: center;">Profitez de toutes nos destinations pour vos besoins de deplacement
-    </h1><br>
-    <!-- PARIE MAP -->
+    <h1 class="text-green-700 text-center font-bold text-2xl mb-4">
+                    Voyagez sur le plus grand réseau camerounais de bus longue distance !
+                </h1><br>
+  <div class="map">
     <?php include 'map.php'; ?>
-
+    </div>
     <br>
 
     <section class="py-12 bg-white">
-        <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-8 items-start">
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-8 items-start">
 
 
             <div>
@@ -214,9 +183,9 @@ if (isset($_POST['deconnect_account'])) {
 
 
             <div>
-                <h2 class="text-green-700 font-bold text-2xl mb-4">
+                <h1 class="text-green-700 font-bold text-2xl mb-4">
                     Voyagez sur le plus grand réseau camerounais de bus longue distance !
-                </h2>
+                </h1>
                 <p class="text-gray-700 mb-4">
                     Depuis 2000, <strong class="text-green-800">Général Voyage</strong> agrandit continuellement son réseau
                     camerounais et dessert chaque jour plus de 100 destinations dont plus de 30 villes au Cameroun.
@@ -245,7 +214,7 @@ if (isset($_POST['deconnect_account'])) {
     </section>
 
     <section class="text-white text-center py-12">
-        <div class="carousel mx-auto" data-flickity='{ "cellAlign": "left", "contain": true, "wrapAround": false, "pageDots": true }'>
+        <div class="carousel mx-auto max-w-7xl" data-flickity='{ "cellAlign": "left", "contain": true, "wrapAround": false, "pageDots": true }'>
             <div class="carousel-cell">
                 <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
                     <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b" alt="City" />
@@ -302,45 +271,18 @@ if (isset($_POST['deconnect_account'])) {
             style=" color: green; position: fixed; top: 566px; right: 18px; cursor: pointer; font-size: 61px;"></i>
     </div>
     <div id="modalMessage"></div>
-
-
-    <!-- <div id="myModal6" class="modale" style="display: none;">
-        <div class="modale-contente">
-            <h2>Insertion réussie</h2> <br>
-            <p>Votre message a été inséré avec succès.</p> <br>
-            <button onclick="closeModal('myModal6')">Fermer</button>
-        </div>
-    </div>'; -->
-
-
-
-
-
+    </div>
     <!-- PARIE FOOTER -->
-    <?php include 'footer.php'; ?>
+    <?php include 'includes/footer.php'; ?>
 
 
 
     <style>
-        /* PARTIE HEADER */
-        .date-input {
-            appearance: none;
-            padding: 8px;
-            border: 1px solid green;
-            border-radius: 4px;
-            font-size: 14px;
-            border-color: green;
-            width: 200px;
-            height: 30px;
-            font-size: 20px;
-        }
 
-        header {
-            width: 1400px;
-            background-color: green;
-            height: 140px;
+        .reste{
+            background-color: white !important;
         }
-
+     
         nav {
             width: 100%;
             margin: 0 auto;
@@ -349,14 +291,14 @@ if (isset($_POST['deconnect_account'])) {
             align-items: center;
         }
 
-        .nav-bar {
-            margin-left: 25px;
-            margin-top: 65px;
-            background-color: #3e8e41;
-            height: 40px;
-            width: 900px;
-            padding: 7px;
-            border-radius: 20px;
+        .map{
+            background-color : #F8F7F7 !important;
+            width: 100%; 
+            height: 850px;
+        }
+
+        .button-container{
+            align-items : center !important;
         }
 
         img {
@@ -387,25 +329,7 @@ if (isset($_POST['deconnect_account'])) {
             cursor: pointer;
         }
 
-        /* Affichage de la popup */
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-            position: fixed;
-            right: 5px;
-            bottom: 197px;
-            gap: 15px;
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-            height: 120px;
-            width: 190px;
-            border-radius: 11px;
-        }
+  
 
         .close {
             color: #aaa;
@@ -492,32 +416,6 @@ if (isset($_POST['deconnect_account'])) {
             background-color: rgba(0, 0, 0, 0.5);
         }
 
-        .modal-content1 {
-            /* background-color: #fefefe; */
-            background-color: aliceblue;
-            /* margin: 15% auto; */
-            padding: 20px;
-            border: 1px solid #888;
-            height: 600px;
-            width: 400px;
-            position: fixed;
-            bottom: 41px;
-            top: 1px;
-            left: 930px;
-        }
-
-        .contente {
-            background-color: white;
-            padding: 20px;
-            border: 2px solid white;
-            border-radius: 5px;
-            height: 450px;
-            width: 600px;
-            position: fixed;
-            bottom: 71px;
-            left: 340px;
-
-        }
 
         .btn {
             display: flex;
@@ -540,27 +438,7 @@ if (isset($_POST['deconnect_account'])) {
             cursor: pointer;
         }
 
-        /* Affichage de la popup de déconnexion */
-        .modal2 {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content2 {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-        }
+       
 
         .close2 {
             color: #aaa;
@@ -597,12 +475,6 @@ if (isset($_POST['deconnect_account'])) {
             height: 40px;
             border-radius: 50%;
             cursor: pointer;
-        }
-
-        .nav-bar ul {
-            display: flex;
-            list-style-type: none;
-            margin-top: 10px;
         }
 
         a {
@@ -685,17 +557,6 @@ if (isset($_POST['deconnect_account'])) {
             background-color: rgba(0, 0, 0, 0.5);
         }
 
-        .modale-contente {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-            height: 150px;
-            text-align: center;
-            border-radius: 8px;
-        }
 
 
         .carousel {
@@ -778,24 +639,11 @@ if (isset($_POST['deconnect_account'])) {
         #apps {
             margin-right: 30px;
         }
-
-
+        
         #outillage {
             /* display: flex; */
             position: fixed;
             top: 50px;
-        }
-
-        .container {
-            padding: 20px;
-            background-size: cover;
-            height: 500px;
-            color: aliceblue;
-            flex-grow: 1;
-            width: 100%;
-            background-repeat: no-repeat;
-            position: relative;
-            transition: background-image 0.1s ease-in-out;
         }
 
         .para {
@@ -810,66 +658,7 @@ if (isset($_POST['deconnect_account'])) {
             color: #000000;
         }
 
-        /* Style de base pour les boutons radio personnalisés */
-        .form-check-input {
-            appearance: none;
-            /* Supprime le style par défaut du navigateur */
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-color: transparent;
-            border: 2px solid #ccc;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            cursor: pointer;
-            /* Change le curseur pour indiquer un élément cliquable */
-            position: relative;
-            /* Nécessaire pour positionner le pseudo-élément */
-            transition: border-color 0.3s;
-            /* Transition douce pour la couleur de la bordure */
-        }
-
-        /* Style lorsque le radio est sélectionné */
-        .form-check-input:checked {
-            border-color: green;
-            /* Change la couleur de la bordure en vert lorsqu'il est sélectionné */
-        }
-
-        .form-check-input:checked::before {
-            content: '';
-            /* Nécessaire pour générer un cercle à l'intérieur */
-            position: absolute;
-            top: 50%;
-            /* Centre le cercle verticalement */
-            left: 50%;
-            /* Centre le cercle horizontalement */
-            width: 14px;
-            /* Largeur du cercle intérieur */
-            height: 14px;
-            /* Hauteur du cercle intérieur */
-            background-color: green;
-            /* Fond vert pour l'état sélectionné */
-            border-radius: 50%;
-            /* Rend le pseudo-élément circulaire */
-            transform: translate(-50%, -50%);
-            /* Assure que le pseudo-élément est parfaitement centré */
-        }
-
-        /* Amélioration de l'interactivité au survol */
-        .form-check-input:hover:not(:checked) {
-            border-color: #aaa;
-            /* Assombrit légèrement la bordure au survol si non sélectionné */
-        }
-
-        /* Améliorations pour l'accessibilité lors du focus */
-        .form-check-input:focus-visible {
-            outline: 2px solid #5b9dd9;
-            /* Ajoute un contour bleu lors du focus par le clavier */
-            outline-offset: 2px;
-        }
-
-
-
+        
         .reservation1 {
             position: relative;
             text-align: center;
@@ -884,52 +673,6 @@ if (isset($_POST['deconnect_account'])) {
             margin: 0 auto;
             /* centrer l'image horizontalement */
         }
-
-        .buttonerser {
-            position: absolute;
-            bottom: 10px;
-            /* ajustez la marge inférieure selon vos besoins */
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 30px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1;
-            /* pour être en avant-plan */
-            width: 150px;
-            height: 50px;
-            transition: background-color 0.3s;
-            /* effet hover */
-        }
-
-        .buttonerser:hover {
-            background-color: #45a049;
-            /* couleur différente au survol */
-        }
-
-        .box {
-            border: 2px solid #ccc;
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 1px 3px rgba(0.2, 0, 0.3, 0.3);
-            width: 910px;
-            margin-left: 205px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-    /* .form-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    } */
-
 
         .rectangle {
             text-align: center;
@@ -1027,15 +770,6 @@ if (isset($_POST['deconnect_account'])) {
             `linear-gradient(rgba(39, 39, 39, 0.6), rgba(0, 0, 0, 0.6)), url(${images[currentIndex]})`;
     }
     setInterval(changeBackground, 4000);
-
-        // // gestion du choix du trajet retour ou non
-        // document.getElementById('inlineRadio1').addEventListener('change', function() {
-        //     document.getElementById('input4').disabled = true;
-        // });
-        // document.getElementById('inlineRadio2').addEventListener('change', function() {
-        //     document.getElementById('input4').disabled = false;
-        // });
-
 
 
         // Code pour ouvrir le modal de reservation  et vérifier sa reservation

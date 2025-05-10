@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 if (isset($_POST['deconnect_account'])) {
     session_unset();
     session_destroy();
@@ -23,11 +23,11 @@ if (isset($_POST['deconnect_account'])) {
 <body>
 
     <!-- HEADER -->
-    <header class="w-full bg-green-600 h-20 flex justify-between items-center px-6 md:px-10">
+    <header class="w-full bg-green-600 h-27 flex justify-between items-center px-6 md:px-10">
         <div>
-            <img src="../logo général.jpg" alt="logo site" class="h-12">
+        <img src="pictures/logo-general.jpg" alt="rien" class="h-22">
         </div>
-        <nav class="hidden md:flex space-x-6 text-white text-lg">
+        <nav class="hidden md:flex space-x-6 text-white navbar">
             <a href="#">Accueil</a>
             <a href="reservations.php">Réservations</a>
             <a href="services.php">Services</a>
@@ -37,8 +37,7 @@ if (isset($_POST['deconnect_account'])) {
         </nav>
         <!-- Icônes Notifications, Langue et Profil -->
         <div class="flex space-x-4 items-center">
-            <!-- <i class="fa fa-bell text-white text-xl cursor-pointer"></i> -->
-            <i class="fa fa-globe text-white text-xl cursor-pointer"></i>
+            <h3 class=" text-white text-xl cursor-pointer">FR</h3>
             <img id="profil" src="pictures/OIP.jpg" class="h-10 w-10 rounded-full cursor-pointer"
                 onclick="openModal('myModal')">
 
@@ -255,5 +254,15 @@ if (isset($_POST['deconnect_account'])) {
     </script>
 
 </body>
+
+<style>
+    .navbar{
+        max-width: 790px;
+        background-color: white ;
+        height : 60px;
+        border-radius : 30px;
+        padding : 15px 15px ; 
+    }
+</style>
 
 </html>
