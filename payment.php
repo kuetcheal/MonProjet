@@ -20,6 +20,7 @@ $_SESSION['prix'] = $prixTotal;
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
+<?php include 'includes/header.php'; ?>
     <div class="flex-1 flex justify-center items-center">
         <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
             <?php
@@ -115,12 +116,7 @@ $_SESSION['prix'] = $prixTotal;
         </div>
     </div>
 
-    <!-- FOOTER FIXE EN BAS -->
-    <footer class="bg-gray-700 text-white text-center py-4 w-full mt-auto">
-        <p>Merci d'avoir choisi notre service. Nous vous souhaitons un excellent voyage!  </p>
-           <p> @By Alex KUETCHE, 2024 EasyTech Website. </p>
-      
-    </footer>
+    <?php include 'includes/footer.php'; ?>
 
     <script src="https://js.stripe.com/v3/"></script>
     <script>

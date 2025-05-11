@@ -23,9 +23,9 @@ if (isset($_POST['deconnect_account'])) {
 <body>
 
     <!-- HEADER -->
-    <header class="w-full bg-green-600 h-27 flex justify-between items-center px-6 md:px-10">
+    <header class="w-full flex justify-between items-center px-6 md:px-10 navigation">
         <div>
-        <img src="pictures/logo-general.jpg" alt="rien" class="h-22">
+        <img src="pictures/logo-general.jpg" alt="rien" class="image">
         </div>
         <nav class="hidden md:flex space-x-6 text-white navbar">
             <a href="#">Accueil</a>
@@ -256,12 +256,22 @@ if (isset($_POST['deconnect_account'])) {
 </body>
 
 <style>
+
+    .navigation{
+        height : 125px;
+        background-color: green;
+    }
     .navbar{
         max-width: 790px;
         background-color: white ;
         height : 60px;
         border-radius : 30px;
         padding : 15px 15px ; 
+    }
+
+    .image{
+        width: 120px;
+        height: 100px;
     }
 </style>
 

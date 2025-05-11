@@ -64,7 +64,7 @@ if (isset($_GET['id_reservation'])) {
 <body class="bg-gray-100 flex flex-col min-h-screen">
 <?php include 'includes/header.php'; ?>
 
-    <div class="container mx-auto p-8 bg-white shadow-lg rounded-lg w-3/4">
+    <div class="container mx-auto p-8 bg-white shadow-lg rounded-lg w-3/4 mt-8">
         <h1 class="text-2xl font-bold text-center text-gray-700 mb-6">Réservation Confirmée</h1>
         <div class="border p-4 rounded-lg shadow-md">
             <p><strong>Numéro de réservation :</strong> <?php echo $numero_reservation; ?></p>

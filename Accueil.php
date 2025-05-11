@@ -24,7 +24,7 @@ if (isset($_POST['deconnect_account'])) {
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -48,10 +48,9 @@ if (isset($_POST['deconnect_account'])) {
         <!-- Texte principal -->
         <div class="relative z-10 text-center px-4">
             <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4">
-                Profite de tes voyages! jusqu'à -20% sur les billets<br>
-                ainsi que des billets gratuits
+                Profite jusqu'à -20% sur les billets de reservations !
             </h1>
-            <p class="text-lg font-bold">
+            <p class="text-lg font-bold text-center pt-2">
                 REMISES EXCLUSIVES POUR LES MEMBRES !
                 <a href="connexion.php" class="text-green-400 underline hover:text-green-300">
                     CONNECTEZ-VOUS / INSCRIVEZ-VOUS ICI
@@ -72,12 +71,12 @@ if (isset($_POST['deconnect_account'])) {
                     <!-- Radios -->
                     <div class="flex space-x-6 items-center text-lg">
                         <label class="flex items-center space-x-2">
-                            <input type="radio" name="inlineRadioOptions" value="option1" checked
+                            <input type="radio" id="inlineRadio1" name="inlineRadioOptions" value="option1" checked
                                 class="text-green-600 focus:ring-green-500 w-5 h-5">
                             <span>Aller</span>
                         </label>
                         <label class="flex items-center space-x-2">
-                            <input type="radio" name="inlineRadioOptions" value="option2"
+                            <input type="radio" id="inlineRadio2" name="inlineRadioOptions" value="option2"
                                 class="text-green-600 focus:ring-green-500 w-5 h-5">
                             <span>Aller-Retour</span>
                         </label>
@@ -147,130 +146,178 @@ if (isset($_POST['deconnect_account'])) {
             </div>
         </div>
     </section>
+
     <div class="reste">
         <div class="reserv">
-        <h1 class="text-green-700 font-bold text-2xl mb-4">
-        Gérer vos trajets et vos reservations sans soucis grâce à vos identfiants de reservation sur votre billet de voyage.
+
+
+        </div>
+
+        <div class="button-container max-w-7xl align-items-center ">
+            <div class="titre">
+                <h1 class="text-green-700  text-center font-bold text-2xl mb-4">
+                    Gérer vos trajets et vos reservations sans soucis grâce à vos identfiants de reservation sur votre billet de voyage.
                 </h1>
-           
+            </div>
+
+            <button class="button" id="openModalButton">Gérer ma réservation</button>
+            <button class="button">Localiser mon trajet</button>
+            <button class="button">Besoin d'aide</button>
+
         </div>
 
-    <div class="button-container max-w-7xl">
-        <button class="button" id="openModalButton">Gérer ma réservation</button>
-        <button class="button">Localiser mon trajet</button>
-        <button class="button">Besoin d'aide</button>
-    </div>
+        <div id="modalContainer"></div>
 
-    <div id="modalContainer"></div>
-
-    <h1 class="text-green-700 text-center font-bold text-2xl mb-4">
-                    Voyagez sur le plus grand réseau camerounais de bus longue distance !
-                </h1><br>
-  <div class="map">
-    <?php include 'map.php'; ?>
-    </div>
-    <br>
-
-    <section class="py-12 bg-white">
-        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-8 items-start">
-
-
-            <div>
-                <img src="https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg"
-                    alt="Bus EasyTravel"
-                    class="rounded-lg shadow-md w-full h-[500px] object-cover">
-            </div>
-
-
-            <div>
-                <h1 class="text-green-700 font-bold text-2xl mb-4">
-                    Voyagez sur le plus grand réseau camerounais de bus longue distance !
-                </h1>
-                <p class="text-gray-700 mb-4">
-                    Depuis 2000, <strong class="text-green-800">Général Voyage</strong> agrandit continuellement son réseau
-                    camerounais et dessert chaque jour plus de 100 destinations dont plus de 30 villes au Cameroun.
-                    Notre objectif est de rendre le Cameroun vert !
-                    Le réseau de Général Voyage s’étend du Sud à l'Est jusqu’au Grand Nord.
-                    Découvrez notre <a href="#" class="text-green-600 font-medium hover:underline">carte interactive</a>
-                    ou réservez dès maintenant pour <strong>Yaoundé, Kribi, Bamenda, Edea, Banga</strong> et bien d’autres.
-                </p>
-
-                <h3 class="text-green-600 font-semibold text-xl mb-2">C’est simple et confortable</h3>
-                <p class="text-gray-700 mb-4">
-                    Voyager n’a jamais été aussi simple avec Général Voyage.
-                    Notre personnel serviable et notre site web détaillé vous accompagnent de la réservation jusqu’à l’arrivée.
-                    Vous pouvez <a href="#" class="text-green-600 font-medium hover:underline">acheter votre billet en ligne</a>
-                    ou même au dernier moment auprès du conducteur.
-                </p>
-
-                <p class="text-gray-700">
-                    Nos bus garantissent <strong class="font-semibold text-green-700">une place assise avec espace pour vos jambes</strong>,
-                    <strong class="font-semibold text-green-700">Wi-fi gratuit</strong>,
-                    <strong class="font-semibold text-green-700">prises électriques</strong> et des snacks à petit prix !
-                </p>
-            </div>
-
+        <h1 class="text-green-700 text-center font-bold text-2xl mb-4">
+            Voyagez sur le plus grand réseau camerounais de bus longue distance !
+        </h1><br>
+        <div class="map">
+            <?php include 'map.php'; ?>
         </div>
-    </section>
+        <br>
 
-    <section class="text-white text-center py-12">
-        <div class="carousel mx-auto max-w-7xl" data-flickity='{ "cellAlign": "left", "contain": true, "wrapAround": false, "pageDots": true }'>
-            <div class="carousel-cell">
-                <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
-                    <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b" alt="City" />
-                    <div class="px-6 py-4">
-                        <div class="font-bold text-xl mb-2">New York City</div>
-                        <p class="text-gray-700 text-base">The Big Apple, featuring stunning architecture and vibrant culture.</p>
+        <section class="py-12 bg-white">
+            <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-8 items-start">
+
+
+                <div>
+                    <img src="https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg"
+                        alt="Bus EasyTravel"
+                        class="rounded-lg shadow-md w-full h-[500px] object-cover">
+                </div>
+
+
+                <div>
+                    <h1 class="text-green-700 font-bold text-2xl mb-4">
+                        Voyagez sur le plus grand réseau camerounais de bus longue distance !
+                    </h1>
+                    <p class="text-gray-700 mb-4">
+                        Depuis 2000, <strong class="text-green-800">Général Voyage</strong> agrandit continuellement son réseau
+                        camerounais et dessert chaque jour plus de 100 destinations dont plus de 30 villes au Cameroun.
+                        Notre objectif est de rendre le Cameroun vert !
+                        Le réseau de Général Voyage s’étend du Sud à l'Est jusqu’au Grand Nord.
+                        Découvrez notre <a href="#" class="text-green-600 font-medium hover:underline">carte interactive</a>
+                        ou réservez dès maintenant pour <strong>Yaoundé, Kribi, Bamenda, Edea, Banga</strong> et bien d’autres.
+                    </p>
+
+                    <h3 class="text-green-600 font-semibold text-xl mb-2">C’est simple et confortable</h3>
+                    <p class="text-gray-700 mb-4">
+                        Voyager n’a jamais été aussi simple avec Général Voyage.
+                        Notre personnel serviable et notre site web détaillé vous accompagnent de la réservation jusqu’à l’arrivée.
+                        Vous pouvez <a href="#" class="text-green-600 font-medium hover:underline">acheter votre billet en ligne</a>
+                        ou même au dernier moment auprès du conducteur.
+                    </p>
+
+                    <p class="text-gray-700">
+                        Nos bus garantissent <strong class="font-semibold text-green-700">une place assise avec espace pour vos jambes</strong>,
+                        <strong class="font-semibold text-green-700">Wi-fi gratuit</strong>,
+                        <strong class="font-semibold text-green-700">prises électriques</strong> et des snacks à petit prix !
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="text-white text-center py-12 bus-location mt-4">
+            <h1 class="text-green-700  text-center font-bold text-2xl mb-4">
+                Gérer vos trajets et vos reservations sans soucis grâce à vos identfiants de reservation sur votre billet de voyage.
+            </h1>
+            <div class="carousel mx-auto max-w-7xl" data-flickity='{ "cellAlign": "left", "contain": true, "wrapAround": false, "pageDots": true }'>
+                <div class="carousel-cell">
+                    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                        <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b" alt="City" />
+                        <div class="px-6 py-4">
+                            <div class="font-bold text-xl mb-2">New York City</div>
+                            <p class="text-gray-700 text-base">The Big Apple, featuring stunning architecture and vibrant culture.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-cell">
+                    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                        <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
+                        <div class="px-6 py-4">
+                            <div class="font-bold text-xl mb-2">Tokyo</div>
+                            <p class="text-gray-700 text-base">A blend of modern technology and traditional culture.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-cell">
+                    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                        <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e" alt="Paris" />
+                        <div class="px-6 py-4">
+                            <div class="font-bold text-xl mb-2">Paris</div>
+                            <p class="text-gray-700 text-base">The City of Light, known for its romance and iconic landmarks.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-cell">
+                    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                        <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b" alt="City" />
+                        <div class="px-6 py-4">
+                            <div class="font-bold text-xl mb-2">New York City</div>
+                            <p class="text-gray-700 text-base">The Big Apple, featuring stunning architecture and vibrant culture.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-cell">
+                    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                        <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
+                        <div class="px-6 py-4">
+                            <div class="font-bold text-xl mb-2">Tokyo</div>
+                            <p class="text-gray-700 text-base">A blend of modern technology and traditional culture.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-cell">
+                    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                        <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
+                        <div class="px-6 py-4">
+                            <div class="font-bold text-xl mb-2">Tokyo</div>
+                            <p class="text-gray-700 text-base">A blend of modern technology and traditional culture.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-cell">
+                    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                        <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
+                        <div class="px-6 py-4">
+                            <div class="font-bold text-xl mb-2">Tokyo</div>
+                            <p class="text-gray-700 text-base">A blend of modern technology and traditional culture.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="carousel-cell">
-                <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
-                    <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
-                    <div class="px-6 py-4">
-                        <div class="font-bold text-xl mb-2">Tokyo</div>
-                        <p class="text-gray-700 text-base">A blend of modern technology and traditional culture.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-cell">
-                <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
-                    <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e" alt="Paris" />
-                    <div class="px-6 py-4">
-                        <div class="font-bold text-xl mb-2">Paris</div>
-                        <p class="text-gray-700 text-base">The City of Light, known for its romance and iconic landmarks.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-cell">
-                <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
-                    <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b" alt="City" />
-                    <div class="px-6 py-4">
-                        <div class="font-bold text-xl mb-2">New York City</div>
-                        <p class="text-gray-700 text-base">The Big Apple, featuring stunning architecture and vibrant culture.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-cell">
-                <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
-                    <img class="w-full h-48 object-cover" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
-                    <div class="px-6 py-4">
-                        <div class="font-bold text-xl mb-2">Tokyo</div>
-                        <p class="text-gray-700 text-base">A blend of modern technology and traditional culture.</p>
-                    </div>
-                </div>
-            </div>
+        </section>
+
+
+
+
+        <!-- Icône de chat -->
+        <!-- Icône flottante du chatbot -->
+        <div class="chat">
+            <i class="fa fa-comments fa-5x" id="openChat"
+                style="color: green; position: fixed; bottom: 30px; right: 30px; cursor: pointer; font-size: 61px;">
+            </i>
         </div>
-    </section>
+
+        <!-- Fenêtre de chat en popup -->
+        <div id="chatModal"
+            style="display:none; position: fixed; bottom: 100px; right: 30px; width: 400px; height: 600px; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.3); z-index: 9999; border-radius: 10px; overflow: hidden;">
+
+            <!-- En-tête -->
+            <div style="background-color: #A93D87; color: white; padding: 10px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+                <span>Assistance Mobiliis</span>
+                <span id="closeChat" style="cursor: pointer;"><i class="fas fa-times"></i></span>
+            </div>
+
+            <!-- Contenu du chat (chargé dynamiquement) -->
+            <iframe src="Cookies/chat.php" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
 
 
 
 
-    <div class=" chat">
-        <i class="fa fa-comments fa-5x" id="openModalMessage"
-            style=" color: green; position: fixed; top: 566px; right: 18px; cursor: pointer; font-size: 61px;"></i>
-    </div>
-    <div id="modalMessage"></div>
+        <div id="modalMessage"></div>
     </div>
     <!-- PARIE FOOTER -->
     <?php include 'includes/footer.php'; ?>
@@ -278,11 +325,10 @@ if (isset($_POST['deconnect_account'])) {
 
 
     <style>
-
-        .reste{
+        .reste {
             background-color: white !important;
         }
-     
+
         nav {
             width: 100%;
             margin: 0 auto;
@@ -291,14 +337,23 @@ if (isset($_POST['deconnect_account'])) {
             align-items: center;
         }
 
-        .map{
-            background-color : #F8F7F7 !important;
-            width: 100%; 
+        .map {
+            background-color: #F8F7F7 !important;
+            width: 100%;
             height: 850px;
         }
 
-        .button-container{
-            align-items : center !important;
+        .button-container {
+            align-items: center !important;
+            /* display : flex;
+            flex-direction: column;
+            justify-content : center; */
+        }
+
+        .bus-location {
+            background-color: #F8F7F7 !important;
+            margin-top: 25px !important;
+            padding-top: 25px !important;
         }
 
         img {
@@ -329,7 +384,7 @@ if (isset($_POST['deconnect_account'])) {
             cursor: pointer;
         }
 
-  
+
 
         .close {
             color: #aaa;
@@ -354,69 +409,6 @@ if (isset($_POST['deconnect_account'])) {
             text-align: center;
         }
 
-        .btn-supprimer {
-            background-color: rgb(0, 128, 0);
-            color: white;
-            height: 30px;
-            width: 180px;
-            border: 1px solid rgb(0, 128, 0);
-            border-radius: 4px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-supprimer:hover {
-            background-color: rgb(46, 184, 46);
-        }
-
-        .btn-deconnecter {
-            background-color: rgb(128, 128, 128);
-            color: white;
-            height: 30px;
-            width: 180px;
-            border: 1px solid gray;
-            border-radius: 4px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-deconnecter:hover {
-            background-color: rgb(150, 150, 150);
-        }
-
-        .btn-modifier {
-            background-color: rgb(188, 143, 143);
-            color: white;
-            height: 30px;
-            width: 180px;
-            border: 1px solid rosybrown;
-            border-radius: 4px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-modifier:hover {
-            background-color: rgb(167, 112, 112);
-        }
-
-
-        /* Affichage de la popup de suppression */
-        .modal1 {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-
         .btn {
             display: flex;
             justify-content: space-between;
@@ -438,7 +430,7 @@ if (isset($_POST['deconnect_account'])) {
             cursor: pointer;
         }
 
-       
+
 
         .close2 {
             color: #aaa;
@@ -516,22 +508,7 @@ if (isset($_POST['deconnect_account'])) {
             display: none;
         }
 
-        .import {
-            cursor: pointer;
-            position: fixed;
-            top: 240px;
-            /* Change le curseur au survol pour indiquer que le label est cliquable */
-            color: green;
-            /* Couleur du texte du label (vous pouvez ajuster selon votre style) */
-            text-decoration: none;
-            /* Souligne le texte du label */
-        }
 
-        /* Style supplémentaire pour améliorer l'aspect du label au survol */
-        .import :hover {
-            color: #0056b3;
-            /* Changement de couleur au survol */
-        }
 
         .fa-bell-o {
             color: white;
@@ -589,105 +566,6 @@ if (isset($_POST['deconnect_account'])) {
         .flickity-page-dots .dot.is-selected {
             opacity: 1;
         }
-
-
-
-
-        /* PARTIE FOOTER */
-
-
-
-        .liste a {
-            color: 'red';
-        }
-
-        h3 {
-            margin-bottom: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        li {
-            margin-bottom: 10px;
-        }
-
-        h3 {
-            color: red;
-        }
-
-        a {
-            color: green;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        a:hover {
-            color: rosybrown;
-        }
-
-        li a {
-            margin-left: 5px;
-        }
-
-        #apps {
-            margin-right: 30px;
-        }
-        
-        #outillage {
-            /* display: flex; */
-            position: fixed;
-            top: 50px;
-        }
-
-        .para {
-            position: absolute;
-            bottom: 300px;
-            left: 200px;
-            font-size: 30px;
-        }
-
-        .custom-icon {
-            font-weight: bold;
-            color: #000000;
-        }
-
-        
-        .reservation1 {
-            position: relative;
-            text-align: center;
-        }
-
-        .reservation1 img {
-            width: 300px;
-            height: 300px;
-            /* ajustez la hauteur selon vos besoins */
-            display: block;
-            /* pour résoudre l'espace réservé sous l'image */
-            margin: 0 auto;
-            /* centrer l'image horizontalement */
-        }
-
-        .rectangle {
-            text-align: center;
-        }
-        .promo-text h1 {
-            font-size: 48px;
-            margin: 0;
-            font-weight: bold;
-        }
-
-        .promo-text p {
-            font-size: 18px;
-            margin-top: 10px;
-            font-weight: bold;
-        }
     </style>
 
 
@@ -713,47 +591,6 @@ if (isset($_POST['deconnect_account'])) {
 
 
 
-        // Vérifier s'il y a une image dans le localStorage
-        let profilPic = document.getElementById("profil-pic");
-        let profilInput = document.getElementById("input-file");
-        const profilPics = document.querySelectorAll(".profil-pic-global");
-        const profilOutils = document.getElementById("profil");
-
-
-        // Vérifier s'il y a une image dans le localStorage
-        const savedImage = localStorage.getItem("savedImage");
-        if (savedImage) {
-            profilPic.src = savedImage; // Affiche l'image dans la popup de settings
-            profilPics.forEach(img => img.src = savedImage); // Affiche l'image dans les autres popups
-            profilOutils.src = savedImage; // Affiche l'image dans la section "outils"
-        }
-        // Gérer le changement d'image
-        profilInput.onchange = function() {
-            const newImageUrl = URL.createObjectURL(profilInput.files[0]);
-            profilPic.src = newImageUrl;
-
-
-            // Mettre à jour toutes les images dans les popups
-            profilPics.forEach(img => img.src = newImageUrl);
-
-            // Mettre à jour l'image dans la section "outils"
-            profilOutils.src = newImageUrl;
-
-            // Stocker l'image dans le localStorage
-            localStorage.setItem("savedImage", newImageUrl);
-        }
-
-        //fontion d 'affichage de aller-retour
-        $(document).ready(function() {
-            $("input[name='inlineRadioOptions']").change(function() {
-                if ($(this).val() === 'option2') {
-                    $("div.form-groupe").show();
-                } else {
-                    $("div.form-groupe").hide();
-                }
-            });
-        });
-
         //gestion des animations de la page d'acceuil
         const images = [
             "https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg",
@@ -764,16 +601,17 @@ if (isset($_POST['deconnect_account'])) {
         let currentIndex = 0;
         const container = document.querySelector('.container');
 
-    function changeBackground() {
-        currentIndex = (currentIndex + 1) % images.length;
-        container.style.backgroundImage =
-            `linear-gradient(rgba(39, 39, 39, 0.6), rgba(0, 0, 0, 0.6)), url(${images[currentIndex]})`;
-    }
-    setInterval(changeBackground, 4000);
+        function changeBackground() {
+            currentIndex = (currentIndex + 1) % images.length;
+            container.style.backgroundImage =
+                `linear-gradient(rgba(39, 39, 39, 0.6), rgba(0, 0, 0, 0.6)), url(${images[currentIndex]})`;
+        }
+        setInterval(changeBackground, 4000);
 
 
-        // Code pour ouvrir le modal de reservation  et vérifier sa reservation
-        document.getElementById('openModalButton').addEventListener('click', function() {
+        // popup de reservations
+         // Code pour ouvrir le modal de reservation  et vérifier sa reservation
+         document.getElementById('openModalButton').addEventListener('click', function() {
             $.ajax({
                 url: './formulaire.php',
                 success: function(response) {
@@ -806,8 +644,6 @@ if (isset($_POST['deconnect_account'])) {
         });
 
 
-
-
         // Code pour gérer la soumission du formulaire de réservation
         $(document).on('submit', '#reservationForm', function(e) {
             e.preventDefault();
@@ -836,7 +672,7 @@ if (isset($_POST['deconnect_account'])) {
         // Code pour ouvrir le modal d'envoi de message
         document.getElementById('openModalMessage').addEventListener('click', function() {
             $.ajax({
-                url: './Contact/contact.php',
+                url: './Cookies/chat.php',
                 success: function(response) {
                     document.getElementById('modalMessage').innerHTML = response;
                     var modal = document.querySelector('#modalMessage .modalitisation');
@@ -890,6 +726,16 @@ if (isset($_POST['deconnect_account'])) {
         });
 
 
+        // popup pour l'oucerture du chat
+        document.getElementById('openChat').addEventListener('click', function() {
+            document.getElementById('chatModal').style.display = 'block';
+        });
+
+        document.getElementById('closeChat').addEventListener('click', function() {
+            document.getElementById('chatModal').style.display = 'none';
+        });
+
+
 
 
 
@@ -900,29 +746,23 @@ if (isset($_POST['deconnect_account'])) {
             const dateRetour = document.getElementById("input4");
 
             function toggleDateRetour() {
+                console.log("Changement détecté");
                 if (radioAllerRetour.checked) {
-                    dateRetour.removeAttribute("disabled"); // Active le champ
-                    dateRetour.setAttribute("required", "true"); // Rend obligatoire
+                    dateRetour.disabled = false;
+                    dateRetour.required = true;
                 } else {
-                    dateRetour.setAttribute("disabled", "true"); // Désactive le champ
-                    dateRetour.removeAttribute("required"); // Enlève l'obligation de remplissage
-                    dateRetour.value = ""; // Réinitialise la valeur
+                    dateRetour.disabled = true;
+                    dateRetour.required = false;
+                    dateRetour.value = "";
                 }
             }
 
+            // Déclencheur au changement de sélection
             radioAller.addEventListener("change", toggleDateRetour);
             radioAllerRetour.addEventListener("change", toggleDateRetour);
 
-            // Appeler la fonction au chargement pour s'assurer que l'état est correct
+            // État initial
             toggleDateRetour();
-        });
-
-        // selectionne de la destination
-        $(document).ready(function() {
-            $('.select2').select2({
-                placeholder: 'Sélectionnez une destination',
-                allowClear: true
-            });
         });
     </script>
 
