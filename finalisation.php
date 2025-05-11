@@ -5,12 +5,13 @@ require __DIR__.'/vendor/autoload.php';
 use Mailjet\Client;
 use Mailjet\Resources;
 use PHPMailer\PHPMailer\Exception;
-use TCPDF;
+// use TCPDF;
 
 // Fonction pour générer la facture PDF
 function generateInvoice($nom, $prenom, $telephone, $email, $reservationNumber, $numeroSiege, $depart, $arrivee, $date, $idVoyage, $prix)
 {
-    $pdf = new TCPDF();
+    $pdf = new \TCPDF();
+
 $pdf->AddPage();
 $pdf->SetFont('dejavusans', '', 12);
 

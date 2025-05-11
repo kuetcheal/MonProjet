@@ -62,9 +62,9 @@ if (isset($_GET['id_reservation'])) {
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
-<?php include 'includes/header.php'; ?>
+    <?php include 'includes/header.php'; ?>
 
-    <div class="container mx-auto p-8 bg-white shadow-lg rounded-lg w-3/4 mt-8">
+    <div class="container mx-auto p-8 bg-white shadow-lg rounded-lg w-3/4 mt-8 pt-8">
         <h1 class="text-2xl font-bold text-center text-gray-700 mb-6">Réservation Confirmée</h1>
         <div class="border p-4 rounded-lg shadow-md">
             <p><strong>Numéro de réservation :</strong> <?php echo $numero_reservation; ?></p>
@@ -79,14 +79,37 @@ if (isset($_GET['id_reservation'])) {
             <p><?php echo date("d M Y", strtotime($jourDepart)) . " | " . $heureDepart . " ➔ " . $heureArrivee; ?></p>
         </div>
 
-        <div class="flex justify-center mt-6 space-x-4">
+        <div class="flex justify-center mt-6 space-x-4 pt-4">
             <button class="bg-red-500 text-white px-6 py-2 rounded shadow-md hover:bg-red-600 transition"
-                onclick="openPopup()">Annuler ma réservation</button>
-
-            <button class="bg-blue-500 text-white px-6 py-2 rounded shadow-md hover:bg-blue-600 transition">
-                Modifier ma réservation
+                onclick="openPopup()">Annuler ma réservation
             </button>
+
+            <a href="Reservation/modifier_reservation.php?id_reservation=<?php echo $id_reservation; ?>">
+                <button class="bg-blue-500 text-white px-6 py-2 rounded shadow-md hover:bg-blue-600 transition">
+                    Modifier ma réservation
+                </button>
+            </a>
+
         </div>
+        <div class="container mx-auto mt-4 mb-4 px-4 w-full mt-5">
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow-md text-justify text-sm max-w-4xl mt-5">
+                <p class="font-semibold mb-2">NB :</p>
+                <ul class="list-disc pl-5">
+                    <li>
+                        L'annulation d'une réservation est remboursable avec :
+                        <ul class="list-inside list-disc pl-5">
+                            <li>-15% du prix du billet si l'annulation est faite à moins de 7 jours du départ,</li>
+                            <li>-30% à moins d’un jour du voyage,</li>
+                            <li>-50% à moins de trois heures du voyage.</li>
+                        </ul>
+                    </li>
+                    <li class="mt-2">
+                        La modification d'une réservation est faisable avec une majoration de +20% sur le prix de la nouvelle réservation si elle est effectuée la veille du départ. Par ailleurs, il est impossible de modifier une réservation le jour du départ.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
     </div>
 
     <!-- Popup d'annulation -->
@@ -125,13 +148,14 @@ if (isset($_GET['id_reservation'])) {
 
                 <button class="w-full mt-4 bg-red-500 text-white py-2 rounded shadow-md hover:bg-red-600 transition"
                     onclick="supprimerReservation(<?php echo $id_reservation; ?>)">Annuler le billet</button>
+
+
+
             </div>
         </div>
     </div>
 
-    <footer class="mt-auto bg-gray-700 text-white text-center py-4">
-        <p>Merci d'avoir choisi notre service. Nous vous souhaitons un excellent voyage!</p>
-    </footer>
+    <?php include 'includes/footer.php'; ?>
 
     <script>
         function openPopup() {
