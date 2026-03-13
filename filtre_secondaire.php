@@ -1,116 +1,147 @@
 <?php
-$bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Récupérer les villes de destination
-$query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
-$response = $bdd->query($query);
+$departValue = $_POST['input1'] ?? $_SESSION['depart'] ?? '';
+$arriveeValue = $_POST['input2'] ?? $_SESSION['arrivee'] ?? '';
+$dateValue = $_POST['input3'] ?? $_SESSION['date'] ?? '';
+$dateRetourValue = $_POST['input4'] ?? $_SESSION['dateretour'] ?? '';
+$tripType = $_POST['inlineRadioOptions'] ?? ($_SESSION['tripType'] ?? 'option1');
 
-$destinations = [];
-while ($donnee = $response->fetch()) {
-    $destinations[] = htmlspecialchars($donnee['Nom_ville']);
+$_SESSION['tripType'] = $tripType;
+
+try {
+    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $query = $bdd->query('SELECT * FROM destination ORDER BY Nom_ville ASC');
+    $destinations = $query->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $destinations = [];
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Recherche de Trajet</title>
-</head>
-
-<body class="bg-gray-100 flex justify-center items-center min-h-screen">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl border border-gray-300">
-        <form action="listevoyageretour.php" method="post">
-            <div class="flex items-center space-x-4 mb-4">
-                <!-- Boutons Aller / Aller-Retour -->
-                <label class="flex items-center space-x-2 cursor-pointer">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked
-                        class="hidden peer">
-                    <span class="w-5 h-5 border-2 border-green-600 rounded-full flex items-center justify-center peer-checked:bg-green-600"></span>
-                    <span class="text-gray-700 font-semibold">Aller</span>
+<div class="secondary-filter-wrapper">
+    <div class="secondary-filter-card">
+        <form action="listevoyageretour.php" method="post" class="secondary-filter-form">
+            <div class="secondary-trip-options">
+                <label class="secondary-trip-option">
+                    <input
+                        type="radio"
+                        id="secondaryInlineRadio1"
+                        name="inlineRadioOptions"
+                        value="option1"
+                        <?php echo ($tripType === 'option1') ? 'checked' : ''; ?>
+                    >
+                    <span>Aller simple</span>
                 </label>
 
-                <label class="flex items-center space-x-2 cursor-pointer">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"
-                        class="hidden peer">
-                    <span class="w-5 h-5 border-2 border-gray-400 rounded-full flex items-center justify-center peer-checked:bg-green-600"></span>
-                    <span class="text-gray-700 font-semibold">Aller-Retour</span>
+                <label class="secondary-trip-option">
+                    <input
+                        type="radio"
+                        id="secondaryInlineRadio2"
+                        name="inlineRadioOptions"
+                        value="option2"
+                        <?php echo ($tripType === 'option2') ? 'checked' : ''; ?>
+                    >
+                    <span>Aller-Retour</span>
                 </label>
             </div>
 
-            <!-- Formulaire principal -->
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
-                <!-- Ville de départ -->
-                <div class="relative">
-                    <label class="block text-gray-700 font-semibold">
-                        <i class="fas fa-map-marker-alt text-green-600 mr-1"></i> DE :
+            <div class="secondary-search-fields">
+                <div class="secondary-field-group">
+                    <label for="secondaryInput1">
+                        <i class="bi bi-geo-alt"></i> DE :
                     </label>
-                    <select name="input1" id="input1"
-                        class="w-full p-2 border border-green-600 rounded-md focus:ring focus:ring-green-200">
-                        <?php foreach ($destinations as $destination) : ?>
-                        <option value="<?= $destination; ?>"><?= $destination; ?></option>
+                    <select id="secondaryInput1" name="input1">
+                        <?php foreach ($destinations as $destinationItem): ?>
+                            <?php $destination = $destinationItem['Nom_ville']; ?>
+                            <option
+                                value="<?php echo htmlspecialchars($destination); ?>"
+                                <?php echo ($departValue === $destination) ? 'selected' : ''; ?>
+                            >
+                                <?php echo htmlspecialchars($destination); ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
 
-                <!-- Ville d'arrivée -->
-                <div class="relative">
-                    <label class="block text-gray-700 font-semibold">
-                        <i class="fas fa-map-marker-alt text-green-600 mr-1"></i> A :
+                <div class="secondary-field-group">
+                    <label for="secondaryInput2">
+                        <i class="bi bi-geo-alt"></i> A :
                     </label>
-                    <select name="input2" id="input2"
-                        class="w-full p-2 border border-green-600 rounded-md focus:ring focus:ring-green-200">
-                        <?php foreach ($destinations as $destination) : ?>
-                        <option value="<?= $destination; ?>"><?= $destination; ?></option>
+                    <select id="secondaryInput2" name="input2">
+                        <?php foreach ($destinations as $destinationItem): ?>
+                            <?php $destination = $destinationItem['Nom_ville']; ?>
+                            <option
+                                value="<?php echo htmlspecialchars($destination); ?>"
+                                <?php echo ($arriveeValue === $destination) ? 'selected' : ''; ?>
+                            >
+                                <?php echo htmlspecialchars($destination); ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
 
-                <!-- Date de départ -->
-                <div>
-                    <label class="block text-gray-700 font-semibold">Date départ :</label>
-                    <input type="date" name="input3"
-                        class="w-full p-2 border border-green-600 rounded-md focus:ring focus:ring-green-200">
+                <div class="secondary-field-group">
+                    <label for="secondaryInput3">Date départ :</label>
+                    <input
+                        type="date"
+                        id="secondaryInput3"
+                        name="input3"
+                        value="<?php echo htmlspecialchars($dateValue); ?>"
+                        required
+                    >
                 </div>
 
-                <!-- Date de retour -->
-                <div>
-                    <label class="block text-gray-700 font-semibold">Date retour :</label>
-                    <input type="date" name="input4" id="input4"
-                        class="w-full p-2 border border-green-600 rounded-md focus:ring focus:ring-green-200 bg-gray-100 cursor-not-allowed"
-                        disabled>
+                <div class="secondary-field-group">
+                    <label for="secondaryInput4">Date retour :</label>
+                    <input
+                        type="date"
+                        id="secondaryInput4"
+                        name="input4"
+                        value="<?php echo htmlspecialchars($dateRetourValue); ?>"
+                        <?php echo ($tripType === 'option1') ? 'disabled' : ''; ?>
+                    >
                 </div>
 
-                <!-- Bouton Valider -->
-                <div class="flex items-end">
-                    <button type="submit"
-                        class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 transition duration-200">
-                        Valider
-                    </button>
+                <div class="secondary-field-group secondary-submit-group">
+                    <label class="secondary-fake-label">Valider</label>
+                    <input type="submit" value="Valider" class="secondary-submit-btn">
                 </div>
             </div>
         </form>
     </div>
+</div>
 
-    <script>
-        // Activer/Désactiver le champ "Date de retour" selon la sélection
-        document.querySelectorAll('input[name="inlineRadioOptions"]').forEach(radio => {
-            radio.addEventListener('change', function () {
-                const dateRetour = document.getElementById("input4");
-                if (document.getElementById("inlineRadio2").checked) {
-                    dateRetour.removeAttribute("disabled");
-                    dateRetour.classList.remove("bg-gray-100", "cursor-not-allowed");
-                } else {
-                    dateRetour.setAttribute("disabled", "true");
-                    dateRetour.classList.add("bg-gray-100", "cursor-not-allowed");
-                    dateRetour.value = "";
-                }
-            });
-        });
-    </script>
-</body>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const radioAller = document.getElementById("secondaryInlineRadio1");
+    const radioAllerRetour = document.getElementById("secondaryInlineRadio2");
+    const dateRetour = document.getElementById("secondaryInput4");
 
-</html>
+    function toggleSecondaryDateRetour() {
+        if (!radioAller || !radioAllerRetour || !dateRetour) return;
+
+        if (radioAllerRetour.checked) {
+            dateRetour.disabled = false;
+            dateRetour.required = true;
+        } else {
+            dateRetour.disabled = true;
+            dateRetour.required = false;
+            dateRetour.value = "";
+        }
+    }
+
+    if (radioAller) {
+        radioAller.addEventListener("change", toggleSecondaryDateRetour);
+    }
+
+    if (radioAllerRetour) {
+        radioAllerRetour.addEventListener("change", toggleSecondaryDateRetour);
+    }
+
+    toggleSecondaryDateRetour();
+});
+</script>

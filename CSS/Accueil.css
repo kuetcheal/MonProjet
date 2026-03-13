@@ -83,6 +83,8 @@ body {
     font-size: 35px;
     color: #46e37b;
     text-align: center;
+    font-weight: bold;
+    padding-bottom: 5px;
 }
 
 /* =========================
@@ -97,8 +99,8 @@ body {
 
 .search-card {
     background: rgba(255, 255, 255, 0.98);
-    border-radius: 22px;
-    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.18);
+   
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
     padding: 34px 32px;
 }
 
@@ -119,7 +121,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #156f3e;
+    color: black;
     font-size: 1.12rem;
     font-weight: 700;
 }
@@ -181,7 +183,7 @@ body {
     height: 58px;
     border: none;
     border-radius: 12px;
-    background: #1f8ef1;
+    background-color: #156f3e !important;
     color: #fff !important;
     font-size: 1.1rem;
     font-weight: 800;
@@ -190,7 +192,7 @@ body {
 }
 
 .submit-btn:hover {
-    background: #0f7de0;
+    background: #156f3e !important;
 }
 
 /* =========================

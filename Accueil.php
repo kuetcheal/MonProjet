@@ -59,14 +59,14 @@ if (isset($_POST['deconnect_account'])) {
         </div>
 
         <div class="search-card-wrapper">
-            <h3 class="hero-search-title">Rechercher votre trajet</h3>
+            <h3 class="hero-search-title">Reserver votre voyage</h3>
             <div class="search-card">
                 <form action="listevoyageretour.php" method="post" class="search-form">
 
                     <div class="trip-options">
                         <label class="trip-option">
                             <input type="radio" id="inlineRadio1" name="inlineRadioOptions" value="option1" checked>
-                            <span>Aller</span>
+                            <span>Aller simple</span>
                         </label>
 
                         <label class="trip-option">
