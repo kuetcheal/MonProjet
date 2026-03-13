@@ -1,0 +1,622 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --home-max-width: 1350px;
+    --home-side-padding: 24px;
+    --brand-green: #177043;
+    --brand-green-light: #20a15b;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.home-main {
+    background: #ffffff;
+}
+
+/* conteneur commun */
+.actions-section,
+.map-section,
+.presentation-grid,
+.home-carousel,
+.hero-content,
+.search-card-wrapper {
+    width: min(var(--home-max-width), calc(100% - (var(--home-side-padding) * 2)));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* =========================
+   HERO
+========================= */
+.hero-section {
+    position: relative;
+    max-height: 760px;
+    padding: 90px 0 0;
+    background-image: url("https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: visible;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.42);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    padding: 0 0 40px;
+}
+
+.hero-title {
+    margin: 0;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.08;
+}
+
+.hero-subtitle {
+    margin-top: 22px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.hero-link {
+    color: #46e37b;
+    text-decoration: underline;
+}
+
+.hero-search-title {
+    font-size: 35px;
+    color: #46e37b;
+    text-align: center;
+}
+
+/* =========================
+   SEARCH CARD
+========================= */
+.search-card-wrapper {
+    position: relative;
+    z-index: 5;
+    margin-top: 42px;
+    transform: translateY(110px);
+}
+
+.search-card {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 22px;
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.18);
+    padding: 34px 32px;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.trip-options {
+    display: flex;
+    align-items: center;
+    gap: 34px;
+    flex-wrap: wrap;
+}
+
+.trip-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #156f3e;
+    font-size: 1.12rem;
+    font-weight: 700;
+}
+
+.trip-option input[type="radio"] {
+    width: 22px;
+    height: 22px;
+    accent-color: #18884c;
+}
+
+.search-fields {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+    align-items: end;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.field-group label {
+    margin-bottom: 8px;
+    color: #156f3e;
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+
+.field-group i {
+    color: #18884c;
+    margin-right: 6px;
+}
+
+.field-group input,
+.field-group select {
+    width: 100%;
+    height: 58px;
+    border: 1px solid #d3d7dc;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #156f3e;
+    background: #fff;
+}
+
+.submit-group {
+    justify-content: flex-end;
+}
+
+.fake-label {
+    visibility: hidden;
+}
+
+.submit-btn {
+    width: 100%;
+    height: 58px;
+    border: none;
+    border-radius: 12px;
+    background: #1f8ef1;
+    color: #fff !important;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.25s ease;
+}
+
+.submit-btn:hover {
+    background: #0f7de0;
+}
+
+/* =========================
+   ACTIONS
+   on remonte cette section pour que
+   la carte blanche soit moitié/moitié
+========================= */
+.actions-section {
+    position: relative;
+    z-index: 2;
+    padding: 170px 0 55px;
+}
+
+.actions-title {
+    margin: 0 0 30px;
+    text-align: center;
+    color: var(--brand-green);
+    font-size: clamp(1.8rem, 2.3vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.action-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.action-btn {
+    height: 72px;
+    border: none;
+    border-radius: 14px;
+    background: #4caf50;
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    background: #3fa644;
+}
+
+/* =========================
+   MAP
+========================= */
+.map-section {
+    padding: 10px 0 50px;
+}
+
+.section-title {
+    margin: 0 0 26px;
+    text-align: center;
+    color: var(--brand-green);
+    font-size: clamp(1.8rem, 2.1vw, 2.7rem);
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.map-box {
+    background: #f8f7f7;
+    width: 100%;
+    min-height: 760px;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    padding: 0;
+}
+
+/* si map.php contient leaflet */
+.map-box #map,
+.map-box .leaflet-container,
+.map-box iframe {
+    width: 100% !important;
+    height: 760px !important;
+    display: block;
+    border: 0;
+}
+
+/* =========================
+   PRESENTATION
+========================= */
+.presentation-section {
+    padding: 60px 0;
+    background: #ffffff;
+}
+
+.presentation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 38px;
+    align-items: start;
+}
+
+.presentation-image-box {
+    width: 100%;
+}
+
+.presentation-image {
+    width: 100%;
+    height: 520px;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.presentation-text h2 {
+    margin: 0 0 18px;
+    color: var(--brand-green);
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.presentation-text h3 {
+    margin: 22px 0 12px;
+    color: var(--brand-green-light);
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.presentation-text p {
+    color: #555;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 16px;
+}
+
+.presentation-text strong {
+    color: var(--brand-green);
+}
+
+.presentation-text a {
+    color: var(--brand-green-light);
+    text-decoration: underline;
+}
+
+/* =========================
+   CAROUSEL
+========================= */
+.carousel-section {
+    background: #f8f7f7;
+    padding: 55px 0 95px;
+}
+
+.home-carousel {
+    max-width: none;
+}
+
+.carousel-cell {
+    width: 320px;
+    margin-right: 20px;
+}
+
+.destination-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.destination-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+}
+
+.destination-card-body {
+    padding: 20px;
+}
+
+.destination-card-title {
+    color: #222;
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.destination-card-body p {
+    color: #666;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.flickity-page-dots {
+    bottom: -45px;
+}
+
+.flickity-page-dots .dot {
+    width: 10px;
+    height: 10px;
+    opacity: 0.45;
+    background: #333;
+}
+
+.flickity-page-dots .dot.is-selected {
+    opacity: 1;
+}
+
+/* =========================
+   CHAT
+========================= */
+.chat-floating {
+    position: fixed;
+    right: 26px;
+    bottom: 26px;
+    z-index: 9998;
+}
+
+.chat-floating i {
+    color: green;
+    font-size: 62px;
+    cursor: pointer;
+}
+
+.chat-modal {
+    display: none;
+    position: fixed;
+    right: 30px;
+    bottom: 100px;
+    width: 400px;
+    height: 600px;
+    background: #fff;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.28);
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.chat-modal-header {
+    background-color: #A93D87;
+    color: #fff;
+    padding: 12px 14px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-close {
+    cursor: pointer;
+}
+
+/* =========================
+   SELECT2
+========================= */
+.select2-container {
+    width: 100% !important;
+}
+
+.select2-container .select2-selection--single {
+    height: 58px !important;
+    border: 1px solid #d3d7dc !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 8px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #156f3e !important;
+    line-height: 58px !important;
+    font-weight: 700;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 58px !important;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 1199px) {
+    .search-fields {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .submit-group {
+        grid-column: span 3;
+    }
+
+    .submit-btn {
+        max-width: 220px;
+    }
+
+    .map-box,
+    .map-box #map,
+    .map-box .leaflet-container,
+    .map-box iframe {
+        min-height: 650px;
+        height: 650px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    :root {
+        --home-side-padding: 18px;
+    }
+
+    .hero-section {
+        min-height: auto;
+        padding: 55px 0 0;
+    }
+
+    .search-card-wrapper {
+        transform: translateY(85px);
+    }
+
+    .actions-section {
+        padding-top: 150px;
+    }
+
+    .action-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .presentation-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .map-box,
+    .map-box #map,
+    .map-box .leaflet-container,
+    .map-box iframe {
+        min-height: 560px;
+        height: 560px !important;
+    }
+}
+
+@media (max-width: 767px) {
+    :root {
+        --home-side-padding: 14px;
+    }
+
+    .hero-section {
+        padding-top: 40px;
+    }
+
+    .hero-title {
+        font-size: 2.35rem;
+        line-height: 1.15;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .hero-search-title {
+        margin-top: 24px;
+        font-size: 2rem;
+    }
+
+    .search-card-wrapper {
+        transform: translateY(55px);
+        margin-top: 20px;
+    }
+
+    .search-card {
+        padding: 20px 16px;
+        border-radius: 18px;
+    }
+
+    .search-fields {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .submit-group {
+        grid-column: auto;
+    }
+
+    .submit-btn {
+        max-width: 100%;
+    }
+
+    .actions-section {
+        padding: 105px 0 40px;
+    }
+
+    .actions-title {
+        font-size: 1.5rem;
+    }
+
+    .action-btn {
+        height: 62px;
+        font-size: 1.05rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .presentation-image {
+        height: 300px;
+    }
+
+    .carousel-cell {
+        width: 260px;
+    }
+
+    .map-box,
+    .map-box #map,
+    .map-box .leaflet-container,
+    .map-box iframe {
+        min-height: 460px;
+        height: 460px !important;
+        border-radius: 18px;
+    }
+
+    .chat-modal {
+        right: 10px;
+        left: 10px;
+        bottom: 80px;
+        width: auto;
+        height: 70vh;
+    }
+
+    .chat-floating {
+        right: 18px;
+        bottom: 18px;
+    }
+
+    .chat-floating i {
+        font-size: 54px;
+    }
+}
