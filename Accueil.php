@@ -161,7 +161,7 @@ if (isset($_POST['deconnect_account'])) {
                 </div>
 
                 <div class="presentation-text">
-                    <h2>Voyagez sur le plus grand réseau camerounais de bus longue distance !</h2>
+                    <h2>EasyTravel est le plus grand réseau camerounais de transport personnel inter-urbain !</h2>
 
                     <p>
                         Depuis 2000, <strong>Général Voyage</strong> agrandit continuellement son réseau

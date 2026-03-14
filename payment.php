@@ -2,30 +2,70 @@
 session_start();
 
 $prixTotal = isset($_GET['totalPrice']) ? (float) $_GET['totalPrice'] : 0;
-$idvoyage = $_POST['idVoyage'] ?? $_SESSION['idVoyage'] ?? null;
+$idVoyage = $_POST['idVoyage'] ?? $_GET['idVoyage'] ?? $_SESSION['idVoyage'] ?? null;
+
+$dbError = '';
+$depart = '';
+$arrivee = '';
+$dateVoyage = '';
+
+function getFirstExistingValue(array $source, array $keys, $default = '')
+{
+    foreach ($keys as $key) {
+        if (isset($source[$key]) && $source[$key] !== '') {
+            return $source[$key];
+        }
+    }
+    return $default;
+}
 
 try {
-    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock;charset=utf8', 'root', '');
     $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    if ($idvoyage) {
-        $_SESSION['idVoyage'] = $idvoyage;
+    if ($idVoyage) {
+        $_SESSION['idVoyage'] = $idVoyage;
 
         $requette = $bdd->prepare("SELECT * FROM voyage WHERE idVoyage = :idVoyage");
-        $requette->execute(['idVoyage' => $idvoyage]);
+        $requette->execute(['idVoyage' => $idVoyage]);
         $donne = $requette->fetch(PDO::FETCH_ASSOC);
 
         if ($donne) {
-            $prixTotal = (float) $donne['prix'];
+            $prixTotal = (float) getFirstExistingValue($donne, ['prix', 'prix_voyage', 'montant'], $prixTotal);
+
+            $depart = getFirstExistingValue($donne, [
+                'depart',
+                'ville_depart',
+                'point_depart',
+                'trajet_depart'
+            ]);
+
+            $arrivee = getFirstExistingValue($donne, [
+                'arrivee',
+                'ville_arrivee',
+                'point_arrivee',
+                'trajet_arrivee'
+            ]);
+
+            $dateVoyage = getFirstExistingValue($donne, [
+                'date',
+                'dateVoyage',
+                'date_depart',
+                'jour_voyage'
+            ]);
         }
     }
 
     $_SESSION['prix'] = $prixTotal;
+    $_SESSION['depart'] = $depart;
+    $_SESSION['arrivee'] = $arrivee;
+    $_SESSION['date'] = $dateVoyage;
 } catch (Exception $e) {
-    $dbError = "Échec de connexion à la base de données.";
+    $dbError = "Échec de connexion à la base de données : " . $e->getMessage();
 }
 
-function generateReservationNumber($length = 8) {
+function generateReservationNumber($length = 8)
+{
     $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
     $randomString = '';
@@ -54,10 +94,13 @@ ob_start();
             </h2>
 
             <form method="post" action="finalisation.php">
-                <?php if ($idvoyage): ?>
-                    <input type="hidden" name="idVoyage" value="<?= htmlspecialchars($idvoyage) ?>">
+                <?php if ($idVoyage): ?>
+                    <input type="hidden" name="idVoyage" value="<?= htmlspecialchars($idVoyage) ?>">
                 <?php endif; ?>
 
+                <input type="hidden" name="depart" value="<?= htmlspecialchars($depart) ?>">
+                <input type="hidden" name="arrivee" value="<?= htmlspecialchars($arrivee) ?>">
+                <input type="hidden" name="dateVoyage" value="<?= htmlspecialchars($dateVoyage) ?>">
                 <input type="hidden" name="reservationNumber" value="<?= htmlspecialchars($reservationNumber) ?>">
                 <input type="hidden" name="prixTotal" value="<?= htmlspecialchars($prixTotal) ?>">
 
@@ -66,14 +109,14 @@ ob_start();
                         <label class="block text-gray-700 font-bold mb-2">
                             Prénom <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="prenom" placeholder="herve" required class="w-full p-3 border rounded-lg">
+                        <input type="text" name="prenom" placeholder="Hervé" required class="w-full p-3 border rounded-lg">
                     </div>
 
                     <div>
                         <label class="block text-gray-700 font-bold mb-2">
                             Nom <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="nom" placeholder="Dupuis"  required class="w-full p-3 border rounded-lg">
+                        <input type="text" name="nom" placeholder="Dupuis" required class="w-full p-3 border rounded-lg">
                     </div>
                 </div>
 
@@ -110,9 +153,7 @@ ob_start();
                                 echo '<button type="button"
                                     class="seat-btn bg-blue-500 text-white p-2 rounded hover:bg-blue-700 transition"
                                     id="seat' . $seatNumber . '"
-                                    onclick="selectSeat(' . $seatNumber . ')">'
-                                    . $seatNumber .
-                                '</button>';
+                                    onclick="selectSeat(' . $seatNumber . ')">' . $seatNumber . '</button>';
                                 $seatNumber++;
                             }
                         }
@@ -151,6 +192,13 @@ ob_start();
     if (checkoutButton) {
         checkoutButton.addEventListener('click', function () {
             const form = document.querySelector('form');
+            const selectedSeat = document.getElementById('selectedSeat').value;
+
+            if (!selectedSeat) {
+                alert('Veuillez sélectionner un siège avant de continuer.');
+                return;
+            }
+
             const formData = new FormData(form);
 
             fetch('create-checkout-session.php', {

@@ -93,18 +93,19 @@ if (isset($_GET['id_reservation'])) {
         </div>
         <div class="container mx-auto mt-4 mb-4 px-4 w-full mt-5">
             <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow-md text-justify text-sm max-w-4xl mt-5">
-                <p class="font-semibold mb-2">NB :</p>
+                <p class="font-bold mb-2">NB :</p>
                 <ul class="list-disc pl-5">
                     <li>
                         L'annulation d'une réservation est remboursable avec :
                         <ul class="list-inside list-disc pl-5">
                             <li>-15% du prix du billet si l'annulation est faite à moins de 7 jours du départ,</li>
-                            <li>-30% à moins d’un jour du voyage,</li>
-                            <li>-50% à moins de trois heures du voyage.</li>
+                            <li>-30% à moins d’un deux jours du voyage,</li>
+                            <li>-70% du prix du billet à moins de cinq heures du voyage.</li>
+                            <li>Non remboursable à moins deux heures du voyage.</li>
                         </ul>
                     </li>
                     <li class="mt-2">
-                        La modification d'une réservation est faisable avec une majoration de +20% sur le prix de la nouvelle réservation si elle est effectuée la veille du départ. Par ailleurs, il est impossible de modifier une réservation le jour du départ.
+                        La modification portant sur la date d'une réservation est faisable avec une majoration de +20% sur le prix de la nouvelle réservation si elle est effectuée la veille du départ. Par ailleurs, il est impossible de modifier une réservation le jour du départ.
                     </li>
                 </ul>
             </div>
