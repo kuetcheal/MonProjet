@@ -1,307 +1,300 @@
 <?php
 session_start();
-?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="connexion.css">
-</head>
-
-<body>
-
-    <header>
-        <nav>
-            <div class="header-picture">
-                <img src="logo général.jpg" alt="logo site" />
-            </div>
-            <div class="nav-bar">
-                <ul>
-                    <li class="items">
-                        <select id="select" name="select" aria-placeholder="2 places">
-                            <option value="option1">Français</option>
-                            <option value="option2">Anglais</option>
-                        </select>
-                    </li>
-                    <li class="items"><a href="#"><i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i></a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-
-    <div class="container">
-        <h1>Connexion</h1>
-        <form method="post" action="#">
-            <label for="username" style="color: white;">Nom d'utilisateur :</label>
-            <input type="text" name="username" id="username" placeholder="ALEX" required
-                style="height: 20px; border-radius: 5px; padding: 10px;"><br>
-            <label for="password" style="color: white;">Mot de passe :</label>
-            <input type="password" name="password" id="password" placeholder="1000jean" required><br>
-            <button type="submit">Se connecter</button>
-            <p class="para">Oupps, un problème ??? <a href="forgetpassword.php">Mot de passe oublié</a>
-            </p>
-            <p class="para">Si vous n'avez pas de compte, veuillez vous inscrire ici.<a
-                    href="inscription.php">S'inscrire</a></p>
-        </form>
-    </div>
-
-    <!-- <hr id="ligne_bas"> -->
-    <footer>
-        <p>&copy; 2024 EasyTravel. Tous droits réservés.</p>
-    </footer>
-    <?php
-    // Connexion à la base de données
-    $host = 'localhost'; // nom d'hôte
-$user = 'root'; // nom d'utilisateur
-$password = ''; // mot de passe
-$database = 'bd_stock'; // nom de la base de données
-
-// Connexion à la base de données MySQLi
-$conn = new mysqli($host, $user, $password, $database);
-
-if ($conn->connect_error) {
-    exit('Connection failed: '.$conn->connect_error);
+// Si l'utilisateur est déjà connecté
+if (isset($_SESSION['Id_compte'])) {
+    header('Location: Accueil.php');
+    exit;
 }
 
-if (isset($_POST['username']) && isset($_POST['password'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+$erreurConnexion = "";
 
-    // Préparation de la requête pour éviter les injections SQL
-    $stmt = $conn->prepare('SELECT * FROM user WHERE user_name = ?');
-    $stmt->bind_param('s', $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
+// Connexion base de données
+$host = 'localhost';
+$dbUser = 'root';
+$dbPassword = '';
+$database = 'bd_stock';
 
-    // Vérification des résultats
-    if ($result->num_rows == 1) {
-        $user = $result->fetch_assoc();
-        // Vérification du mot de passe
-        if (password_verify($password, $user['user_password'])) {
-            $_SESSION['Id_compte'] = $user['id'];
-            header('Location: Accueil.php');
-        } else {
-            echo "<p class='para2'>Mot de passe incorrect.</p>";
+$conn = new mysqli($host, $dbUser, $dbPassword, $database);
+
+if ($conn->connect_error) {
+    die('Connexion échouée : ' . $conn->connect_error);
+}
+
+// Traitement du formulaire
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    if (!empty($username) && !empty($password)) {
+
+        // Cas ADMIN
+        if ($username === 'GENERAL' && $password === '123general') {
+            $_SESSION['admin_name'] = 'GENERAL';
+            header('Location: Accueiladmin.php');
+            exit;
         }
-    } elseif ($username == 'GENERAL' && $password == '123general') {
-        header('Location: Accueiladmin.php');
-    } else {
-        echo "<p class='para2'>Nom d'utilisateur incorrect.</p>";
-    }
 
-    $stmt->close();
+        // Recherche utilisateur
+        $stmt = $conn->prepare('SELECT * FROM user WHERE user_name = ? LIMIT 1');
+
+        if ($stmt) {
+
+            $stmt->bind_param('s', $username);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows === 1) {
+
+                $user = $result->fetch_assoc();
+
+                // Vérification mot de passe hashé
+                if (password_verify($password, $user['user_password'])) {
+
+                    // Création session utilisateur
+                    $_SESSION['Id_compte'] = $user['id'];
+                    $_SESSION['user_name'] = $user['user_name'];
+                    $_SESSION['user_firstname'] = $user['user_firstname'];
+                    $_SESSION['user_mail'] = $user['user_mail'];
+                    $_SESSION['user_phone'] = $user['user_phone'];
+
+                    header('Location: Accueil.php');
+                    exit;
+
+                } else {
+                    $erreurConnexion = "Mot de passe incorrect.";
+                }
+
+            } else {
+                $erreurConnexion = "Nom d'utilisateur incorrect.";
+            }
+
+            $stmt->close();
+
+        } else {
+            $erreurConnexion = "Erreur serveur.";
+        }
+
+    } else {
+        $erreurConnexion = "Veuillez remplir tous les champs.";
+    }
 }
 
 $conn->close();
 ?>
 
-    <style>
-    body {
-        background-color: aliceblue;
-    }
+<!DOCTYPE html>
+<html lang="fr">
 
-    header {
-        width: 100%;
-        background-color: green;
-        height: 100px;
-    }
+<head>
 
-    nav {
-        width: 100%;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    img {
-        width: 120px;
-        height: 80px;
-        margin-top: 20px;
-    }
+<title>Connexion</title>
 
-    .items a {
-        text-decoration: none;
-        color: whitesmoke;
-        font-size: 20px;
-        margin-right: 40px;
-        padding: 0 15px;
-    }
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    .nav-bar ul {
-        display: flex;
-        list-style-type: none;
-    }
+<link rel="stylesheet" href="connexion.css">
 
-    .header-picture {
-        margin-left: 40px;
-    }
+</head>
 
-    img {
-        height: 60px;
-        width: 100px;
-    }
+<body>
 
-    .nav-bar {
-        margin-right: 30px;
-    }
+<header>
 
-    .container {
-        background-color: green;
-        border-radius: 5px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-        margin: 50px auto;
-        max-width: 500px;
-        padding: 20px;
-        margin-top: 20px;
-    }
+<nav>
 
-    h1 {
-        margin-bottom: 20px;
-        text-align: center;
-        color: white;
-    }
+<div class="header-picture">
+<img src="pictures/logo-general.jpg" alt="logo site">
+</div>
 
-    form {
-        display: flex;
-        flex-direction: column;
-    }
+<div class="nav-bar">
 
-    label {
-        margin-bottom: 10px;
-    }
+<ul>
 
-    input[type="text"],
-    input[type="password"] {
-        border: black;
-        border-radius: 5px;
-        padding: 10px;
-        margin-bottom: 20px;
-    }
+<li class="items">
+<select>
+<option>Français</option>
+<option>Anglais</option>
+</select>
+</li>
 
-    button[type="submit"] {
-        background-color: white;
-        border: none;
-        border-radius: 5px;
-        color: white;
-        padding: 10px;
-        font-size: 16px;
-        cursor: pointer;
-    }
+<li class="items">
+<a href="#">
+<i class="fa fa-user-circle-o fa-2x"></i>
+</a>
+</li>
 
-    button[type="submit"] {
-        padding: 10px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+</ul>
 
-    .liste ul {
-        display: flex;
-        font-size: 15px;
-        list-style-type: none;
-    }
+</div>
 
-    button:hover {
-        background-color: #3e8e41;
-    }
+</nav>
 
-    .para {
-        font-size: 16px;
-    }
+</header>
 
-    hr {
-        color: aqua;
-    }
+<div class="container">
 
-    #ligne {
-        margin-top: 50px;
-        color: aqua;
-        height: 2px;
-    }
+<h1>Connexion</h1>
 
-    #ligne_bas {
-        margin-bottom: 70px;
-        height: 2px;
-        color: aqua;
-    }
+<form method="post" action="connexion.php">
 
-    .social-icons {
-        display: flex;
-        justify-content: center;
-        margin: '25px';
-        flex-basis: 30%;
-        margin-bottom: 20px;
-        margin-left: 50px;
-    }
+<label style="color:white;">Nom d'utilisateur :</label>
 
-    .social-icons ul {
-        display: flex;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        list-style-type: none;
-    }
+<input type="text"
+name="username"
+placeholder="ALEX"
+required>
 
-    .social-icons a {
-        display: flex;
-        margin: 0 10px;
-    }
+<label style="color:white;">Mot de passe :</label>
 
-    .social-icons li {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
+<input type="password"
+name="password"
+placeholder="********"
+required>
 
-    .social-icons i {
-        font-size: 24px;
-        color: black;
-    }
+<button type="submit">Se connecter</button>
 
-    .social-icons li.liste {
-        font-size: 20px;
-    }
+<?php
+if (!empty($erreurConnexion)) {
+    echo "<p class='para2'>$erreurConnexion</p>";
+}
+?>
 
-    .social-icons li a i {
-        font-size: 32px;
-    }
+<p class="para">
+Oupps, un problème ?
+<a href="forgetpassword.php">Mot de passe oublié</a>
+</p>
 
-    a {
-        color: white;
-    }
+<p class="para">
+Pas encore de compte ?
+<a href="inscription.php">S'inscrire</a>
+</p>
 
-    .para2 {
-        text-align: center;
-        color: red;
-        font-size: 18px;
-    }
+</form>
 
-    footer {
-        background-color: #6c757d;
-        color: white;
-        padding: 20px 0;
-        text-align: center;
-        width: 100%;
-    }
+</div>
 
-    .containere {
-        background-color: green;
-        border-radius: 5px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-        margin: 50px auto;
-        max-width: 500px;
-        padding: 20px;
-        margin-top: 20px;
-        border-color: 1px red;
-    }
-    </style>
+<footer>
+<p>&copy; 2024 EasyTravel. Tous droits réservés.</p>
+</footer>
+
+<style>
+
+body{
+background-color:aliceblue;
+}
+
+header{
+width:100%;
+background-color:green;
+height:100px;
+}
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.header-picture{
+margin-left:40px;
+}
+
+.header-picture img{
+height:60px;
+width:100px;
+}
+
+.nav-bar{
+margin-right:30px;
+}
+
+.nav-bar ul{
+display:flex;
+list-style:none;
+}
+
+.items a{
+color:white;
+font-size:20px;
+margin-right:40px;
+}
+
+.container{
+
+background-color:green;
+
+border-radius:5px;
+
+box-shadow:0 0 10px rgba(0,0,0,0.3);
+
+margin:50px auto;
+
+max-width:500px;
+
+padding:20px;
+
+}
+
+h1{
+text-align:center;
+color:white;
+}
+
+form{
+display:flex;
+flex-direction:column;
+}
+
+input{
+padding:10px;
+margin-bottom:20px;
+border-radius:5px;
+border:none;
+}
+
+button{
+padding:10px;
+background:#4CAF50;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#3e8e41;
+}
+
+.para{
+color:white;
+font-size:16px;
+}
+
+.para a{
+color:white;
+font-weight:bold;
+}
+
+.para2{
+color:red;
+text-align:center;
+font-size:18px;
+}
+
+footer{
+background:#6c757d;
+color:white;
+text-align:center;
+padding:20px;
+margin-top:30px;
+}
+
+</style>
 
 </body>
 

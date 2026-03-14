@@ -1,11 +1,38 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (isset($_POST['deconnect_account'])) {
     session_unset();
     session_destroy();
     header('Location: connexion.php');
     exit;
 }
+
+$isLoggedIn = isset($_SESSION['Id_compte']);
+
+$userFullName = '';
+if ($isLoggedIn) {
+    $prenom = $_SESSION['user_firstname'] ?? '';
+    $nom = $_SESSION['user_name'] ?? '';
+    $userFullName = trim($prenom . ' ' . $nom);
+
+    if ($userFullName === '') {
+        $userFullName = 'Utilisateur';
+    }
+}
+
+$userEmail = $isLoggedIn ? ($_SESSION['user_mail'] ?? '') : '';
+
+$offerLabel = $isLoggedIn ? 'Mes offres' : 'Inscription';
+$offerLink = $isLoggedIn ? 'offres.php' : 'inscription.php';
+
+$easyLabel = 'EasyTravel';
+$easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
 ?>
+
+<link rel="stylesheet" href="includes/header.css">
 
 <header class="gv-header">
     <div class="gv-header__inner">
@@ -18,16 +45,22 @@ if (isset($_POST['deconnect_account'])) {
             <a href="reservations.php" class="gv-header__link">Réservations</a>
             <a href="services.php" class="gv-header__link">Services</a>
             <a href="contact.php" class="gv-header__link">Nos contacts</a>
-            <a href="inscription.php" class="gv-header__link">Inscription</a>
-            <a href="connexion.php" class="gv-header__link">Connexion</a>
+            <a href="<?= htmlspecialchars($offerLink) ?>" class="gv-header__link">
+                <?= htmlspecialchars($offerLabel) ?>
+            </a>
+            <a href="<?= htmlspecialchars($easyLink) ?>" class="gv-header__link">
+                <?= htmlspecialchars($easyLabel) ?>
+            </a>
         </nav>
 
         <div class="gv-header__actions">
             <button type="button" class="gv-header__lang">FR</button>
 
-            <button type="button" class="gv-header__profile-btn" onclick="gvOpenModal('gvAccountModal')">
-                <img id="profil" src="pictures/OIP.jpg" alt="Profil" class="gv-header__profile-img">
-            </button>
+            <?php if ($isLoggedIn): ?>
+                <button type="button" class="gv-header__profile-btn" onclick="gvOpenModal('gvAccountModal')">
+                    <img id="profil" src="pictures/OIP.jpg" alt="Profil" class="gv-header__profile-img">
+                </button>
+            <?php endif; ?>
 
             <button id="gvBurgerButton" type="button" class="gv-header__burger" aria-label="Ouvrir le menu">
                 <i class="fa fa-bars"></i>
@@ -52,515 +85,128 @@ if (isset($_POST['deconnect_account'])) {
         <a href="reservations.php" class="gv-mobile-drawer__link">Réservations</a>
         <a href="services.php" class="gv-mobile-drawer__link">Services</a>
         <a href="contact.php" class="gv-mobile-drawer__link">Nos contacts</a>
-        <a href="inscription.php" class="gv-mobile-drawer__link">Inscription</a>
-        <a href="connexion.php" class="gv-mobile-drawer__link">Connexion</a>
+        <a href="<?= htmlspecialchars($offerLink) ?>" class="gv-mobile-drawer__link">
+            <?= htmlspecialchars($offerLabel) ?>
+        </a>
+        <a href="<?= htmlspecialchars($easyLink) ?>" class="gv-mobile-drawer__link">
+            <?= htmlspecialchars($easyLabel) ?>
+        </a>
     </nav>
 </aside>
 
-<div id="gvAccountModal" class="gv-account-modal">
-    <div class="gv-account-modal__panel">
-        <button class="gv-account-modal__close" onclick="gvCloseModal('gvAccountModal')">
-            <i class="fa fa-times-circle"></i>
-        </button>
-
-        <h2 class="gv-account-modal__title">Mon compte utilisateur</h2>
-        <hr class="gv-account-modal__divider">
-
-        <div class="gv-account-modal__profile">
-            <img id="profil-pic" src="pictures/OIP.jpg" class="gv-account-modal__profile-img profil-pic-global" alt="Profil utilisateur">
-            <input type="file" id="input-file" accept="image/png, image/jpeg, image/jpg" hidden>
-            <label for="input-file" class="gv-account-modal__upload-btn">
-                Télécharger une image
-            </label>
-        </div>
-
-        <hr class="gv-account-modal__divider">
-
-        <div class="gv-account-modal__user">
-            <p class="gv-account-modal__name">Alex KUETCHE</p>
-            <p class="gv-account-modal__email">alexkuetche@gmail.com</p>
-        </div>
-
-        <hr class="gv-account-modal__divider">
-
-        <div class="gv-account-modal__actions">
-            <button class="gv-account-modal__action gv-account-modal__action--danger" onclick="gvOpenModal('gvDeleteAccountModal')">
-                Supprimer
+<?php if ($isLoggedIn): ?>
+    <div id="gvAccountModal" class="gv-account-modal">
+        <div class="gv-account-modal__panel">
+            <button class="gv-account-modal__close" onclick="gvCloseModal('gvAccountModal')">
+                <i class="fa fa-times-circle"></i>
             </button>
-            <button class="gv-account-modal__action gv-account-modal__action--neutral" onclick="gvOpenModal('gvLogoutModal')">
-                Se déconnecter
-            </button>
-            <button class="gv-account-modal__action gv-account-modal__action--primary">
-                Modifier
-            </button>
-        </div>
-    </div>
-</div>
 
-<div id="gvDeleteAccountModal" class="gv-account-modal">
-    <div class="gv-account-modal__panel">
-        <button class="gv-account-modal__back" onclick="gvCloseModal('gvDeleteAccountModal')">
-            <i class="fa fa-arrow-left"></i>
-        </button>
+            <h2 class="gv-account-modal__title">Mon compte utilisateur</h2>
+            <hr class="gv-account-modal__divider">
 
-        <h2 class="gv-account-modal__title">Suppression du compte</h2>
-        <hr class="gv-account-modal__divider">
+            <div class="gv-account-modal__profile">
+                <img id="profil-pic" src="pictures/OIP.jpg" class="gv-account-modal__profile-img profil-pic-global" alt="Profil utilisateur">
+                <input type="file" id="input-file" accept="image/png, image/jpeg, image/jpg" hidden>
+                <label for="input-file" class="gv-account-modal__upload-btn">
+                    Télécharger une image
+                </label>
+            </div>
 
-        <div class="gv-account-modal__profile">
-            <img src="pictures/OIP.jpg" class="gv-account-modal__profile-img profil-pic-global" alt="Profil utilisateur">
-        </div>
+            <hr class="gv-account-modal__divider">
 
-        <hr class="gv-account-modal__divider">
+            <div class="gv-account-modal__user">
+                <p class="gv-account-modal__name"><?= htmlspecialchars($userFullName) ?></p>
+                <p class="gv-account-modal__email"><?= htmlspecialchars($userEmail) ?></p>
+            </div>
 
-        <div class="gv-account-modal__user">
-            <p class="gv-account-modal__name">Alex KUETCHE</p>
-            <p class="gv-account-modal__email">alexkuetche@gmail.com</p>
-        </div>
+            <hr class="gv-account-modal__divider">
 
-        <hr class="gv-account-modal__divider">
-
-        <p class="gv-account-modal__message">
-            Attention, cette action effacera définitivement votre compte de l'application.
-            Êtes-vous sûr de vouloir supprimer votre compte ?
-        </p>
-
-        <div class="gv-account-modal__actions">
-            <button class="gv-account-modal__action gv-account-modal__action--danger">
-                Confirmer la suppression
-            </button>
-        </div>
-    </div>
-</div>
-
-<div id="gvLogoutModal" class="gv-account-modal">
-    <div class="gv-account-modal__panel">
-        <button class="gv-account-modal__back" onclick="gvCloseModal('gvLogoutModal')">
-            <i class="fa fa-arrow-left"></i>
-        </button>
-
-        <h2 class="gv-account-modal__title">Déconnexion</h2>
-        <hr class="gv-account-modal__divider">
-
-        <div class="gv-account-modal__profile">
-            <img src="pictures/OIP.jpg" class="gv-account-modal__profile-img profil-pic-global" alt="Profil utilisateur">
-        </div>
-
-        <hr class="gv-account-modal__divider">
-
-        <div class="gv-account-modal__user">
-            <p class="gv-account-modal__name">Alex KUETCHE</p>
-            <p class="gv-account-modal__email">alexkuetche@gmail.com</p>
-        </div>
-
-        <hr class="gv-account-modal__divider">
-
-        <p class="gv-account-modal__message">
-            Attention, cette action vous déconnectera du site.
-            Êtes-vous sûr de vouloir vous déconnecter ?
-        </p>
-
-        <div class="gv-account-modal__actions">
-            <form method="post" class="gv-account-modal__form">
-                <button type="submit" name="deconnect_account" class="gv-account-modal__action gv-account-modal__action--neutral">
+            <div class="gv-account-modal__actions">
+                <button class="gv-account-modal__action gv-account-modal__action--danger" onclick="gvOpenModal('gvDeleteAccountModal')">
+                    Supprimer
+                </button>
+                <button class="gv-account-modal__action gv-account-modal__action--neutral" onclick="gvOpenModal('gvLogoutModal')">
                     Se déconnecter
                 </button>
-            </form>
+                <button class="gv-account-modal__action gv-account-modal__action--primary">
+                    Modifier
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-<style>
-    .gv-header {
-        position: sticky;
-        top: 0;
-        z-index: 1200;
-        width: 100%;
-        background: linear-gradient(135deg, #018b01 0%, #016f01 100%);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
-    }
+    <div id="gvDeleteAccountModal" class="gv-account-modal">
+        <div class="gv-account-modal__panel">
+            <button class="gv-account-modal__back" onclick="gvCloseModal('gvDeleteAccountModal')">
+                <i class="fa fa-arrow-left"></i>
+            </button>
 
-    .gv-header__inner {
-        max-width: 1400px;
-        margin: 0 auto;
-        min-height: 108px;
-        padding: 14px 24px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-    }
+            <h2 class="gv-account-modal__title">Suppression du compte</h2>
+            <hr class="gv-account-modal__divider">
 
-    .gv-header__brand {
-        display: flex;
-        align-items: center;
-        flex-shrink: 0;
-        text-decoration: none;
-    }
+            <div class="gv-account-modal__profile">
+                <img src="pictures/OIP.jpg" class="gv-account-modal__profile-img profil-pic-global" alt="Profil utilisateur">
+            </div>
 
-    .gv-header__logo {
-        width: 125px;
-        height: 90px;
-        object-fit: cover;
-        border-radius: 10px;
-        background: #fff;
-        padding: 4px;
-    }
+            <hr class="gv-account-modal__divider">
 
-    .gv-header__desktop-nav {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        flex: 1;
-        max-width: 760px;
-        background: rgba(255, 255, 255, 0.96);
-        border-radius: 999px;
-        padding: 10px 16px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    }
+            <div class="gv-account-modal__user">
+                <p class="gv-account-modal__name"><?= htmlspecialchars($userFullName) ?></p>
+                <p class="gv-account-modal__email"><?= htmlspecialchars($userEmail) ?></p>
+            </div>
 
-    .gv-header__link {
-        color: #0f6c39;
-        text-decoration: none;
-        font-size: 1rem;
-        font-weight: 700;
-        padding: 10px 16px;
-        border-radius: 999px;
-        transition: all 0.25s ease;
-        white-space: nowrap;
-    }
+            <hr class="gv-account-modal__divider">
 
-    .gv-header__link:hover,
-    .gv-header__link--active {
-        background: #e8f7eb;
-        color: #018b01;
-    }
+            <p class="gv-account-modal__message">
+                Attention, cette action effacera définitivement votre compte de l'application.
+                Êtes-vous sûr de vouloir supprimer votre compte ?
+            </p>
 
-    .gv-header__actions {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        flex-shrink: 0;
-    }
+            <div class="gv-account-modal__actions">
+                <button class="gv-account-modal__action gv-account-modal__action--danger">
+                    Confirmer la suppression
+                </button>
+            </div>
+        </div>
+    </div>
 
-    .gv-header__lang {
-        border: none;
-        background: transparent;
-        color: #fff;
-        font-size: 1.15rem;
-        font-weight: 700;
-        cursor: pointer;
-    }
+    <div id="gvLogoutModal" class="gv-account-modal">
+        <div class="gv-account-modal__panel">
+            <button class="gv-account-modal__back" onclick="gvCloseModal('gvLogoutModal')">
+                <i class="fa fa-arrow-left"></i>
+            </button>
 
-    .gv-header__profile-btn {
-        border: none;
-        background: transparent;
-        padding: 0;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-    }
+            <h2 class="gv-account-modal__title">Déconnexion</h2>
+            <hr class="gv-account-modal__divider">
 
-    .gv-header__profile-img {
-        width: 46px;
-        height: 46px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid rgba(255, 255, 255, 0.45);
-    }
+            <div class="gv-account-modal__profile">
+                <img src="pictures/OIP.jpg" class="gv-account-modal__profile-img profil-pic-global" alt="Profil utilisateur">
+            </div>
 
-    .gv-header__burger {
-        display: none;
-        border: none;
-        background: transparent;
-        color: #fff;
-        font-size: 2rem;
-        cursor: pointer;
-    }
+            <hr class="gv-account-modal__divider">
 
-    .gv-mobile-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(3, 10, 24, 0.55);
-        backdrop-filter: blur(7px);
-        -webkit-backdrop-filter: blur(7px);
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-        transition: all 0.3s ease;
-        z-index: 1300;
-    }
+            <div class="gv-account-modal__user">
+                <p class="gv-account-modal__name"><?= htmlspecialchars($userFullName) ?></p>
+                <p class="gv-account-modal__email"><?= htmlspecialchars($userEmail) ?></p>
+            </div>
 
-    .gv-mobile-backdrop.is-active {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-    }
+            <hr class="gv-account-modal__divider">
 
-    .gv-mobile-drawer {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: min(86vw, 380px);
-        height: 100vh;
-        background: linear-gradient(180deg, #071120 0%, #0b1425 100%);
-        box-shadow: -16px 0 40px rgba(0, 0, 0, 0.28);
-        transform: translateX(100%);
-        transition: transform 0.35s ease;
-        z-index: 1350;
-        display: flex;
-        flex-direction: column;
-        padding: 18px 18px 28px;
-    }
+            <p class="gv-account-modal__message">
+                Attention, cette action vous déconnectera du site.
+                Êtes-vous sûr de vouloir vous déconnecter ?
+            </p>
 
-    .gv-mobile-drawer.is-open {
-        transform: translateX(0);
-    }
-
-    .gv-mobile-drawer__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 28px;
-    }
-
-    .gv-mobile-drawer__logo {
-        width: 88px;
-        height: 68px;
-        object-fit: cover;
-        border-radius: 10px;
-        background: #fff;
-        padding: 4px;
-    }
-
-    .gv-mobile-drawer__close {
-        border: none;
-        background: transparent;
-        color: #fff;
-        font-size: 2rem;
-        cursor: pointer;
-    }
-
-    .gv-mobile-drawer__nav {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        margin-top: 12px;
-    }
-
-    .gv-mobile-drawer__link {
-        color: #fff;
-        text-decoration: none;
-        font-size: 1.35rem;
-        font-weight: 700;
-        padding: 18px 22px;
-        border-radius: 18px;
-        transition: all 0.25s ease;
-    }
-
-    .gv-mobile-drawer__link:hover,
-    .gv-mobile-drawer__link--active {
-        background: rgba(138, 53, 76, 0.22);
-        color: #ff546e;
-    }
-
-    .gv-account-modal {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.45);
-        display: none;
-        justify-content: flex-end;
-        z-index: 1400;
-    }
-
-    .gv-account-modal.is-open {
-        display: flex;
-    }
-
-    .gv-account-modal__panel {
-        position: relative;
-        width: min(100%, 410px);
-        height: 100vh;
-        background: #fff;
-        padding: 28px 22px;
-        overflow-y: auto;
-        box-shadow: -8px 0 24px rgba(0, 0, 0, 0.18);
-    }
-
-    .gv-account-modal__close,
-    .gv-account-modal__back {
-        position: absolute;
-        top: 18px;
-        border: none;
-        background: transparent;
-        color: #5f6368;
-        font-size: 1.4rem;
-        cursor: pointer;
-    }
-
-    .gv-account-modal__close {
-        right: 18px;
-    }
-
-    .gv-account-modal__back {
-        left: 18px;
-    }
-
-    .gv-account-modal__title {
-        margin: 10px 0 0;
-        text-align: center;
-        color: #0f8d43;
-        font-size: 1.35rem;
-        font-weight: 800;
-    }
-
-    .gv-account-modal__divider {
-        border: none;
-        border-top: 1px solid #c7e8cf;
-        margin: 18px 0;
-    }
-
-    .gv-account-modal__profile {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 14px;
-    }
-
-    .gv-account-modal__profile-img {
-        width: 96px;
-        height: 96px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 3px solid #0f8d43;
-    }
-
-    .gv-account-modal__upload-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 18px;
-        border-radius: 10px;
-        background: #0f8d43;
-        color: #fff;
-        font-size: 0.95rem;
-        font-weight: 700;
-        cursor: pointer;
-    }
-
-    .gv-account-modal__user {
-        text-align: center;
-    }
-
-    .gv-account-modal__name {
-        margin: 0 0 6px;
-        font-size: 1.1rem;
-        font-weight: 800;
-        color: #1a1a1a;
-    }
-
-    .gv-account-modal__email {
-        margin: 0;
-        color: #0f8d43;
-        font-size: 0.96rem;
-    }
-
-    .gv-account-modal__message {
-        color: #333;
-        font-size: 1rem;
-        line-height: 1.6;
-        font-weight: 600;
-        margin: 0 0 16px;
-    }
-
-    .gv-account-modal__actions,
-    .gv-account-modal__form {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .gv-account-modal__action {
-        width: 100%;
-        border: none;
-        border-radius: 12px;
-        padding: 13px 16px;
-        font-size: 1rem;
-        font-weight: 700;
-        color: #fff;
-        cursor: pointer;
-    }
-
-    .gv-account-modal__action--primary {
-        background: #ef4444;
-    }
-
-    .gv-account-modal__action--danger {
-        background: #16a34a;
-    }
-
-    .gv-account-modal__action--neutral {
-        background: #6b7280;
-    }
-
-    @media (max-width: 1100px) {
-        .gv-header__desktop-nav {
-            display: none;
-        }
-
-        .gv-header__burger {
-            display: inline-flex;
-        }
-
-        .gv-header__inner {
-            min-height: 94px;
-        }
-
-        .gv-header__logo {
-            width: 110px;
-            height: 78px;
-        }
-    }
-
-    @media (max-width: 640px) {
-        .gv-header__inner {
-            padding: 12px 16px;
-            min-height: 88px;
-        }
-
-        .gv-header__logo {
-            width: 92px;
-            height: 70px;
-        }
-
-        .gv-header__actions {
-            gap: 10px;
-        }
-
-        .gv-header__lang {
-            font-size: 1rem;
-        }
-
-        .gv-header__profile-img {
-            width: 42px;
-            height: 42px;
-        }
-
-        .gv-mobile-drawer {
-            width: min(92vw, 360px);
-            padding: 16px;
-        }
-
-        .gv-mobile-drawer__link {
-            font-size: 1.15rem;
-            padding: 16px 18px;
-        }
-
-        .gv-account-modal__panel {
-            width: 100%;
-        }
-    }
-</style>
+            <div class="gv-account-modal__actions">
+                <form method="post" class="gv-account-modal__form">
+                    <button type="submit" name="deconnect_account" class="gv-account-modal__action gv-account-modal__action--neutral">
+                        Se déconnecter
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <script>
     function gvOpenModal(id) {
@@ -584,14 +230,14 @@ if (isset($_POST['deconnect_account'])) {
         const mobileBackdrop = document.getElementById('gvMobileBackdrop');
 
         function openDrawer() {
-            mobileDrawer.classList.add('is-open');
-            mobileBackdrop.classList.add('is-active');
+            if (mobileDrawer) mobileDrawer.classList.add('is-open');
+            if (mobileBackdrop) mobileBackdrop.classList.add('is-active');
             document.body.style.overflow = 'hidden';
         }
 
         function closeDrawer() {
-            mobileDrawer.classList.remove('is-open');
-            mobileBackdrop.classList.remove('is-active');
+            if (mobileDrawer) mobileDrawer.classList.remove('is-open');
+            if (mobileBackdrop) mobileBackdrop.classList.remove('is-active');
             document.body.style.overflow = '';
         }
 

@@ -146,10 +146,7 @@ if (isset($_POST['deconnect_account'])) {
         <div id="modalContainer"></div>
 
         <section class="map-section">
-            <h2 class="section-title">
-                Voyagez sur le plus grand réseau camerounais de bus longue distance !
-            </h2>
-
+          
             <div class="map-box">
                 <?php include 'map.php'; ?>
             </div>
