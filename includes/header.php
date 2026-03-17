@@ -32,12 +32,12 @@ $easyLabel = 'EasyTravel';
 $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
 ?>
 
-<link rel="stylesheet" href="includes/header.css">
+<link rel="stylesheet" href="/MonProjet/includes/header.css">
 
 <header class="gv-header">
     <div class="gv-header__inner">
         <a href="Accueil.php" class="gv-header__brand">
-            <img src="pictures/logo-general.jpg" alt="Logo Général Voyage" class="gv-header__logo">
+           <img src="/MonProjet/pictures/logo-general.jpg" alt="Logo Général Voyage" class="gv-header__logo">
         </a>
 
         <nav class="gv-header__desktop-nav">

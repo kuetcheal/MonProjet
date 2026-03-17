@@ -55,7 +55,7 @@ if (isset($_POST['deconnect_account'])) {
             </p>
         </div>
 
-       <div class="search-card-wrapper hidden md:block">
+       <div class="search-card-wrapper hidden md:block shadow-md">
             <h3 class="hero-search-title">Reserver votre voyage</h3>
             <div class="search-card">
                 <form action="listevoyageretour.php" method="post" class="search-form">

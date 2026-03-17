@@ -8,7 +8,6 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Location de bus - Général Voyage</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -30,7 +29,7 @@ session_start();
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24 lg:py-28">
             <div class="max-w-3xl">
-                <span class="inline-block bg-white/15 text-white border border-white/20 rounded-full px-4 py-2 text-sm font-semibold mb-5">
+                <span class="inline-block bg-white/15 text-white border border-white/20  px-4 py-2 text-sm font-semibold mb-5">
                     Service Premium • Général Voyage
                 </span>
 
@@ -61,9 +60,9 @@ session_start();
 
     <!-- BLOC INFOS RAPIDES -->
     <section class="relative -mt-8 sm:-mt-12 z-10">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                <div class="bg-white  shadow-md p-6 text-center">
                     <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center text-[#008000] text-2xl">
                         <i class="fa-solid fa-bus"></i>
                     </div>
@@ -73,7 +72,7 @@ session_start();
                     </p>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                <div class="bg-white  shadow-md p-6 text-center">
                     <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center text-[#008000] text-2xl">
                         <i class="fa-solid fa-user-shield"></i>
                     </div>
@@ -83,7 +82,7 @@ session_start();
                     </p>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                <div class="bg-white  shadow-md p-6 text-center">
                     <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center text-[#008000] text-2xl">
                         <i class="fa-solid fa-route"></i>
                     </div>
@@ -129,21 +128,21 @@ session_start();
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <div class="rounded-2xl overflow-hidden shadow-lg">
+                <div class=" overflow-hidden shadow-lg">
                     <img
                         src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=80"
                         alt="Intérieur bus"
                         class="w-full h-64 object-cover"
                     >
                 </div>
-                <div class="rounded-2xl overflow-hidden shadow-lg mt-10">
+                <div class=" overflow-hidden shadow-lg mt-10">
                     <img
                         src="https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=900&q=80"
                         alt="Voyage groupe"
                         class="w-full h-64 object-cover"
                     >
                 </div>
-                <div class="col-span-2 rounded-2xl overflow-hidden shadow-lg">
+                <div class="col-span-2  overflow-hidden shadow-lg">
                     <img
                         src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80"
                         alt="Bus sur la route"
@@ -168,8 +167,8 @@ session_start();
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                <div class="bg-slate-50 rounded-2xl overflow-hidden shadow-md">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-[1300px]">
+                <div class="bg-slate-50  overflow-hidden shadow-md">
                     <img
                         src="https://images.unsplash.com/photo-1517404215738-15263e9f9178?auto=format&fit=crop&w=1200&q=80"
                         alt="Minibus"
@@ -186,7 +185,7 @@ session_start();
                     </div>
                 </div>
 
-                <div class="bg-slate-50 rounded-2xl overflow-hidden shadow-md">
+                <div class="bg-slate-50  overflow-hidden shadow-md">
                     <img
                         src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80"
                         alt="Bus standard"
@@ -203,7 +202,7 @@ session_start();
                     </div>
                 </div>
 
-                <div class="bg-slate-50 rounded-2xl overflow-hidden shadow-md">
+                <div class="bg-slate-50  overflow-hidden shadow-md">
                     <img
                         src="https://images.unsplash.com/photo-1529074963764-98f45c47344b?auto=format&fit=crop&w=1200&q=80"
                         alt="Autocar premium"
@@ -307,8 +306,8 @@ session_start();
 
     <!-- FORMULAIRE -->
     <section id="reservation" class="py-16">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-[#008000] rounded-2xl shadow-xl overflow-hidden">
+        <div class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-[#008000]  shadow-xl overflow-hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-2">
                     <div class="p-8 sm:p-10">
                         <span class="text-green-100 font-semibold uppercase tracking-wide text-sm">Demande de location</span>
@@ -420,8 +419,8 @@ session_start();
 
     <!-- CTA FINAL -->
     <section class="py-16">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="rounded-3xl bg-gradient-to-r from-[#008000] to-[#0d5d31] p-8 sm:p-10 text-center shadow-xl">
+        <div class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class=" bg-gradient-to-r from-[#008000] to-[#0d5d31] p-8 sm:p-10 text-center shadow-xl">
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">
                     Besoin d’un transport fiable pour votre groupe ?
                 </h2>

@@ -9,7 +9,7 @@
                     Recevez nos nouveautés, nos offres et nos informations utiles directement par email.
                 </p>
 
-                <h3 class="text-sm font-semibold mb-3 text-pink-300">Inscrivez-vous à notre newsletter</h3>
+                <h3 class="text-sm font-semibold mb-3 text-green">Inscrivez-vous à notre newsletter</h3>
 
                 <form class="flex flex-col sm:flex-row gap-3">
                     <input
