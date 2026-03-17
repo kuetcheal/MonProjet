@@ -312,8 +312,8 @@ if (isset($_POST['deconnect_account'])) {
         </section>
 
         <section class="carousel-section">
-            <h2 class="section-title">
-                Découvrez quelques destinations populaires
+            <h2 class="actu font-bold justify-start max-w-[1350px] text-2xl pb-5">
+               Profitez de toutes les dernières actualités de génral voyage qui vous informe sur tout ce qu'il y'a de nouveaux ainsi que les promotions 
             </h2>
 
             <div class="carousel home-carousel"
@@ -323,8 +323,9 @@ if (isset($_POST['deconnect_account'])) {
                     <div class="destination-card">
                         <img src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b" alt="City" />
                         <div class="destination-card-body">
-                            <div class="destination-card-title">New York City</div>
-                            <p>The Big Apple, featuring stunning architecture and vibrant culture.</p>
+                            <div class="destination-card-title">Promotion </div>
+                            <p class="text-sm">la période de vacances arrive profitez de la reduction jusqu'a -10%.</p>
+                            <a href="/article.php">Lire l'article</a>
                         </div>
                     </div>
                 </div>
@@ -334,7 +335,8 @@ if (isset($_POST['deconnect_account'])) {
                         <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
                         <div class="destination-card-body">
                             <div class="destination-card-title">Tokyo</div>
-                            <p>A blend of modern technology and traditional culture.</p>
+                            <p class="text-sm">A blend of modern technology and traditional culture.</p>
+                             <a href="/article.php">Lire l'article</a>
                         </div>
                     </div>
                 </div>
@@ -344,7 +346,8 @@ if (isset($_POST['deconnect_account'])) {
                         <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e" alt="Paris" />
                         <div class="destination-card-body">
                             <div class="destination-card-title">Paris</div>
-                            <p>The City of Light, known for its romance and iconic landmarks.</p>
+                            <p class="text-sm">The City of Light, known for its romance and iconic landmarks.</p>
+                             <a href="/article.php">Lire l'article</a>
                         </div>
                     </div>
                 </div>
@@ -353,8 +356,9 @@ if (isset($_POST['deconnect_account'])) {
                     <div class="destination-card">
                         <img src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b" alt="City" />
                         <div class="destination-card-body">
-                            <div class="destination-card-title">New York City</div>
-                            <p>The Big Apple, featuring stunning architecture and vibrant culture.</p>
+                            <div class="destination-card-title">Location de bus</div>
+                            <p class="text-sm">Désormais vous pouvez reserver et louer vos bus en ligne.</p>
+                             <a href="/article.php">Lire l'article</a>
                         </div>
                     </div>
                 </div>
@@ -364,7 +368,30 @@ if (isset($_POST['deconnect_account'])) {
                         <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
                         <div class="destination-card-body">
                             <div class="destination-card-title">Tokyo</div>
-                            <p>A blend of modern technology and traditional culture.</p>
+                            <p class="text-sm">A blend of modern technology and traditional culture.</p>
+                             <a href="/article.php">Lire l'article</a>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="carousel-cell">
+                    <div class="destination-card">
+                        <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
+                        <div class="destination-card-body">
+                            <div class="destination-card-title">Nouvel agence</div>
+                            <p class="text-sm">général voyage vous informe qu'un nouvel agence sera à Douala.</p>
+                             <a href="/article.php">Lire l'article</a>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="carousel-cell">
+                    <div class="destination-card">
+                        <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
+                        <div class="destination-card-body">
+                            <div class="destination-card-title">Tokyo</div>
+                            <p class="text-sm">A blend of modern technology and traditional culture.</p>
+                             <a href="/article.php">Lire l'article</a>
                         </div>
                     </div>
                 </div>
@@ -372,9 +399,9 @@ if (isset($_POST['deconnect_account'])) {
         </section>
     </main>
 
-    <div class="chat-floating">
+    <!-- <div class="chat-floating">
         <i class="fa fa-comments" id="openChat"></i>
-    </div>
+    </div> -->
 
     <div id="chatModal" class="chat-modal">
         <div class="chat-modal-header">
@@ -389,6 +416,7 @@ if (isset($_POST['deconnect_account'])) {
 
     <div id="modalMessage"></div>
 
+    <?php include 'includes/scrollToUp.php'?>
     <?php include 'includes/footer.php'; ?>
 
     <script src="Javascript/Accueil.js"></script>

@@ -439,7 +439,7 @@ session_start();
             </div>
         </div>
     </section>
-
+    <?php include '../includes/scrollToUp.php' ?>
     <?php include '../includes/footer.php'; ?>
 
 </body>
