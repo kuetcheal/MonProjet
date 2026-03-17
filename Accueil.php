@@ -47,18 +47,15 @@ if (isset($_POST['deconnect_account'])) {
             <h1 class="hero-title">
                 Profite jusqu'à -20% sur les billets de reservations !
             </h1>
-
             <p class="hero-subtitle">
                 REMISES EXCLUSIVES POUR LES MEMBRES !
                 <a href="connexion.php" class="hero-link">
                     CONNECTEZ-VOUS / INSCRIVEZ-VOUS ICI
                 </a>
             </p>
-
-  
         </div>
 
-        <div class="search-card-wrapper">
+       <div class="search-card-wrapper hidden md:block">
             <h3 class="hero-search-title">Reserver votre voyage</h3>
             <div class="search-card">
                 <form action="listevoyageretour.php" method="post" class="search-form">
@@ -130,7 +127,126 @@ if (isset($_POST['deconnect_account'])) {
         </div>
     </section>
 
+    
+
     <main class="home-main">
+
+       <section class="block md:hidden px-4 py-5 bg-white">
+    <div class="w-full max-w-md mx-auto relative z-[5]">
+        <h3 class="text-center text-[20px] font-bold text-[#46e37b] pb-3 leading-tight">
+            Reserver votre voyage
+        </h3>
+
+        <div class="bg-white/95 rounded-[24px] shadow-[0_8px_24px_rgba(0,0,0,0.12)] px-4 py-5">
+            <form action="listevoyageretour.php" method="post" class="flex flex-col gap-5">
+
+                <div class="flex flex-wrap items-center gap-6">
+                    <label class="flex items-center gap-2 text-black text-[15px] font-bold">
+                        <input
+                            type="radio"
+                            id="inlineRadio1"
+                            name="inlineRadioOptions"
+                            value="option1"
+                            checked
+                            class="w-[18px] h-[18px] accent-[#18884c]"
+                        >
+                        <span>Aller simple</span>
+                    </label>
+
+                    <label class="flex items-center gap-2 text-black text-[15px] font-bold">
+                        <input
+                            type="radio"
+                            id="inlineRadio2"
+                            name="inlineRadioOptions"
+                            value="option2"
+                            class="w-[18px] h-[18px] accent-[#18884c]"
+                        >
+                        <span>Aller-Retour</span>
+                    </label>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
+
+                    <div class="flex flex-col min-w-0">
+                        <label for="input1" class="mb-2 text-[#156f3e] text-[15px] font-extrabold flex items-center gap-2">
+                            <i class="bi bi-geo-alt text-[#18884c]"></i> DE :
+                        </label>
+                        <select
+                            id="input1"
+                            name="input1"
+                            class="select2 w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none"
+                        >
+                            <?php
+                            $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+                            $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
+                            $response = $bdd->query($query);
+                            while ($donnee = $response->fetch()) {
+                                $destination = $donnee['Nom_ville'];
+                                echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col min-w-0">
+                        <label for="input2" class="mb-2 text-[#156f3e] text-[15px] font-extrabold flex items-center gap-2">
+                            <i class="bi bi-geo-alt text-[#18884c]"></i> A :
+                        </label>
+                        <select
+                            id="input2"
+                            name="input2"
+                            class="select2 w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none"
+                        >
+                            <?php
+                            $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+                            $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
+                            $response = $bdd->query($query);
+                            while ($donnee = $response->fetch()) {
+                                $destination = $donnee['Nom_ville'];
+                                echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col min-w-0">
+                        <label for="input3" class="mb-2 text-[#156f3e] text-[15px] font-extrabold">
+                            Date départ :
+                        </label>
+                        <input
+                            type="date"
+                            id="input3"
+                            name="input3"
+                            class="w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none"
+                        >
+                    </div>
+
+                    <div class="flex flex-col min-w-0">
+                        <label for="input4" class="mb-2 text-[#156f3e] text-[15px] font-extrabold">
+                            Date retour :
+                        </label>
+                        <input
+                            type="date"
+                            id="input4"
+                            name="input4"
+                            disabled
+                            class="w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none disabled:bg-gray-100 disabled:text-gray-400"
+                        >
+                    </div>
+
+                    <div class="flex flex-col min-w-0">
+                        <input
+                            type="submit"
+                            value="Valider"
+                            class="w-full h-[50px] rounded-[12px] border-0 bg-[#156f3e] text-white text-[15px] font-extrabold cursor-pointer"
+                        >
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
         <section class="actions-section">
             <h2 class="actions-title">
                 Gérer vos trajets et vos reservations sans soucis grâce à vos identifiants de reservation sur votre billet de voyage.
@@ -145,12 +261,17 @@ if (isset($_POST['deconnect_account'])) {
 
         <div id="modalContainer"></div>
 
+            <section>
+            <?php include 'includes/service-bus-card.php'; ?>
+        </section>
+
         <section class="map-section">
           
             <div class="map-box">
                 <?php include 'map.php'; ?>
             </div>
         </section>
+    
 
         <section class="presentation-section">
             <div class="presentation-grid">

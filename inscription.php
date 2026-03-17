@@ -1,163 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="CSS/inscription.css">
-    <title>Document</title>
+    <title>Inscription</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
-<body>
+<body style="background-color: aliceblue;">
 
-<?php include 'includes/header.php'; ?>
+    <?php include 'includes/header.php'; ?>
 
+    <main class="px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <div class="w-full max-w-xl mx-auto mt-6 sm:mt-10 mb-12 bg-[#008000] rounded-md shadow-lg p-5 sm:p-6 md:p-8">
+            <h2 class="text-center text-white text-2xl sm:text-3xl font-bold mb-4">
+                Formulaire d'inscription
+            </h2>
 
-    <div class="container">
-        <h2>Formulaire d'inscription</h2>
-        <hr>
-        <form action="verification.php" method="POST">
-            <label for="nom">Nom:</label>
-            <input type="text" id="nom" name="nom" placeholder="KUETCHE" required>
+            <hr class="border-white/30 mb-6">
 
-            <label for=" prenom">Prénom:</label>
-            <input type="text" id="prenom" name="prenom" placeholder="ALEX" required>
+            <form action="verification.php" method="POST" class="flex flex-col gap-4">
+                <div>
+                    <label for="nom" class="block text-white font-medium mb-2">
+                        Nom :
+                    </label>
+                    <input
+                        type="text"
+                        id="nom"
+                        name="nom"
+                        placeholder="KUETCHE"
+                        required
+                        class="w-full rounded-md px-4 py-3 border border-gray-300 text-gray-700 placeholder-gray-400 outline-none focus:ring-2 focus:ring-green-300"
+                    >
+                </div>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" placeholder="nom@gmail.com" required>
+                <div>
+                    <label for="prenom" class="block text-white font-medium mb-2">
+                        Prénom :
+                    </label>
+                    <input
+                        type="text"
+                        id="prenom"
+                        name="prenom"
+                        placeholder="ALEX"
+                        required
+                        class="w-full rounded-md px-4 py-3 border border-gray-300 text-gray-700 placeholder-gray-400 outline-none focus:ring-2 focus:ring-green-300"
+                    >
+                </div>
 
-            <label for="email">Téléphone:</label>
-            <input type="number" id="phone" name="phone" placeholder="655198412" required>
+                <div>
+                    <label for="email" class="block text-white font-medium mb-2">
+                        Email :
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="nom@gmail.com"
+                        required
+                        class="w-full rounded-md px-4 py-3 border border-gray-300 text-gray-700 placeholder-gray-400 outline-none focus:ring-2 focus:ring-green-300"
+                    >
+                </div>
 
-            <label for="password">Mot de passe:</label>
-            <input type="password" id="password" name="password" required>
+                <div>
+                    <label for="phone" class="block text-white font-medium mb-2">
+                        Téléphone :
+                    </label>
+                    <input
+                        type="number"
+                        id="phone"
+                        name="phone"
+                        placeholder="655198412"
+                        required
+                        class="w-full rounded-md px-4 py-3 border border-gray-300 text-gray-700 placeholder-gray-400 outline-none focus:ring-2 focus:ring-green-300"
+                    >
+                </div>
 
-            <button type="submit">S'inscrire</button>
-        </form>
-    </div>
+                <div>
+                    <label for="password" class="block text-white font-medium mb-2">
+                        Mot de passe :
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                        class="w-full rounded-md px-4 py-3 border border-gray-300 text-gray-700 outline-none focus:ring-2 focus:ring-green-300"
+                    >
+                </div>
 
-    <footer>
-        <p>&copy; 2024 EasyTravel. Tous droits réservés.</p>
-    </footer>
+                <button
+                    type="submit"
+                    class="w-full bg-[#4CAF50] hover:bg-[#3e8e41] text-white py-3 rounded-md text-base font-medium transition duration-200 mt-2"
+                >
+                    S'inscrire
+                </button>
 
-    <style>
-    body {
-        background-color: aliceblue;
-    }
+                <p class="mt-4 text-white text-base leading-7">
+                    Vous avez déjà un compte ?
+                    <a href="connexion.php" class="text-white font-bold underline hover:text-green-200 transition">
+                        Se connecter
+                    </a>
+                </p>
+            </form>
+        </div>
+    </main>
 
-    .container {
-        background-color: green;
-        border-radius: 5px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-        margin: 50px auto;
-        max-width: 500px;
-        padding: 20px;
-        margin-top: 70px;
-    }
-
-    form {
-        display: flex;
-        flex-direction: column;
-        width: 300px;
-        margin: auto;
-    }
-
-    label {
-        margin-top: 10px;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-        padding: 5px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        border: 1px solid black;
-    }
-
-    button[type="submit"] {
-        padding: 10px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    button[type="submit"]:hover {
-        background-color: #3e8e41;
-    }
-
-
-    h2 {
-        text-align: center;
-        color: white;
-    }
-
-
-
-    header {
-        width: 100%;
-        background-color: green;
-        height: 100px;
-    }
-
-    nav {
-        width: 100%;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    img {
-        width: 120px;
-        height: 80px;
-        margin-top: 20px;
-    }
-
-    .items a {
-        text-decoration: none;
-        color: whitesmoke;
-        font-size: 20px;
-        margin-right: 40PX;
-        padding: 0 15px;
-    }
-
-
-    .nav-bar ul {
-        display: flex;
-
-        list-style-type: none;
-    }
-
-    .header-picture {
-        margin-left: 40px;
-
-    }
-
-    img {
-
-        height: 60px;
-        width: 100px;
-    }
-
-    footer {
-        background-color: #6c757d;
-        color: white;
-        padding: 20px 0;
-        text-align: center;
-        width: 100%;
-    }
-
-    .nav-bar {
-        margin-right: 30px;
-    }
-    </style>
-
-
+    <?php include 'includes/footer.php'; ?>
 
 </body>
 
