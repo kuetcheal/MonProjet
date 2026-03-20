@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Cas ADMIN
         if ($username === 'GENERAL' && $password === '123general') {
             $_SESSION['admin_name'] = 'GENERAL';
-            header('Location: Accueiladmin.php');
+            header('Location: Admins/listevoyage.php');
             exit;
         }
 
