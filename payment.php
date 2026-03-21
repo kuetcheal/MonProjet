@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/includes/seat_helpers.php';
 
 $prixTotal = isset($_GET['totalPrice']) ? (float) $_GET['totalPrice'] : 0;
 $idVoyage = $_POST['idVoyage'] ?? $_GET['idVoyage'] ?? $_SESSION['idVoyage'] ?? null;
@@ -8,16 +9,8 @@ $dbError = '';
 $depart = '';
 $arrivee = '';
 $dateVoyage = '';
-
-function getFirstExistingValue(array $source, array $keys, $default = '')
-{
-    foreach ($keys as $key) {
-        if (isset($source[$key]) && $source[$key] !== '') {
-            return $source[$key];
-        }
-    }
-    return $default;
-}
+$nombrePlaces = 0;
+$reservedSeats = [];
 
 try {
     $bdd = new PDO('mysql:host=localhost;dbname=bd_stock;charset=utf8', 'root', '');
@@ -26,33 +19,15 @@ try {
     if ($idVoyage) {
         $_SESSION['idVoyage'] = $idVoyage;
 
-        $requette = $bdd->prepare("SELECT * FROM voyage WHERE idVoyage = :idVoyage");
-        $requette->execute(['idVoyage' => $idVoyage]);
-        $donne = $requette->fetch(PDO::FETCH_ASSOC);
+        $voyage = getVoyageById($bdd, (int)$idVoyage);
 
-        if ($donne) {
-            $prixTotal = (float) getFirstExistingValue($donne, ['prix', 'prix_voyage', 'montant'], $prixTotal);
-
-            $depart = getFirstExistingValue($donne, [
-                'depart',
-                'ville_depart',
-                'point_depart',
-                'trajet_depart'
-            ]);
-
-            $arrivee = getFirstExistingValue($donne, [
-                'arrivee',
-                'ville_arrivee',
-                'point_arrivee',
-                'trajet_arrivee'
-            ]);
-
-            $dateVoyage = getFirstExistingValue($donne, [
-                'date',
-                'dateVoyage',
-                'date_depart',
-                'jour_voyage'
-            ]);
+        if ($voyage) {
+            $prixTotal = (float)($voyage['prix'] ?? $prixTotal);
+            $depart = trim(($voyage['villeDepart'] ?? '') . (!empty($voyage['quartierDepart']) ? ' - ' . $voyage['quartierDepart'] : ''));
+            $arrivee = trim(($voyage['villeArrivee'] ?? '') . (!empty($voyage['quartierArrivee']) ? ' - ' . $voyage['quartierArrivee'] : ''));
+            $dateVoyage = $voyage['jourDepart'] ?? '';
+            $nombrePlaces = (int)($voyage['nombrePlaces'] ?? 0);
+            $reservedSeats = getReservedSeats($bdd, (int)$idVoyage);
         }
     }
 
@@ -85,10 +60,7 @@ ob_start();
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"/>
 
 <style>
-    .iti {
-        width: 100%;
-    }
-
+    .iti { width: 100%; }
     .iti__tel-input {
         width: 100% !important;
         padding-top: 12px !important;
@@ -98,16 +70,8 @@ ob_start();
         font-size: 1rem !important;
         line-height: 1.5rem !important;
     }
-
-    .iti__selected-flag {
-        border-radius: 0.5rem 0 0 0.5rem;
-    }
-
     .iti__country-list {
         z-index: 9999 !important;
-        border-radius: 14px !important;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12) !important;
-        border: 1px solid #e5e7eb !important;
     }
 </style>
 
@@ -155,14 +119,7 @@ ob_start();
                     <label class="block text-gray-700 font-bold mb-2">
                         Email <span class="text-red-500" id="emailRequiredMark">*</span>
                     </label>
-                    <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        placeholder="example@gmail.com"
-                        required
-                        class="w-full p-3 border rounded-lg"
-                    >
+                    <input type="email" name="email" id="email" placeholder="example@gmail.com" required class="w-full p-3 border rounded-lg">
                     <p id="emailHint" class="text-sm text-gray-500 mt-2">
                         Utilisé si vous choisissez de recevoir votre billet par email.
                     </p>
@@ -172,15 +129,7 @@ ob_start();
                     <label class="block text-gray-700 font-bold mb-2">
                         Téléphone <span class="text-red-500">*</span>
                     </label>
-
-                    <input
-                        type="tel"
-                        id="telephoneVisible"
-                        placeholder="6 55 19 62 54"
-                        required
-                        class="w-full p-3 border rounded-lg"
-                    >
-
+                    <input type="tel" id="telephoneVisible" placeholder="6 55 19 62 54" required class="w-full p-3 border rounded-lg">
                     <p id="telephoneError" class="text-red-500 text-sm mt-2 hidden">
                         Veuillez saisir un numéro de téléphone valide.
                     </p>
@@ -194,13 +143,7 @@ ob_start();
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <label class="border rounded-xl p-4 cursor-pointer hover:border-green-500 transition bg-gray-50">
                             <div class="flex items-start gap-3">
-                                <input
-                                    type="radio"
-                                    name="deliveryMethodChoice"
-                                    value="email"
-                                    checked
-                                    class="mt-1 accent-green-600"
-                                >
+                                <input type="radio" name="deliveryMethodChoice" value="email" checked class="mt-1 accent-green-600">
                                 <div>
                                     <div class="font-bold text-gray-800">Je veux le recevoir par email</div>
                                     <p class="text-sm text-gray-500 mt-1">
@@ -212,12 +155,7 @@ ob_start();
 
                         <label class="border rounded-xl p-4 cursor-pointer hover:border-green-500 transition bg-gray-50">
                             <div class="flex items-start gap-3">
-                                <input
-                                    type="radio"
-                                    name="deliveryMethodChoice"
-                                    value="whatsapp"
-                                    class="mt-1 accent-green-600"
-                                >
+                                <input type="radio" name="deliveryMethodChoice" value="whatsapp" class="mt-1 accent-green-600">
                                 <div>
                                     <div class="font-bold text-gray-800">
                                         J’accepte de recevoir ma confirmation et mon billet sur WhatsApp si ce numéro a un compte WhatsApp
@@ -235,28 +173,7 @@ ob_start();
                     Sélectionnez votre siège <span class="text-red-500">*</span>
                 </h3>
 
-                <div class="grid grid-cols-6 gap-2 bg-gray-100 p-4 rounded-xl">
-                    <div class="col-span-6 flex justify-center items-center bg-orange-500 text-white font-bold py-3 rounded-lg">
-                        Conducteur
-                    </div>
-
-                    <?php
-                    $seatNumber = 1;
-                    for ($row = 0; $row < 12; $row++) {
-                        for ($col = 0; $col < 6; $col++) {
-                            if ($col === 2) {
-                                echo '<div></div>';
-                            } else {
-                                echo '<button type="button"
-                                    class="seat-btn bg-blue-500 text-white p-2 rounded hover:bg-blue-700 transition"
-                                    id="seat' . $seatNumber . '"
-                                    onclick="selectSeat(' . $seatNumber . ')">' . $seatNumber . '</button>';
-                                $seatNumber++;
-                            }
-                        }
-                    }
-                    ?>
-                </div>
+                <?php include __DIR__ . '/includes/seat_grid.php'; ?>
 
                 <input type="hidden" name="selectedSeat" id="selectedSeat">
 
@@ -360,29 +277,42 @@ ob_start();
             return false;
         }
 
-        if (deliveryMethod === 'email') {
-            if (!emailInput.value.trim()) {
-                if (showAlert) alert('Veuillez renseigner votre adresse email pour recevoir votre billet.');
-                emailInput.focus();
-                return false;
-            }
+        if (deliveryMethod === 'email' && !emailInput.value.trim()) {
+            if (showAlert) alert('Veuillez renseigner votre adresse email.');
+            emailInput.focus();
+            return false;
         }
 
-        if (deliveryMethod === 'whatsapp') {
-            if (!phoneOk) {
-                if (showAlert) alert('Veuillez saisir un numéro valide pour recevoir votre billet sur WhatsApp.');
-                phoneInput.focus();
-                return false;
-            }
-        } else {
-            if (phoneInput.value.trim() && !phoneOk) {
-                if (showAlert) alert('Le numéro de téléphone saisi n’est pas valide.');
-                phoneInput.focus();
-                return false;
-            }
+        if (deliveryMethod === 'whatsapp' && !phoneOk) {
+            if (showAlert) alert('Veuillez saisir un numéro valide pour WhatsApp.');
+            phoneInput.focus();
+            return false;
+        }
+
+        if (deliveryMethod === 'email' && phoneInput.value.trim() && !phoneOk) {
+            if (showAlert) alert('Le numéro de téléphone saisi n’est pas valide.');
+            phoneInput.focus();
+            return false;
         }
 
         return true;
+    }
+
+    function selectSeat(seatNumber) {
+        const seats = document.querySelectorAll('.seat-btn');
+
+        seats.forEach(seat => {
+            seat.classList.remove('bg-green-500');
+            seat.classList.add('bg-blue-500');
+        });
+
+        const selectedSeat = document.getElementById(`seat${seatNumber}`);
+        if (selectedSeat && !selectedSeat.disabled) {
+            selectedSeat.classList.remove('bg-blue-500');
+            selectedSeat.classList.add('bg-green-500');
+        }
+
+        document.getElementById('selectedSeat').value = seatNumber;
     }
 
     deliveryMethodRadios.forEach(radio => {
@@ -420,23 +350,6 @@ ob_start();
             .then(session => stripe.redirectToCheckout({ sessionId: session.id }))
             .catch(error => console.error('Error:', error));
         });
-    }
-
-    function selectSeat(seatNumber) {
-        const seats = document.querySelectorAll('.seat-btn');
-
-        seats.forEach(seat => {
-            seat.classList.remove('bg-green-500');
-            seat.classList.add('bg-blue-500');
-        });
-
-        const selectedSeat = document.getElementById(`seat${seatNumber}`);
-        if (selectedSeat) {
-            selectedSeat.classList.remove('bg-blue-500');
-            selectedSeat.classList.add('bg-green-500');
-        }
-
-        document.getElementById('selectedSeat').value = seatNumber;
     }
 
     syncDeliveryMethod();

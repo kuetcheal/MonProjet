@@ -9,15 +9,9 @@ try {
     die('Échec de connexion : ' . $e->getMessage());
 }
 
-/* =========================
-   RECUPERATION DES DESTINATIONS
-========================= */
 $stmtDestinations = $bdd->query("SELECT * FROM destination ORDER BY Nom_ville ASC");
 $destinations = $stmtDestinations->fetchAll(PDO::FETCH_ASSOC);
 
-/* =========================
-   RECUPERATION DES QUARTIERS
-========================= */
 $stmtQuartiers = $bdd->query("
     SELECT q.id_quartier, q.nom_quartier, q.id_destination, d.Nom_ville
     FROM quartier q
@@ -26,9 +20,6 @@ $stmtQuartiers = $bdd->query("
 ");
 $quartiers = $stmtQuartiers->fetchAll(PDO::FETCH_ASSOC);
 
-/* =========================
-   INSERTION D'UN VOYAGE
-========================= */
 $messageSuccess = '';
 $messageError = '';
 
@@ -40,6 +31,7 @@ if (
         $_POST['arrivee'],
         $_POST['quartier_arrivee'],
         $_POST['selectBus'],
+        $_POST['nombrePlaces'],
         $_POST['partir'],
         $_POST['destination'],
         $_POST['date'],
@@ -51,6 +43,7 @@ if (
     $arrivee = trim($_POST['arrivee']);
     $quartierArrivee = trim($_POST['quartier_arrivee']);
     $bus = trim($_POST['selectBus']);
+    $nombrePlaces = (int)($_POST['nombrePlaces'] ?? 0);
     $heureDepart = trim($_POST['partir']);
     $heureArrivee = trim($_POST['destination']);
     $date = trim($_POST['date']);
@@ -62,13 +55,14 @@ if (
         !empty($arrivee) &&
         !empty($quartierArrivee) &&
         !empty($bus) &&
+        $nombrePlaces > 0 &&
         !empty($heureDepart) &&
         !empty($heureArrivee) &&
         !empty($date) &&
         !empty($prix)
     ) {
         if ($depart === $arrivee && $quartierDepart === $quartierArrivee) {
-            $messageError = 'Le départ et l’arrivée ne peuvent pas être exactement identiques.';
+            $messageError = 'Le départ et l’arrivée ne peuvent pas être identiques.';
         } else {
             try {
                 $requete = $bdd->prepare("
@@ -78,6 +72,7 @@ if (
                         villeArrivee,
                         quartierArrivee,
                         typeBus,
+                        nombrePlaces,
                         prix,
                         heureDepart,
                         heureArrivee,
@@ -89,6 +84,7 @@ if (
                         :arrivee,
                         :quartierArrivee,
                         :bus,
+                        :nombrePlaces,
                         :prix,
                         :heureDepart,
                         :heureArrivee,
@@ -102,6 +98,7 @@ if (
                     ':arrivee' => $arrivee,
                     ':quartierArrivee' => $quartierArrivee,
                     ':bus' => $bus,
+                    ':nombrePlaces' => $nombrePlaces,
                     ':prix' => $prix,
                     ':heureDepart' => $heureDepart,
                     ':heureArrivee' => $heureArrivee,
@@ -119,14 +116,9 @@ if (
     }
 }
 
-/* =========================
-   PREPARATION JSON POUR JS
-========================= */
 $quartiersParVille = [];
-
 foreach ($quartiers as $quartier) {
     $villeId = $quartier['id_destination'];
-
     if (!isset($quartiersParVille[$villeId])) {
         $quartiersParVille[$villeId] = [];
     }
@@ -137,9 +129,6 @@ foreach ($quartiers as $quartier) {
     ];
 }
 
-/* =========================
-   CONTENU DE LA PAGE
-========================= */
 ob_start();
 ?>
 
@@ -160,7 +149,6 @@ ob_start();
         <h2 class="text-2xl font-bold text-center text-gray-700 mb-6">Veuillez insérer un trajet de voyage</h2>
 
         <form action="" method="POST" class="space-y-6">
-            <!-- Ligne Ville départ et Ville arrivée -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-gray-600 font-semibold mb-2">Ville de départ</label>
@@ -195,7 +183,6 @@ ob_start();
                 </div>
             </div>
 
-            <!-- Ligne Quartier départ et Quartier arrivée -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-gray-600 font-semibold mb-2">Quartier de départ</label>
@@ -212,20 +199,21 @@ ob_start();
                 </div>
             </div>
 
-            <!-- Type de bus -->
-            <div>
-                <label class="block text-gray-600 font-semibold mb-2">Type de bus</label>
-                <select name="selectBus" class="w-full border rounded-lg px-3 py-2" required>
-                    <option value="classique" <?= (isset($_POST['selectBus']) && $_POST['selectBus'] === 'classique') ? 'selected' : '' ?>>
-                        Bus classique
-                    </option>
-                    <option value="VIP" <?= (isset($_POST['selectBus']) && $_POST['selectBus'] === 'VIP') ? 'selected' : '' ?>>
-                        Bus VIP
-                    </option>
-                </select>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-gray-600 font-semibold mb-2">Type de bus</label>
+                    <select name="selectBus" class="w-full border rounded-lg px-3 py-2" required>
+                        <option value="classique" <?= (isset($_POST['selectBus']) && $_POST['selectBus'] === 'classique') ? 'selected' : '' ?>>Bus classique</option>
+                        <option value="VIP" <?= (isset($_POST['selectBus']) && $_POST['selectBus'] === 'VIP') ? 'selected' : '' ?>>Bus VIP</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-gray-600 font-semibold mb-2">Nombre de places</label>
+                    <input type="number" name="nombrePlaces" min="1" value="<?= htmlspecialchars($_POST['nombrePlaces'] ?? '') ?>" placeholder="Ex: 70" class="w-full border rounded-lg px-3 py-2" required>
+                </div>
             </div>
 
-            <!-- Ligne Heure Départ et Heure Arrivée -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-gray-600 font-semibold mb-2">Heure de départ</label>
@@ -238,7 +226,6 @@ ob_start();
                 </div>
             </div>
 
-            <!-- Ligne Date Départ et Prix -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-gray-600 font-semibold mb-2">Jour de départ</label>
@@ -251,7 +238,6 @@ ob_start();
                 </div>
             </div>
 
-            <!-- Boutons -->
             <div class="flex justify-center space-x-4">
                 <button type="reset" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600">
                     Annuler
@@ -272,7 +258,6 @@ ob_start();
 
 <script>
     const quartiersParVille = <?= json_encode($quartiersParVille, JSON_UNESCAPED_UNICODE) ?>;
-
     const selectedQuartierDepart = <?= json_encode($_POST['quartier_depart'] ?? '') ?>;
     const selectedQuartierArrivee = <?= json_encode($_POST['quartier_arrivee'] ?? '') ?>;
 
@@ -313,21 +298,16 @@ ob_start();
     const quartierArriveeSelect = document.getElementById('quartier_arrivee');
 
     departSelect.addEventListener('change', function () {
-        const villeId = getSelectedVilleId(this);
-        remplirQuartiers(villeId, quartierDepartSelect);
+        remplirQuartiers(getSelectedVilleId(this), quartierDepartSelect);
     });
 
     arriveeSelect.addEventListener('change', function () {
-        const villeId = getSelectedVilleId(this);
-        remplirQuartiers(villeId, quartierArriveeSelect);
+        remplirQuartiers(getSelectedVilleId(this), quartierArriveeSelect);
     });
 
     window.addEventListener('DOMContentLoaded', function () {
-        const departVilleId = getSelectedVilleId(departSelect);
-        const arriveeVilleId = getSelectedVilleId(arriveeSelect);
-
-        remplirQuartiers(departVilleId, quartierDepartSelect, selectedQuartierDepart);
-        remplirQuartiers(arriveeVilleId, quartierArriveeSelect, selectedQuartierArrivee);
+        remplirQuartiers(getSelectedVilleId(departSelect), quartierDepartSelect, selectedQuartierDepart);
+        remplirQuartiers(getSelectedVilleId(arriveeSelect), quartierArriveeSelect, selectedQuartierArrivee);
     });
 </script>
 
