@@ -181,21 +181,24 @@ session_start();
     {
         $ville = htmlspecialchars($ville);
         $quartier = trim((string) $quartier);
-        $alignClass = $align === 'center' ? 'text-center items-center' : ($align === 'right' ? 'text-right items-end' : 'text-left items-start');
+
+        $alignClass = $align === 'center'
+            ? 'text-center items-center'
+            : ($align === 'right' ? 'text-right items-end' : 'text-left items-start');
 
         if (!empty($quartier)) {
             $quartierSafe = htmlspecialchars($quartier);
             return "
-                <div class='flex flex-col {$alignClass} leading-tight'>
-                    <div class='text-[18px] md:text-[20px] font-bold text-slate-700'>{$ville}</div>
-                    <div class='text-[12px] text-gray-500 mt-1'>{$quartierSafe}</div>
+                <div class='flex flex-col {$alignClass} leading-tight min-w-0'>
+                    <div class='text-[15px] sm:text-[16px] md:text-[20px] font-bold text-slate-700 break-words'>{$ville}</div>
+                    <div class='text-[10px] sm:text-[11px] md:text-[12px] text-gray-500 mt-0.5 break-words'>{$quartierSafe}</div>
                 </div>
             ";
         }
 
         return "
-            <div class='flex flex-col {$alignClass} leading-tight'>
-                <div class='text-[18px] md:text-[20px] font-bold text-slate-700'>{$ville}</div>
+            <div class='flex flex-col {$alignClass} leading-tight min-w-0'>
+                <div class='text-[15px] sm:text-[16px] md:text-[20px] font-bold text-slate-700 break-words'>{$ville}</div>
             </div>
         ";
     }
@@ -203,14 +206,14 @@ session_start();
     function renderAmenitiesHtml(string $bus): string
     {
         $amenities = getBusAmenities($bus);
-        $html = "<div class='flex flex-wrap items-center gap-3 text-gray-500 text-sm'>";
+        $html = "<div class='flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-gray-500'>";
 
         foreach ($amenities as $item) {
             $icon = htmlspecialchars($item['icon']);
             $label = htmlspecialchars($item['label']);
             $html .= "
-                <span class='inline-flex items-center gap-1.5' title='{$label}'>
-                    <i class='{$icon} text-[14px]'></i>
+                <span class='inline-flex items-center gap-1 sm:gap-1.5' title='{$label}'>
+                    <i class='{$icon} text-[12px] sm:text-[13px] md:text-[14px]'></i>
                     <span class='hidden md:inline text-[13px]'>{$label}</span>
                 </span>
             ";
@@ -239,185 +242,117 @@ session_start();
         $busLower = strtolower(trim($bus));
 
         $typeHtml = "
-            <div class='flex items-center justify-end gap-2 text-right'>
-                <i class='fa fa-bus text-green-600 text-[22px]'></i>
-                <span class='text-[18px] md:text-[20px] font-bold text-slate-700'>{$busLower}</span>
+            <div class='flex items-center justify-end gap-1.5 sm:gap-2 text-right'>
+                <i class='fa fa-bus text-[16px] sm:text-[18px] md:text-[22px]'></i>
+                <span class='text-[15px] sm:text-[16px] md:text-[20px] font-bold text-slate-700'>{$busLower}</span>
             </div>
         ";
 
+        $cardBody = "
+    <div class='bg-white shadow-md border border-gray-100 px-2 py-3 sm:px-4 sm:py-4 md:px-5 transition hover:shadow-md w-full'>
+
+        <!-- Ligne 1 -->
+        <div class='grid grid-cols-3 items-center gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4'>
+            <div class='text-left'>
+                <span class='text-[13px] sm:text-[16px] md:text-[22px] font-extrabold text-slate-800'>{$heureDepart}</span>
+            </div>
+
+            <div class='flex items-center justify-center gap-1 sm:gap-2 md:gap-3'>
+                <span class='w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 rounded-full bg-slate-700'></span>
+                <span class='h-[2px] w-5 sm:w-8 md:w-16 bg-slate-300'></span>
+                <span class='text-[13px] sm:text-[16px] md:text-[22px] font-extrabold text-slate-800'>{$heureArrivee}</span>
+                <span class='h-[2px] w-5 sm:w-8 md:w-16 bg-slate-300'></span>
+                <span class='w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 rounded-full bg-slate-700'></span>
+            </div>
+
+            <div class='text-right'>
+                <p class='text-[13px] sm:text-[16px] md:text-[20px] leading-none font-extrabold text-black'>
+                    {$prix}<span class='text-[9px] sm:text-[10px] md:text-[14px] ml-1'>FCFA</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Ligne 2 -->
+        <div class='grid grid-cols-3 items-start gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4'>
+            <div class='flex items-start gap-1.5 sm:gap-2 min-w-0'>
+                <i class='bi bi-geo-alt text-[16px] sm:text-[18px] md:text-[22px] mt-0.5 shrink-0'></i>
+                {$departHtml}
+            </div>
+
+            <div class='flex items-start justify-center gap-1.5 sm:gap-2 min-w-0'>
+                <i class='bi bi-geo-alt text-[16px] sm:text-[18px] md:text-[22px] mt-0.5 shrink-0'></i>
+                {$arriveeHtml}
+            </div>
+
+            <div class='flex justify-end min-w-0'>
+                {$typeHtml}
+            </div>
+        </div>
+
+        <!-- Ligne 3 -->
+        <div class='grid grid-cols-3 items-center gap-2 sm:gap-3 md:gap-4'>
+            <div class='text-left min-w-0'>
+                <button
+                    type='button'
+                    class='text-blue-600 hover:underline font-medium text-[11px] sm:text-[13px] md:text-[15px]'
+                    onclick=\"toggleDetails('{$detailsId}')\">
+                    Détails du trajet
+                </button>
+            </div>
+
+            <div class='flex justify-center min-w-0'>
+                {$amenitiesHtml}
+            </div>
+
+            <div class='flex justify-end min-w-0'>
+                %s
+            </div>
+        </div>
+
+        <div id='{$detailsId}' class='hidden mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200'>
+            <div class='grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-[12px] sm:text-sm text-slate-600'>
+                <div>
+                    <p><strong>Départ :</strong> " . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "</p>
+                    <p><strong>Heure départ :</strong> {$heureDepart}</p>
+                </div>
+                <div>
+                    <p><strong>Arrivée :</strong> " . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "</p>
+                    <p><strong>Heure arrivée :</strong> {$heureArrivee}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+";
+
         if ($type === 'simple') {
-            echo "
-            <div class='mb-5'>
-                <div class='bg-white rounded-[22px] shadow-[0_8px_24px_rgba(0,0,0,0.08)] border border-gray-100 px-5 py-4 hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition'>
-
-                    <!-- Ligne 1 -->
-                    <div class='grid grid-cols-3 items-center gap-4 mb-4'>
-                        <div class='text-left'>
-                            <span class='text-[20px] md:text-[22px] font-extrabold text-slate-800'>{$heureDepart}</span>
-                        </div>
-
-                        <div class='flex items-center justify-center gap-3'>
-                            <span class='w-2.5 h-2.5 rounded-full bg-slate-700'></span>
-                            <span class='h-[2px] w-12 md:w-20 bg-slate-300'></span>
-                            <span class='text-[20px] md:text-[22px] font-extrabold text-slate-800'>{$heureArrivee}</span>
-                            <span class='h-[2px] w-12 md:w-20 bg-slate-300'></span>
-                            <span class='w-2.5 h-2.5 rounded-full bg-slate-700'></span>
-                        </div>
-
-                        <div class='text-right'>
-                            <p class='text-[30px] leading-none font-extrabold text-green-600'>{$prix}<span class='text-[14px] ml-1'>FCFA</span></p>
-                        </div>
-                    </div>
-
-                    <!-- Ligne 2 -->
-                    <div class='grid grid-cols-1 md:grid-cols-3 items-start gap-4 mb-4'>
-                        <div class='flex items-start gap-2'>
-                            <i class='bi bi-geo-alt text-green-600 text-[22px] mt-0.5'></i>
-                            {$departHtml}
-                        </div>
-
-                        <div class='flex items-start justify-center gap-2'>
-                            <i class='bi bi-geo-alt text-green-600 text-[22px] mt-0.5'></i>
-                            {$arriveeHtml}
-                        </div>
-
-                        <div class='flex justify-end'>
-                            {$typeHtml}
-                        </div>
-                    </div>
-
-                    <!-- Ligne 3 -->
-                    <div class='grid grid-cols-1 md:grid-cols-3 items-center gap-4'>
-                        <div class='text-left'>
-                            <button
-                                type='button'
-                                class='text-blue-600 hover:underline font-medium text-[15px]'
-                                onclick=\"toggleDetails('{$detailsId}')\">
-                                Détails du trajet
-                            </button>
-                        </div>
-
-                        <div class='flex justify-center'>
-                            {$amenitiesHtml}
-                        </div>
-
-                        <div class='flex justify-end'>
-                            <form method='post' action='{$formAction}' class='w-full md:w-auto'>
-                                <input type='hidden' name='idVoyage' value='{$id}'>
-                                <input type='submit' value='Continuer' class='bg-green-600 hover:bg-green-700 text-white font-bold text-[15px] px-4 py-2.5 cursor-pointer transition min-w-[180px]'>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div id='{$detailsId}' class='hidden mt-4 pt-4 border-t border-gray-200'>
-                        <div class='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600'>
-                            <div>
-                                <p><strong>Départ :</strong> " . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "</p>
-                                <p><strong>Heure départ :</strong> {$heureDepart}</p>
-                            </div>
-                            <div>
-                                <p><strong>Arrivée :</strong> " . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "</p>
-                                <p><strong>Heure arrivée :</strong> {$heureArrivee}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>";
+            $action = "
+                <form method='post' action='{$formAction}' class='w-full flex justify-end'>
+                    <input type='hidden' name='idVoyage' value='{$id}'>
+                    <input type='submit' value='Continuer' class='bg-green-600 hover:bg-green-700 text-white font-bold text-[11px] sm:text-[13px] md:text-[15px] px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 transition min-w-[92px] sm:min-w-[120px] md:min-w-[130px]'>
+                </form>
+            ";
+            echo "<div class='mb-4 sm:mb-5'>" . sprintf($cardBody, $action) . "</div>";
         } else {
-            echo "
-            <div id='conteneur-{$type}-{$id}' class='mb-5 voyage-card transition-all duration-200'>
-                <div class='bg-white  shadow-md border-2 border-transparent px-5 py-4 hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition'>
-
-                    <!-- Ligne 1 -->
-                    <div class='grid grid-cols-3 items-center gap-4 mb-4'>
-                        <div class='text-left'>
-                            <span class='text-[20px] md:text-[22px] font-extrabold text-slate-800'>{$heureDepart}</span>
-                        </div>
-
-                        <div class='flex items-center justify-center gap-3'>
-                            <span class='w-2.5 h-2.5 rounded-full bg-slate-700'></span>
-                            <span class='h-[2px] w-12 md:w-20 bg-slate-300'></span>
-                            <span class='text-[20px] md:text-[22px] font-extrabold text-slate-800'>{$heureArrivee}</span>
-                            <span class='h-[2px] w-12 md:w-20 bg-slate-300'></span>
-                            <span class='w-2.5 h-2.5 rounded-full bg-slate-700'></span>
-                        </div>
-
-                        <div class='text-right'>
-                            <p class='text-[20px] leading-none font-extrabold text-black'>{$prix}<span class='text-[14px] ml-1'>FCFA</span></p>
-                        </div>
-                    </div>
-
-                    <!-- Ligne 2 -->
-                    <div class='grid grid-cols-1 md:grid-cols-3 items-start gap-4 mb-4'>
-                        <div class='flex items-start gap-2'>
-                            <i class='bi bi-geo-alt  text-[22px] mt-0.5'></i>
-                            {$departHtml}
-                        </div>
-
-                        <div class='flex items-start justify-center gap-2'>
-                            <i class='bi bi-geo-alt  text-[22px] mt-0.5'></i>
-                            {$arriveeHtml}
-                        </div>
-
-                        <div class='flex justify-end'>
-                            {$typeHtml}
-                        </div>
-                    </div>
-
-                    <!-- Ligne 3 -->
-                    <div class='grid grid-cols-1 md:grid-cols-3 items-center gap-4'>
-                        <div class='text-left'>
-                            <button
-                                type='button'
-                                class='text-blue-600 hover:underline font-medium text-[15px]'
-                                onclick=\"toggleDetails('{$detailsId}')\">
-                                Détails du trajet
-                            </button>
-                        </div>
-
-                        <div class='flex justify-center'>
-                            {$amenitiesHtml}
-                        </div>
-
-                        <div class='flex justify-end'>
-                            <button
-                                class='continuer-btn bg-green-600 hover:bg-green-700 text-white font-bold text-[15px] px-5 py-2.5  transition min-w-[130px]'
-                                data-id='{$id}'
-                                data-type='{$type}'
-                                data-price='{$prix}'
-                                data-depart='" . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "'
-                                data-arrive='" . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "'
-                                data-time='{$heureDepart}'>
-                                Continuer
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id='{$detailsId}' class='hidden mt-4 pt-4 border-t border-gray-200'>
-                        <div class='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600'>
-                            <div>
-                                <p><strong>Départ :</strong> " . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "</p>
-                                <p><strong>Heure départ :</strong> {$heureDepart}</p>
-                            </div>
-                            <div>
-                                <p><strong>Arrivée :</strong> " . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "</p>
-                                <p><strong>Heure arrivée :</strong> {$heureArrivee}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>";
+            $action = "
+                <button
+                    class='continuer-btn bg-green-600 hover:bg-green-700 text-white font-bold text-[11px] sm:text-[13px] md:text-[15px] px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 transition min-w-[92px] sm:min-w-[120px] md:min-w-[130px]'
+                    data-id='{$id}'
+                    data-type='{$type}'
+                    data-price='{$prix}'
+                    data-depart='" . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "'
+                    data-arrive='" . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "'
+                    data-time='{$heureDepart}'>
+                    Continuer
+                </button>
+            ";
+            echo "<div id='conteneur-{$type}-{$id}' class='mb-4 sm:mb-5 voyage-card transition-all duration-200'>" . sprintf($cardBody, $action) . "</div>";
         }
     }
     ?>
 
-    <div class="max-w-7xl mx-auto px-4 py-8">
-        <div class="flex flex-col lg:flex-row gap-8 items-start">
-            <aside class="w-full lg:w-[290px] shrink-0">
-                <?php include 'includes/voyage_filtre.php'; ?>
-            </aside>
-
-            <main class="flex-1 min-w-0">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 py-5 sm:py-8">
+        <div class="flex flex-col lg:flex-row gap-5 sm:gap-8 items-start">
+            <main class="flex-1 min-w-0 order-1">
                 <?php if ($allerSimpleSelected): ?>
                     <?php
                     $voyagesDisponiblesAller = 0;
@@ -429,11 +364,11 @@ session_start();
                     }
                     ?>
 
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-8">
-                        <p class="text-xl font-bold text-green-600">
+                    <div class="flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between mb-5 sm:mb-8">
+                        <p class="text-[16px] sm:text-[18px] md:text-xl font-bold text-green-600">
                             Aller : <?php echo !empty($date) ? date("d M Y", strtotime($date)) : ''; ?>
                         </p>
-                        <p class="text-xl font-bold text-slate-800">
+                        <p class="text-[16px] sm:text-[18px] md:text-xl font-bold text-slate-800">
                             <?php echo $voyagesDisponiblesAller; ?> voyages disponibles
                         </p>
                     </div>
@@ -444,10 +379,10 @@ session_start();
                                 <?php renderVoyageCard($donne, 'simple', 'payment.php'); ?>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <p class="text-center text-gray-500 text-lg mt-10">Aucun voyage disponible pour cette recherche.</p>
+                            <p class="text-center text-gray-500 text-base sm:text-lg mt-10">Aucun voyage disponible pour cette recherche.</p>
                         <?php endif; ?>
                     <?php else: ?>
-                        <p class="text-center text-gray-500 text-lg mt-10">Veuillez lancer une recherche de trajet.</p>
+                        <p class="text-center text-gray-500 text-base sm:text-lg mt-10">Veuillez lancer une recherche de trajet.</p>
                     <?php endif; ?>
                 <?php endif; ?>
 
@@ -462,11 +397,11 @@ session_start();
                     }
                     ?>
 
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-8">
-                        <h2 class="text-xl font-bold ">
+                    <div class="flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between mb-5 sm:mb-8">
+                        <h2 class="text-[16px] sm:text-[18px] md:text-xl font-bold">
                             Aller : <?php echo !empty($date) ? date("d M Y", strtotime($date)) : ''; ?>
                         </h2>
-                        <p class="text-xl font-bold text-slate-800">
+                        <p class="text-[16px] sm:text-[18px] md:text-xl font-bold text-slate-800">
                             <?php echo $voyagesDisponiblesAller; ?> voyages disponibles
                         </p>
                     </div>
@@ -476,7 +411,7 @@ session_start();
                             <?php renderVoyageCard($donne, 'aller'); ?>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="text-center text-gray-500 text-lg mt-10 mb-10">Aucun voyage aller disponible.</p>
+                        <p class="text-center text-gray-500 text-base sm:text-lg mt-10 mb-10">Aucun voyage aller disponible.</p>
                     <?php endif; ?>
 
                     <?php
@@ -489,11 +424,11 @@ session_start();
                     }
                     ?>
 
-                    <div class="mt-12 mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                        <h2 class="text-xl font-bold ">
+                    <div class="mt-8 sm:mt-12 mb-5 sm:mb-8 flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between">
+                        <h2 class="text-[16px] sm:text-[18px] md:text-xl font-bold">
                             Retour : <?php echo !empty($dateRetour) ? date("d M Y", strtotime($dateRetour)) : ''; ?>
                         </h2>
-                        <p class="text-xl font-bold text-slate-800">
+                        <p class="text-[16px] sm:text-[18px] md:text-xl font-bold text-slate-800">
                             <?php echo $voyagesDisponiblesRetour; ?> voyages disponibles
                         </p>
                     </div>
@@ -503,10 +438,14 @@ session_start();
                             <?php renderVoyageCard($donne, 'retour'); ?>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="text-center text-gray-500 text-lg mt-10">Aucun voyage retour disponible.</p>
+                        <p class="text-center text-gray-500 text-base sm:text-lg mt-10">Aucun voyage retour disponible.</p>
                     <?php endif; ?>
                 <?php endif; ?>
             </main>
+
+            <aside class="w-full lg:w-[290px] shrink-0 order-2 lg:order-none">
+                <?php include 'includes/voyage_filtre.php'; ?>
+            </aside>
         </div>
     </div>
 
