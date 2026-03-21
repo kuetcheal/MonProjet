@@ -16,14 +16,40 @@ $stmtDestinations = $bdd->query("SELECT * FROM destination ORDER BY Nom_ville AS
 $destinations = $stmtDestinations->fetchAll(PDO::FETCH_ASSOC);
 
 /* =========================
+   RECUPERATION DES QUARTIERS
+========================= */
+$stmtQuartiers = $bdd->query("
+    SELECT q.id_quartier, q.nom_quartier, q.id_destination, d.Nom_ville
+    FROM quartier q
+    INNER JOIN destination d ON q.id_destination = d.id_destination
+    ORDER BY d.Nom_ville ASC, q.nom_quartier ASC
+");
+$quartiers = $stmtQuartiers->fetchAll(PDO::FETCH_ASSOC);
+
+/* =========================
    INSERTION D'UN VOYAGE
 ========================= */
 $messageSuccess = '';
 $messageError = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['depart'], $_POST['arrivee'], $_POST['selectBus'], $_POST['partir'], $_POST['destination'], $_POST['date'], $_POST['prix'])) {
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    isset(
+        $_POST['depart'],
+        $_POST['quartier_depart'],
+        $_POST['arrivee'],
+        $_POST['quartier_arrivee'],
+        $_POST['selectBus'],
+        $_POST['partir'],
+        $_POST['destination'],
+        $_POST['date'],
+        $_POST['prix']
+    )
+) {
     $depart = trim($_POST['depart']);
+    $quartierDepart = trim($_POST['quartier_depart']);
     $arrivee = trim($_POST['arrivee']);
+    $quartierArrivee = trim($_POST['quartier_arrivee']);
     $bus = trim($_POST['selectBus']);
     $heureDepart = trim($_POST['partir']);
     $heureArrivee = trim($_POST['destination']);
@@ -32,36 +58,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['depart'], $_POST['arr
 
     if (
         !empty($depart) &&
+        !empty($quartierDepart) &&
         !empty($arrivee) &&
+        !empty($quartierArrivee) &&
         !empty($bus) &&
         !empty($heureDepart) &&
         !empty($heureArrivee) &&
         !empty($date) &&
         !empty($prix)
     ) {
-        try {
-            $requete = $bdd->prepare("
-                INSERT INTO voyage (villeDepart, villeArrivee, typeBus, prix, heureDepart, heureArrivee, jourDepart)
-                VALUES (:depart, :arrivee, :bus, :prix, :heureDepart, :heureArrivee, :jourDepart)
-            ");
+        if ($depart === $arrivee && $quartierDepart === $quartierArrivee) {
+            $messageError = 'Le départ et l’arrivée ne peuvent pas être exactement identiques.';
+        } else {
+            try {
+                $requete = $bdd->prepare("
+                    INSERT INTO voyage (
+                        villeDepart,
+                        quartierDepart,
+                        villeArrivee,
+                        quartierArrivee,
+                        typeBus,
+                        prix,
+                        heureDepart,
+                        heureArrivee,
+                        jourDepart
+                    )
+                    VALUES (
+                        :depart,
+                        :quartierDepart,
+                        :arrivee,
+                        :quartierArrivee,
+                        :bus,
+                        :prix,
+                        :heureDepart,
+                        :heureArrivee,
+                        :jourDepart
+                    )
+                ");
 
-            $requete->execute([
-                ':depart' => $depart,
-                ':arrivee' => $arrivee,
-                ':bus' => $bus,
-                ':prix' => $prix,
-                ':heureDepart' => $heureDepart,
-                ':heureArrivee' => $heureArrivee,
-                ':jourDepart' => $date
-            ]);
+                $requete->execute([
+                    ':depart' => $depart,
+                    ':quartierDepart' => $quartierDepart,
+                    ':arrivee' => $arrivee,
+                    ':quartierArrivee' => $quartierArrivee,
+                    ':bus' => $bus,
+                    ':prix' => $prix,
+                    ':heureDepart' => $heureDepart,
+                    ':heureArrivee' => $heureArrivee,
+                    ':jourDepart' => $date
+                ]);
 
-            $messageSuccess = 'Voyage inséré avec succès.';
-        } catch (Exception $e) {
-            $messageError = "Erreur lors de l'insertion : " . $e->getMessage();
+                $messageSuccess = 'Voyage inséré avec succès.';
+                $_POST = [];
+            } catch (Exception $e) {
+                $messageError = "Erreur lors de l'insertion : " . $e->getMessage();
+            }
         }
     } else {
         $messageError = 'Veuillez remplir tous les champs.';
     }
+}
+
+/* =========================
+   PREPARATION JSON POUR JS
+========================= */
+$quartiersParVille = [];
+
+foreach ($quartiers as $quartier) {
+    $villeId = $quartier['id_destination'];
+
+    if (!isset($quartiersParVille[$villeId])) {
+        $quartiersParVille[$villeId] = [];
+    }
+
+    $quartiersParVille[$villeId][] = [
+        'id_quartier' => $quartier['id_quartier'],
+        'nom_quartier' => $quartier['nom_quartier']
+    ];
 }
 
 /* =========================
@@ -83,18 +156,22 @@ ob_start();
         </div>
     <?php endif; ?>
 
-    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-3xl mx-auto">
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl mx-auto">
         <h2 class="text-2xl font-bold text-center text-gray-700 mb-6">Veuillez insérer un trajet de voyage</h2>
 
         <form action="" method="POST" class="space-y-6">
-            <!-- Ligne Départ et Arrivée -->
+            <!-- Ligne Ville départ et Ville arrivée -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-gray-600 font-semibold mb-2">Départ</label>
-                    <select name="depart" class="w-full border rounded-lg px-3 py-2" required>
+                    <label class="block text-gray-600 font-semibold mb-2">Ville de départ</label>
+                    <select id="depart" name="depart" class="w-full border rounded-lg px-3 py-2" required>
                         <option value="">-- Choisir une ville --</option>
                         <?php foreach ($destinations as $ville): ?>
-                            <option value="<?= htmlspecialchars($ville['Nom_ville']) ?>" <?= (isset($_POST['depart']) && $_POST['depart'] === $ville['Nom_ville']) ? 'selected' : '' ?>>
+                            <option
+                                value="<?= htmlspecialchars($ville['Nom_ville']) ?>"
+                                data-id="<?= (int)$ville['id_destination'] ?>"
+                                <?= (isset($_POST['depart']) && $_POST['depart'] === $ville['Nom_ville']) ? 'selected' : '' ?>
+                            >
                                 <?= htmlspecialchars($ville['Nom_ville']) ?>
                             </option>
                         <?php endforeach; ?>
@@ -102,14 +179,35 @@ ob_start();
                 </div>
 
                 <div>
-                    <label class="block text-gray-600 font-semibold mb-2">Arrivée</label>
-                    <select name="arrivee" class="w-full border rounded-lg px-3 py-2" required>
+                    <label class="block text-gray-600 font-semibold mb-2">Ville d'arrivée</label>
+                    <select id="arrivee" name="arrivee" class="w-full border rounded-lg px-3 py-2" required>
                         <option value="">-- Choisir une ville --</option>
                         <?php foreach ($destinations as $ville): ?>
-                            <option value="<?= htmlspecialchars($ville['Nom_ville']) ?>" <?= (isset($_POST['arrivee']) && $_POST['arrivee'] === $ville['Nom_ville']) ? 'selected' : '' ?>>
+                            <option
+                                value="<?= htmlspecialchars($ville['Nom_ville']) ?>"
+                                data-id="<?= (int)$ville['id_destination'] ?>"
+                                <?= (isset($_POST['arrivee']) && $_POST['arrivee'] === $ville['Nom_ville']) ? 'selected' : '' ?>
+                            >
                                 <?= htmlspecialchars($ville['Nom_ville']) ?>
                             </option>
                         <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Ligne Quartier départ et Quartier arrivée -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-gray-600 font-semibold mb-2">Quartier de départ</label>
+                    <select id="quartier_depart" name="quartier_depart" class="w-full border rounded-lg px-3 py-2" required>
+                        <option value="">-- Choisir d'abord une ville --</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-gray-600 font-semibold mb-2">Quartier d'arrivée</label>
+                    <select id="quartier_arrivee" name="quartier_arrivee" class="w-full border rounded-lg px-3 py-2" required>
+                        <option value="">-- Choisir d'abord une ville --</option>
                     </select>
                 </div>
             </div>
@@ -118,8 +216,12 @@ ob_start();
             <div>
                 <label class="block text-gray-600 font-semibold mb-2">Type de bus</label>
                 <select name="selectBus" class="w-full border rounded-lg px-3 py-2" required>
-                    <option value="classique" <?= (isset($_POST['selectBus']) && $_POST['selectBus'] === 'classique') ? 'selected' : '' ?>>Bus classique</option>
-                    <option value="VIP" <?= (isset($_POST['selectBus']) && $_POST['selectBus'] === 'VIP') ? 'selected' : '' ?>>Bus VIP</option>
+                    <option value="classique" <?= (isset($_POST['selectBus']) && $_POST['selectBus'] === 'classique') ? 'selected' : '' ?>>
+                        Bus classique
+                    </option>
+                    <option value="VIP" <?= (isset($_POST['selectBus']) && $_POST['selectBus'] === 'VIP') ? 'selected' : '' ?>>
+                        Bus VIP
+                    </option>
                 </select>
             </div>
 
@@ -167,6 +269,67 @@ ob_start();
         </a>
     </div>
 </div>
+
+<script>
+    const quartiersParVille = <?= json_encode($quartiersParVille, JSON_UNESCAPED_UNICODE) ?>;
+
+    const selectedQuartierDepart = <?= json_encode($_POST['quartier_depart'] ?? '') ?>;
+    const selectedQuartierArrivee = <?= json_encode($_POST['quartier_arrivee'] ?? '') ?>;
+
+    function getSelectedVilleId(selectElement) {
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        return selectedOption ? selectedOption.getAttribute('data-id') : null;
+    }
+
+    function remplirQuartiers(selectVilleId, selectQuartier, valeurSelectionnee = '') {
+        selectQuartier.innerHTML = '';
+
+        if (!selectVilleId || !quartiersParVille[selectVilleId] || quartiersParVille[selectVilleId].length === 0) {
+            selectQuartier.innerHTML = '<option value="">-- Aucun quartier disponible --</option>';
+            return;
+        }
+
+        const optionDefault = document.createElement('option');
+        optionDefault.value = '';
+        optionDefault.textContent = '-- Choisir un quartier --';
+        selectQuartier.appendChild(optionDefault);
+
+        quartiersParVille[selectVilleId].forEach(quartier => {
+            const option = document.createElement('option');
+            option.value = quartier.nom_quartier;
+            option.textContent = quartier.nom_quartier;
+
+            if (valeurSelectionnee && valeurSelectionnee === quartier.nom_quartier) {
+                option.selected = true;
+            }
+
+            selectQuartier.appendChild(option);
+        });
+    }
+
+    const departSelect = document.getElementById('depart');
+    const arriveeSelect = document.getElementById('arrivee');
+    const quartierDepartSelect = document.getElementById('quartier_depart');
+    const quartierArriveeSelect = document.getElementById('quartier_arrivee');
+
+    departSelect.addEventListener('change', function () {
+        const villeId = getSelectedVilleId(this);
+        remplirQuartiers(villeId, quartierDepartSelect);
+    });
+
+    arriveeSelect.addEventListener('change', function () {
+        const villeId = getSelectedVilleId(this);
+        remplirQuartiers(villeId, quartierArriveeSelect);
+    });
+
+    window.addEventListener('DOMContentLoaded', function () {
+        const departVilleId = getSelectedVilleId(departSelect);
+        const arriveeVilleId = getSelectedVilleId(arriveeSelect);
+
+        remplirQuartiers(departVilleId, quartierDepartSelect, selectedQuartierDepart);
+        remplirQuartiers(arriveeVilleId, quartierArriveeSelect, selectedQuartierArrivee);
+    });
+</script>
 
 <?php
 $adminContent = ob_get_clean();

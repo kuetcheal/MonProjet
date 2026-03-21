@@ -61,7 +61,7 @@ $whereClause = !empty($conditions) ? ' WHERE ' . implode(' AND ', $conditions) :
    PAGINATION
 ========================= */
 $limit = 10;
-$page = isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+$page = isset($_GET['page']) && (int) $_GET['page'] > 0 ? (int) $_GET['page'] : 1;
 $start = ($page - 1) * $limit;
 
 /* =========================
@@ -167,9 +167,9 @@ ob_start();
             >
         </div>
 
-        <!-- Bouton reset uniquement -->
+        <!-- Bouton reset -->
         <div class="flex gap-3">
-            <a href="listevoyage.php" class="bg-red-500 text-white h-12 px-6 flex items-center justify-center rounded-lg transition duration-300 hover:bg-red-600 hover:scale-105">
+            <a href="listevoyadmin.php" class="bg-red-500 text-white h-12 px-6 flex items-center justify-center rounded-lg transition duration-300 hover:bg-red-600 hover:scale-105">
                 Réinitialiser
             </a>
         </div>
@@ -180,9 +180,11 @@ ob_start();
     <table class="w-full text-left border-collapse">
         <thead>
             <tr class="bg-gray-800 text-white">
-                <th class="p-2">ID Voyage</th>
+                <th class="p-2">N° Voyage</th>
                 <th class="p-2">Ville Départ</th>
+                <th class="p-2">Quartier Départ</th>
                 <th class="p-2">Ville Arrivée</th>
+                <th class="p-2">Quartier Arrivée</th>
                 <th class="p-2">Heure Départ</th>
                 <th class="p-2">Heure Arrivée</th>
                 <th class="p-2">Type de Bus</th>
@@ -197,7 +199,9 @@ ob_start();
                     <tr class="border-b">
                         <td class="p-2"><?= htmlspecialchars($donne['idVoyage']) ?></td>
                         <td class="p-2"><?= htmlspecialchars($donne['villeDepart']) ?></td>
+                        <td class="p-2"><?= htmlspecialchars($donne['quartierDepart'] ?? '') ?></td>
                         <td class="p-2"><?= htmlspecialchars($donne['villeArrivee']) ?></td>
+                        <td class="p-2"><?= htmlspecialchars($donne['quartierArrivee'] ?? '') ?></td>
                         <td class="p-2"><?= htmlspecialchars($donne['heureDepart']) ?></td>
                         <td class="p-2"><?= htmlspecialchars($donne['heureArrivee']) ?></td>
                         <td class="p-2"><?= htmlspecialchars($donne['typeBus']) ?></td>
@@ -221,7 +225,7 @@ ob_start();
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="9" class="text-center p-4 text-gray-500">Aucun voyage trouvé.</td>
+                    <td colspan="11" class="text-center p-4 text-gray-500">Aucun voyage trouvé.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
@@ -230,9 +234,7 @@ ob_start();
 
 <!-- Pagination -->
 <div class="flex justify-center mt-6 space-x-2 flex-wrap">
-    <?php
-    $queryParams = $_GET;
-    ?>
+    <?php $queryParams = $_GET; ?>
 
     <?php if ($page > 1): ?>
         <?php $queryParams['page'] = $page - 1; ?>

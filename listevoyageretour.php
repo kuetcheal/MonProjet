@@ -21,322 +21,504 @@ session_start();
 
     <?php include 'filtre_secondaire.php'; ?>
 
-    <div class="max-w-6xl mx-auto px-4 py-8">
-        <?php
-        try {
-            $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-            $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    <?php
+    try {
+        $bdd = new PDO('mysql:host=localhost;dbname=bd_stock;charset=utf8', 'root', '', [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
 
-            $Depart = trim($_POST['input1'] ?? $_SESSION['depart'] ?? '');
-            $Arrivee = trim($_POST['input2'] ?? $_SESSION['arrivee'] ?? '');
-            $date = trim($_POST['input3'] ?? $_SESSION['date'] ?? '');
-            $dateRetour = trim($_POST['input4'] ?? $_SESSION['dateretour'] ?? '');
+        $Depart = trim($_POST['input1'] ?? $_SESSION['depart'] ?? '');
+        $Arrivee = trim($_POST['input2'] ?? $_SESSION['arrivee'] ?? '');
+        $date = trim($_POST['input3'] ?? $_SESSION['date'] ?? '');
+        $dateRetour = trim($_POST['input4'] ?? $_SESSION['dateretour'] ?? '');
+        $tripType = $_POST['inlineRadioOptions'] ?? $_SESSION['tripType'] ?? 'option1';
 
-            $tripType = $_POST['inlineRadioOptions'] ?? $_SESSION['tripType'] ?? 'option1';
+        $_SESSION['depart'] = $Depart;
+        $_SESSION['arrivee'] = $Arrivee;
+        $_SESSION['date'] = $date;
+        $_SESSION['dateretour'] = $dateRetour;
+        $_SESSION['tripType'] = $tripType;
 
-            $_SESSION['depart'] = $Depart;
-            $_SESSION['arrivee'] = $Arrivee;
-            $_SESSION['date'] = $date;
-            $_SESSION['dateretour'] = $dateRetour;
-            $_SESSION['tripType'] = $tripType;
+        $allerSimpleSelected = $tripType === 'option1';
+        $allerRetourSelected = $tripType === 'option2';
 
-            $allerSimpleSelected = $tripType === 'option1';
-            $allerRetourSelected = $tripType === 'option2';
+        $typeBusFilter = trim($_GET['typeBus'] ?? '');
+        $trancheHoraire = trim($_GET['trancheHoraire'] ?? '');
+        $prixMax = trim($_GET['prixMax'] ?? '');
+        $tri = trim($_GET['tri'] ?? 'heure_asc');
+    } catch (Exception $e) {
+        echo '<p class="text-red-600 text-center mt-8">Échec de connexion à la base de données.</p>';
+        exit;
+    }
 
-            $voyagesDisponibles = 0;
+    function buildFilterConditions(array &$params, string $prefix = '')
+    {
+        global $typeBusFilter, $trancheHoraire, $prixMax;
 
-            if (!empty($Depart) && !empty($Arrivee) && !empty($date)) {
-                $countQuery = $bdd->prepare("
-                    SELECT COUNT(*) as count
-                    FROM voyage
-                    WHERE villeDepart = :depart
-                    AND villeArrivee = :arrivee
-                    AND jourDepart = :date
-                ");
-                $countQuery->execute([
-                    'depart' => $Depart,
-                    'arrivee' => $Arrivee,
-                    'date' => $date,
-                ]);
-                $voyagesDisponibles = $countQuery->fetch(PDO::FETCH_ASSOC)['count'] ?? 0;
-            }
-        } catch (Exception $e) {
-            echo '<p class="text-red-600 text-center mt-8">Échec de connexion à la base de données.</p>';
-            exit;
+        $conditions = [];
+
+        if (!empty($typeBusFilter)) {
+            $conditions[] = "typeBus = :typeBus{$prefix}";
+            $params[":typeBus{$prefix}"] = $typeBusFilter;
         }
 
-        function renderVoyageCard($id, $heureDepart, $heureArrivee, $depart, $arrivee, $prix, $bus, $type = 'simple', $formAction = 'payment.php')
-        {
-            $busLabel = htmlspecialchars($bus);
-            $departSafe = htmlspecialchars($depart);
-            $arriveeSafe = htmlspecialchars($arrivee);
-            $heureDepartSafe = htmlspecialchars($heureDepart);
-            $heureArriveeSafe = htmlspecialchars($heureArrivee);
-            $prixSafe = htmlspecialchars($prix);
-            $idSafe = htmlspecialchars($id);
+        if ($prixMax !== '' && is_numeric($prixMax)) {
+            $conditions[] = "prix <= :prixMax{$prefix}";
+            $params[":prixMax{$prefix}"] = (float)$prixMax;
+        }
 
-            if ($type === 'simple') {
-                echo "
-                <div class='max-w-5xl mx-auto mb-6'>
-                    <div class='bg-white rounded-[22px] shadow-[0_8px_24px_rgba(0,0,0,0.08)] border border-gray-100 p-6 hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition'>
-                        <div class='flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6'>
-                            
-                            <div class='flex-1'>
-                                <div class='flex flex-wrap items-center gap-3 mb-6'>
-                                    <span class='text-2xl font-extrabold text-slate-800'>{$heureDepartSafe}</span>
-                                    <span class='text-gray-400 font-semibold'>—</span>
-                                    <span class='text-2xl font-extrabold text-slate-800'>{$heureArriveeSafe}</span>
-                                </div>
+        if (!empty($trancheHoraire)) {
+            switch ($trancheHoraire) {
+                case 'matin':
+                    $conditions[] = "heureDepart BETWEEN :heureStart{$prefix} AND :heureEnd{$prefix}";
+                    $params[":heureStart{$prefix}"] = '00:00:00';
+                    $params[":heureEnd{$prefix}"] = '11:59:59';
+                    break;
 
-                                <div class='grid grid-cols-1 md:grid-cols-3 gap-6 mb-5'>
-                                    <div>
-                                        <p class='text-xs uppercase tracking-wide text-gray-400 font-semibold mb-2'>Départ</p>
-                                        <p class='text-[30px] font-bold text-slate-700 flex items-center gap-2'>
-                                            <i class='bi bi-geo-alt text-green-600'></i> {$departSafe}
-                                        </p>
-                                    </div>
+                case 'apresmidi':
+                    $conditions[] = "heureDepart BETWEEN :heureStart{$prefix} AND :heureEnd{$prefix}";
+                    $params[":heureStart{$prefix}"] = '12:00:00';
+                    $params[":heureEnd{$prefix}"] = '17:59:59';
+                    break;
 
-                                    <div>
-                                        <p class='text-xs uppercase tracking-wide text-gray-400 font-semibold mb-2'>Arrivée</p>
-                                        <p class='text-[30px] font-bold text-slate-700 flex items-center gap-2'>
-                                            <i class='bi bi-geo-alt text-green-600'></i> {$arriveeSafe}
-                                        </p>
-                                    </div>
+                case 'soir':
+                    $conditions[] = "heureDepart BETWEEN :heureStart{$prefix} AND :heureEnd{$prefix}";
+                    $params[":heureStart{$prefix}"] = '18:00:00';
+                    $params[":heureEnd{$prefix}"] = '23:59:59';
+                    break;
+            }
+        }
 
-                                    <div>
-                                        <p class='text-xs uppercase tracking-wide text-gray-400 font-semibold mb-2'>Type</p>
-                                        <p class='text-[30px] font-bold text-slate-700 flex items-center gap-2'>
-                                            <i class='fa fa-bus text-green-600'></i> {$busLabel}
-                                        </p>
-                                    </div>
-                                </div>
+        return $conditions;
+    }
 
-                                <div class='flex flex-wrap items-center gap-4 text-gray-500'>
-                                    <button type='button' class='text-blue-600 hover:underline font-medium'>Détails du trajet</button>
-                                    <div class='flex items-center gap-4 text-lg'>
-                                        <i class='fa fa-wifi'></i>
-                                        <i class='fa fa-television'></i>
-                                        <i class='fa fa-beer'></i>
-                                    </div>
-                                </div>
+    function getOrderByClause()
+    {
+        global $tri;
+
+        switch ($tri) {
+            case 'prix_asc':
+                return 'prix ASC, heureDepart ASC';
+            case 'prix_desc':
+                return 'prix DESC, heureDepart ASC';
+            case 'heure_desc':
+                return 'heureDepart DESC';
+            case 'heure_asc':
+            default:
+                return 'heureDepart ASC';
+        }
+    }
+
+    function countVoyages(PDO $bdd, string $depart, string $arrivee, string $date, string $prefix = 'c')
+    {
+        $params = [
+            ":depart{$prefix}" => $depart,
+            ":arrivee{$prefix}" => $arrivee,
+            ":date{$prefix}" => $date,
+        ];
+
+        $conditions = [
+            "villeDepart = :depart{$prefix}",
+            "villeArrivee = :arrivee{$prefix}",
+            "jourDepart = :date{$prefix}",
+        ];
+
+        $conditions = array_merge($conditions, buildFilterConditions($params, $prefix));
+
+        $sql = "SELECT COUNT(*) FROM voyage WHERE " . implode(' AND ', $conditions);
+        $stmt = $bdd->prepare($sql);
+        $stmt->execute($params);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    function fetchVoyages(PDO $bdd, string $depart, string $arrivee, string $date, string $prefix = 'f')
+    {
+        $params = [
+            ":depart{$prefix}" => $depart,
+            ":arrivee{$prefix}" => $arrivee,
+            ":date{$prefix}" => $date,
+        ];
+
+        $conditions = [
+            "villeDepart = :depart{$prefix}",
+            "villeArrivee = :arrivee{$prefix}",
+            "jourDepart = :date{$prefix}",
+        ];
+
+        $conditions = array_merge($conditions, buildFilterConditions($params, $prefix));
+
+        $orderBy = getOrderByClause();
+
+        $sql = "SELECT * FROM voyage WHERE " . implode(' AND ', $conditions) . " ORDER BY {$orderBy}";
+        $stmt = $bdd->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function getBusAmenities(string $bus): array
+    {
+        $bus = strtolower(trim($bus));
+
+        if ($bus === 'vip') {
+            return [
+                ['icon' => 'fa fa-wifi', 'label' => 'Wi-Fi'],
+                ['icon' => 'fa fa-television', 'label' => 'Écran'],
+                ['icon' => 'fa fa-plug', 'label' => 'Prise'],
+                ['icon' => 'fa fa-coffee', 'label' => 'Boisson'],
+            ];
+        }
+
+        return [
+            ['icon' => 'fa fa-wifi', 'label' => 'Wi-Fi'],
+            ['icon' => 'fa fa-television', 'label' => 'Écran'],
+            ['icon' => 'fa fa-plug', 'label' => 'Prise'],
+        ];
+    }
+
+    function formatLieuCompact(string $ville = '', string $quartier = '', string $align = 'left'): string
+    {
+        $ville = htmlspecialchars($ville);
+        $quartier = trim((string) $quartier);
+        $alignClass = $align === 'center' ? 'text-center items-center' : ($align === 'right' ? 'text-right items-end' : 'text-left items-start');
+
+        if (!empty($quartier)) {
+            $quartierSafe = htmlspecialchars($quartier);
+            return "
+                <div class='flex flex-col {$alignClass} leading-tight'>
+                    <div class='text-[18px] md:text-[20px] font-bold text-slate-700'>{$ville}</div>
+                    <div class='text-[12px] text-gray-500 mt-1'>{$quartierSafe}</div>
+                </div>
+            ";
+        }
+
+        return "
+            <div class='flex flex-col {$alignClass} leading-tight'>
+                <div class='text-[18px] md:text-[20px] font-bold text-slate-700'>{$ville}</div>
+            </div>
+        ";
+    }
+
+    function renderAmenitiesHtml(string $bus): string
+    {
+        $amenities = getBusAmenities($bus);
+        $html = "<div class='flex flex-wrap items-center gap-3 text-gray-500 text-sm'>";
+
+        foreach ($amenities as $item) {
+            $icon = htmlspecialchars($item['icon']);
+            $label = htmlspecialchars($item['label']);
+            $html .= "
+                <span class='inline-flex items-center gap-1.5' title='{$label}'>
+                    <i class='{$icon} text-[14px]'></i>
+                    <span class='hidden md:inline text-[13px]'>{$label}</span>
+                </span>
+            ";
+        }
+
+        $html .= "</div>";
+        return $html;
+    }
+
+    function renderVoyageCard(array $voyage, string $type = 'simple', string $formAction = 'payment.php')
+    {
+        $id = htmlspecialchars($voyage['idVoyage']);
+        $heureDepart = htmlspecialchars(substr($voyage['heureDepart'], 0, 5));
+        $heureArrivee = htmlspecialchars(substr($voyage['heureArrivee'], 0, 5));
+        $villeDepart = $voyage['villeDepart'] ?? '';
+        $quartierDepart = $voyage['quartierDepart'] ?? '';
+        $villeArrivee = $voyage['villeArrivee'] ?? '';
+        $quartierArrivee = $voyage['quartierArrivee'] ?? '';
+        $prix = htmlspecialchars($voyage['prix']);
+        $bus = htmlspecialchars($voyage['typeBus']);
+
+        $departHtml = formatLieuCompact($villeDepart, $quartierDepart, 'left');
+        $arriveeHtml = formatLieuCompact($villeArrivee, $quartierArrivee, 'center');
+        $amenitiesHtml = renderAmenitiesHtml($bus);
+        $detailsId = "details-{$type}-{$id}";
+        $busLower = strtolower(trim($bus));
+
+        $typeHtml = "
+            <div class='flex items-center justify-end gap-2 text-right'>
+                <i class='fa fa-bus text-green-600 text-[22px]'></i>
+                <span class='text-[18px] md:text-[20px] font-bold text-slate-700'>{$busLower}</span>
+            </div>
+        ";
+
+        if ($type === 'simple') {
+            echo "
+            <div class='mb-5'>
+                <div class='bg-white rounded-[22px] shadow-[0_8px_24px_rgba(0,0,0,0.08)] border border-gray-100 px-5 py-4 hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition'>
+
+                    <!-- Ligne 1 -->
+                    <div class='grid grid-cols-3 items-center gap-4 mb-4'>
+                        <div class='text-left'>
+                            <span class='text-[20px] md:text-[22px] font-extrabold text-slate-800'>{$heureDepart}</span>
+                        </div>
+
+                        <div class='flex items-center justify-center gap-3'>
+                            <span class='w-2.5 h-2.5 rounded-full bg-slate-700'></span>
+                            <span class='h-[2px] w-12 md:w-20 bg-slate-300'></span>
+                            <span class='text-[20px] md:text-[22px] font-extrabold text-slate-800'>{$heureArrivee}</span>
+                            <span class='h-[2px] w-12 md:w-20 bg-slate-300'></span>
+                            <span class='w-2.5 h-2.5 rounded-full bg-slate-700'></span>
+                        </div>
+
+                        <div class='text-right'>
+                            <p class='text-[30px] leading-none font-extrabold text-green-600'>{$prix}<span class='text-[14px] ml-1'>FCFA</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Ligne 2 -->
+                    <div class='grid grid-cols-1 md:grid-cols-3 items-start gap-4 mb-4'>
+                        <div class='flex items-start gap-2'>
+                            <i class='bi bi-geo-alt text-green-600 text-[22px] mt-0.5'></i>
+                            {$departHtml}
+                        </div>
+
+                        <div class='flex items-start justify-center gap-2'>
+                            <i class='bi bi-geo-alt text-green-600 text-[22px] mt-0.5'></i>
+                            {$arriveeHtml}
+                        </div>
+
+                        <div class='flex justify-end'>
+                            {$typeHtml}
+                        </div>
+                    </div>
+
+                    <!-- Ligne 3 -->
+                    <div class='grid grid-cols-1 md:grid-cols-3 items-center gap-4'>
+                        <div class='text-left'>
+                            <button
+                                type='button'
+                                class='text-blue-600 hover:underline font-medium text-[15px]'
+                                onclick=\"toggleDetails('{$detailsId}')\">
+                                Détails du trajet
+                            </button>
+                        </div>
+
+                        <div class='flex justify-center'>
+                            {$amenitiesHtml}
+                        </div>
+
+                        <div class='flex justify-end'>
+                            <form method='post' action='{$formAction}' class='w-full md:w-auto'>
+                                <input type='hidden' name='idVoyage' value='{$id}'>
+                                <input type='submit' value='Continuer' class='bg-green-600 hover:bg-green-700 text-white font-bold text-[15px] px-4 py-2.5 cursor-pointer transition min-w-[180px]'>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div id='{$detailsId}' class='hidden mt-4 pt-4 border-t border-gray-200'>
+                        <div class='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600'>
+                            <div>
+                                <p><strong>Départ :</strong> " . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "</p>
+                                <p><strong>Heure départ :</strong> {$heureDepart}</p>
                             </div>
-
-                            <div class='lg:w-[210px] flex flex-col items-end justify-between gap-4'>
-                                <div class='text-right w-full'>
-                                    <p class='text-sm text-gray-400 font-semibold'>Prix</p>
-                                    <p class='text-3xl font-extrabold text-green-600'>{$prixSafe} <span class='text-lg'>FCFA</span></p>
-                                </div>
-
-                                <form method='post' action='{$formAction}' class='w-full'>
-                                    <input type='hidden' name='idVoyage' value='{$idSafe}'>
-                                    <input type='submit' value='Continuer' class='w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl cursor-pointer transition'>
-                                </form>
+                            <div>
+                                <p><strong>Arrivée :</strong> " . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "</p>
+                                <p><strong>Heure arrivée :</strong> {$heureArrivee}</p>
                             </div>
                         </div>
                     </div>
-                </div>";
-            } else {
-                echo "
-                <div id='conteneur-{$type}-{$idSafe}' class='max-w-5xl mx-auto mb-6 voyage-card transition-all duration-200'>
-                    <div class='bg-white rounded-[22px] shadow-[0_8px_24px_rgba(0,0,0,0.08)] border-2 border-transparent p-6 hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition'>
-                        <div class='flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6'>
-                            
-                            <div class='flex-1'>
-                                <div class='flex flex-wrap items-center gap-3 mb-6'>
-                                    <span class='text-2xl font-extrabold text-slate-800'>{$heureDepartSafe}</span>
-                                    <span class='text-gray-400 font-semibold'>—</span>
-                                    <span class='text-2xl font-extrabold text-slate-800'>{$heureArriveeSafe}</span>
-                                </div>
+                </div>
+            </div>";
+        } else {
+            echo "
+            <div id='conteneur-{$type}-{$id}' class='mb-5 voyage-card transition-all duration-200'>
+                <div class='bg-white  shadow-md border-2 border-transparent px-5 py-4 hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition'>
 
-                                <div class='grid grid-cols-1 md:grid-cols-3 gap-6 mb-5'>
-                                    <div>
-                                        <p class='text-xs uppercase tracking-wide text-gray-400 font-semibold mb-2'>Départ</p>
-                                        <p class='text-[30px] font-bold text-slate-700 flex items-center gap-2'>
-                                            <i class='bi bi-geo-alt text-green-600'></i> {$departSafe}
-                                        </p>
-                                    </div>
+                    <!-- Ligne 1 -->
+                    <div class='grid grid-cols-3 items-center gap-4 mb-4'>
+                        <div class='text-left'>
+                            <span class='text-[20px] md:text-[22px] font-extrabold text-slate-800'>{$heureDepart}</span>
+                        </div>
 
-                                    <div>
-                                        <p class='text-xs uppercase tracking-wide text-gray-400 font-semibold mb-2'>Arrivée</p>
-                                        <p class='text-[30px] font-bold text-slate-700 flex items-center gap-2'>
-                                            <i class='bi bi-geo-alt text-green-600'></i> {$arriveeSafe}
-                                        </p>
-                                    </div>
+                        <div class='flex items-center justify-center gap-3'>
+                            <span class='w-2.5 h-2.5 rounded-full bg-slate-700'></span>
+                            <span class='h-[2px] w-12 md:w-20 bg-slate-300'></span>
+                            <span class='text-[20px] md:text-[22px] font-extrabold text-slate-800'>{$heureArrivee}</span>
+                            <span class='h-[2px] w-12 md:w-20 bg-slate-300'></span>
+                            <span class='w-2.5 h-2.5 rounded-full bg-slate-700'></span>
+                        </div>
 
-                                    <div>
-                                        <p class='text-xs uppercase tracking-wide text-gray-400 font-semibold mb-2'>Type</p>
-                                        <p class='text-[30px] font-bold text-slate-700 flex items-center gap-2'>
-                                            <i class='fa fa-bus text-green-600'></i> {$busLabel}
-                                        </p>
-                                    </div>
-                                </div>
+                        <div class='text-right'>
+                            <p class='text-[20px] leading-none font-extrabold text-black'>{$prix}<span class='text-[14px] ml-1'>FCFA</span></p>
+                        </div>
+                    </div>
 
-                                <div class='flex flex-wrap items-center gap-4 text-gray-500'>
-                                    <button type='button' class='text-blue-600 hover:underline font-medium'>Détails du trajet</button>
-                                    <div class='flex items-center gap-4 text-lg'>
-                                        <i class='fa fa-wifi'></i>
-                                        <i class='fa fa-television'></i>
-                                        <i class='fa fa-beer'></i>
-                                    </div>
-                                </div>
+                    <!-- Ligne 2 -->
+                    <div class='grid grid-cols-1 md:grid-cols-3 items-start gap-4 mb-4'>
+                        <div class='flex items-start gap-2'>
+                            <i class='bi bi-geo-alt  text-[22px] mt-0.5'></i>
+                            {$departHtml}
+                        </div>
+
+                        <div class='flex items-start justify-center gap-2'>
+                            <i class='bi bi-geo-alt  text-[22px] mt-0.5'></i>
+                            {$arriveeHtml}
+                        </div>
+
+                        <div class='flex justify-end'>
+                            {$typeHtml}
+                        </div>
+                    </div>
+
+                    <!-- Ligne 3 -->
+                    <div class='grid grid-cols-1 md:grid-cols-3 items-center gap-4'>
+                        <div class='text-left'>
+                            <button
+                                type='button'
+                                class='text-blue-600 hover:underline font-medium text-[15px]'
+                                onclick=\"toggleDetails('{$detailsId}')\">
+                                Détails du trajet
+                            </button>
+                        </div>
+
+                        <div class='flex justify-center'>
+                            {$amenitiesHtml}
+                        </div>
+
+                        <div class='flex justify-end'>
+                            <button
+                                class='continuer-btn bg-green-600 hover:bg-green-700 text-white font-bold text-[15px] px-5 py-2.5  transition min-w-[130px]'
+                                data-id='{$id}'
+                                data-type='{$type}'
+                                data-price='{$prix}'
+                                data-depart='" . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "'
+                                data-arrive='" . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "'
+                                data-time='{$heureDepart}'>
+                                Continuer
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id='{$detailsId}' class='hidden mt-4 pt-4 border-t border-gray-200'>
+                        <div class='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600'>
+                            <div>
+                                <p><strong>Départ :</strong> " . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "</p>
+                                <p><strong>Heure départ :</strong> {$heureDepart}</p>
                             </div>
-
-                            <div class='lg:w-[210px] flex flex-col items-end justify-between gap-4'>
-                                <div class='text-right w-full'>
-                                    <p class='text-sm text-gray-400 font-semibold'>Prix</p>
-                                    <p class='text-3xl font-extrabold text-green-600'>{$prixSafe} <span class='text-lg'>FCFA</span></p>
-                                </div>
-
-                                <button 
-                                    class='continuer-btn w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition'
-                                    data-id='{$idSafe}'
-                                    data-type='{$type}'
-                                    data-price='{$prixSafe}'
-                                    data-depart='{$departSafe}'
-                                    data-arrive='{$arriveeSafe}'
-                                    data-time='{$heureDepartSafe}'>
-                                    Continuer
-                                </button>
+                            <div>
+                                <p><strong>Arrivée :</strong> " . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "</p>
+                                <p><strong>Heure arrivée :</strong> {$heureArrivee}</p>
                             </div>
                         </div>
                     </div>
-                </div>";
-            }
+                </div>
+            </div>";
         }
-        ?>
+    }
+    ?>
 
-        <?php if ($allerSimpleSelected): ?>
-            <div class="max-w-5xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-8">
-                <h2 class="text-3xl font-extrabold text-green-600">
-                    Aller : <?php echo !empty($date) ? date("d M Y", strtotime($date)) : ''; ?>
-                </h2>
-                <p class="text-xl font-bold text-slate-800">
-                    <?php echo $voyagesDisponibles; ?> voyages disponibles
-                </p>
-            </div>
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8 items-start">
+            <aside class="w-full lg:w-[290px] shrink-0">
+                <?php include 'includes/voyage_filtre.php'; ?>
+            </aside>
 
-            <?php
-            $requette1 = $bdd->prepare("
-                SELECT * 
-                FROM voyage 
-                WHERE villeDepart = :depart 
-                AND villeArrivee = :arrivee 
-                AND jourDepart = :date
-                ORDER BY heureDepart ASC
-            ");
-            $requette1->execute([
-                'depart' => $Depart,
-                'arrivee' => $Arrivee,
-                'date' => $date
-            ]);
+            <main class="flex-1 min-w-0">
+                <?php if ($allerSimpleSelected): ?>
+                    <?php
+                    $voyagesDisponiblesAller = 0;
+                    $voyagesAller = [];
 
-            if ($requette1->rowCount() > 0) {
-                while ($donne = $requette1->fetch(PDO::FETCH_ASSOC)) {
-                    renderVoyageCard(
-                        $donne['idVoyage'],
-                        $donne['heureDepart'],
-                        $donne['heureArrivee'],
-                        $donne['villeDepart'],
-                        $donne['villeArrivee'],
-                        $donne['prix'],
-                        $donne['typeBus'],
-                        'simple',
-                        'payment.php'
-                    );
-                }
-            } else {
-                echo "<p class='text-center text-gray-500 text-lg mt-10'>Aucun voyage disponible pour cette recherche.</p>";
-            }
-            ?>
-        <?php endif; ?>
+                    if (!empty($Depart) && !empty($Arrivee) && !empty($date)) {
+                        $voyagesDisponiblesAller = countVoyages($bdd, $Depart, $Arrivee, $date, 'allerCount');
+                        $voyagesAller = fetchVoyages($bdd, $Depart, $Arrivee, $date, 'allerFetch');
+                    }
+                    ?>
 
-        <?php if ($allerRetourSelected): ?>
-            <div class="max-w-5xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-8">
-                <h2 class="text-3xl font-extrabold text-green-600">
-                    Aller : <?php echo !empty($date) ? date("d M Y", strtotime($date)) : ''; ?>
-                </h2>
-                <p class="text-xl font-bold text-slate-800">
-                    <?php echo $voyagesDisponibles; ?> voyages disponibles
-                </p>
-            </div>
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-8">
+                        <p class="text-xl font-bold text-green-600">
+                            Aller : <?php echo !empty($date) ? date("d M Y", strtotime($date)) : ''; ?>
+                        </p>
+                        <p class="text-xl font-bold text-slate-800">
+                            <?php echo $voyagesDisponiblesAller; ?> voyages disponibles
+                        </p>
+                    </div>
 
-            <?php
-            $requetteAller = $bdd->prepare("
-                SELECT * 
-                FROM voyage 
-                WHERE villeDepart = :depart 
-                AND villeArrivee = :arrivee 
-                AND jourDepart = :date
-                ORDER BY heureDepart ASC
-            ");
-            $requetteAller->execute([
-                'depart' => $Depart,
-                'arrivee' => $Arrivee,
-                'date' => $date
-            ]);
+                    <?php if (!empty($Depart) && !empty($Arrivee) && !empty($date)): ?>
+                        <?php if (!empty($voyagesAller)): ?>
+                            <?php foreach ($voyagesAller as $donne): ?>
+                                <?php renderVoyageCard($donne, 'simple', 'payment.php'); ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p class="text-center text-gray-500 text-lg mt-10">Aucun voyage disponible pour cette recherche.</p>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <p class="text-center text-gray-500 text-lg mt-10">Veuillez lancer une recherche de trajet.</p>
+                    <?php endif; ?>
+                <?php endif; ?>
 
-            if ($requetteAller->rowCount() > 0) {
-                while ($donne = $requetteAller->fetch(PDO::FETCH_ASSOC)) {
-                    renderVoyageCard(
-                        $donne['idVoyage'],
-                        $donne['heureDepart'],
-                        $donne['heureArrivee'],
-                        $donne['villeDepart'],
-                        $donne['villeArrivee'],
-                        $donne['prix'],
-                        $donne['typeBus'],
-                        'aller'
-                    );
-                }
-            } else {
-                echo "<p class='text-center text-gray-500 text-lg mt-10 mb-10'>Aucun voyage aller disponible.</p>";
-            }
-            ?>
+                <?php if ($allerRetourSelected): ?>
+                    <?php
+                    $voyagesDisponiblesAller = 0;
+                    $voyagesAller = [];
 
-            <div class="max-w-5xl mx-auto mt-12 mb-8">
-                <h2 class="text-3xl font-extrabold text-green-600">
-                    Retour : <?php echo !empty($dateRetour) ? date("d M Y", strtotime($dateRetour)) : ''; ?>
-                </h2>
-            </div>
+                    if (!empty($Depart) && !empty($Arrivee) && !empty($date)) {
+                        $voyagesDisponiblesAller = countVoyages($bdd, $Depart, $Arrivee, $date, 'allerCountRT');
+                        $voyagesAller = fetchVoyages($bdd, $Depart, $Arrivee, $date, 'allerFetchRT');
+                    }
+                    ?>
 
-            <?php
-            $requetteRetour = $bdd->prepare("
-                SELECT * 
-                FROM voyage 
-                WHERE villeDepart = :departRetour
-                AND villeArrivee = :arriveeRetour
-                AND jourDepart = :dateRetour
-                ORDER BY heureDepart ASC
-            ");
-            $requetteRetour->execute([
-                'departRetour' => $Arrivee,
-                'arriveeRetour' => $Depart,
-                'dateRetour' => $dateRetour
-            ]);
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-8">
+                        <h2 class="text-xl font-bold ">
+                            Aller : <?php echo !empty($date) ? date("d M Y", strtotime($date)) : ''; ?>
+                        </h2>
+                        <p class="text-xl font-bold text-slate-800">
+                            <?php echo $voyagesDisponiblesAller; ?> voyages disponibles
+                        </p>
+                    </div>
 
-            if ($requetteRetour->rowCount() > 0) {
-                while ($donne = $requetteRetour->fetch(PDO::FETCH_ASSOC)) {
-                    renderVoyageCard(
-                        $donne['idVoyage'],
-                        $donne['heureDepart'],
-                        $donne['heureArrivee'],
-                        $donne['villeDepart'],
-                        $donne['villeArrivee'],
-                        $donne['prix'],
-                        $donne['typeBus'],
-                        'retour'
-                    );
-                }
-            } else {
-                echo "<p class='text-center text-gray-500 text-lg mt-10'>Aucun voyage retour disponible.</p>";
-            }
-            ?>
-        <?php endif; ?>
+                    <?php if (!empty($voyagesAller)): ?>
+                        <?php foreach ($voyagesAller as $donne): ?>
+                            <?php renderVoyageCard($donne, 'aller'); ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="text-center text-gray-500 text-lg mt-10 mb-10">Aucun voyage aller disponible.</p>
+                    <?php endif; ?>
+
+                    <?php
+                    $voyagesDisponiblesRetour = 0;
+                    $voyagesRetour = [];
+
+                    if (!empty($Depart) && !empty($Arrivee) && !empty($dateRetour)) {
+                        $voyagesDisponiblesRetour = countVoyages($bdd, $Arrivee, $Depart, $dateRetour, 'retourCountRT');
+                        $voyagesRetour = fetchVoyages($bdd, $Arrivee, $Depart, $dateRetour, 'retourFetchRT');
+                    }
+                    ?>
+
+                    <div class="mt-12 mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                        <h2 class="text-xl font-bold ">
+                            Retour : <?php echo !empty($dateRetour) ? date("d M Y", strtotime($dateRetour)) : ''; ?>
+                        </h2>
+                        <p class="text-xl font-bold text-slate-800">
+                            <?php echo $voyagesDisponiblesRetour; ?> voyages disponibles
+                        </p>
+                    </div>
+
+                    <?php if (!empty($voyagesRetour)): ?>
+                        <?php foreach ($voyagesRetour as $donne): ?>
+                            <?php renderVoyageCard($donne, 'retour'); ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="text-center text-gray-500 text-lg mt-10">Aucun voyage retour disponible.</p>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </main>
+        </div>
     </div>
 
     <?php include 'includes/footer.php'; ?>
 
     <script>
+        function toggleDetails(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.toggle('hidden');
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             let selectedTrips = { aller: null, retour: null };
 
