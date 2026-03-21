@@ -36,3 +36,8 @@ email comme canal principal ;
 WhatsApp en plus, avec un message de confirmation et un lien vers le PDF.
 Puis dans un second temps, tu passes à l’envoi direct du PDF sur WhatsApp.
 C’est plus facile à déboguer, plus léger, et ça garde une solution de secours si WhatsApp échoue.
+
+
+
+### on utilise Flatpickr  comme librairie pour la gestion des calendriers
+### on utilise intl-tel-input (LA référence) comme librairie pour gérer l'indice international des numéros

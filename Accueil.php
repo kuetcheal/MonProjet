@@ -30,10 +30,209 @@ if (isset($_POST['deconnect_account'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
+    <!-- Litepicker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" />
+    <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/bundle.js"></script>
+
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="CSS/Accueil.css">
 
     <title>Accueil</title>
+
+<style>
+    .litepicker {
+        font-family: 'Inter', Arial, sans-serif;
+        background: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        padding: 18px 18px 14px !important;
+        min-width: 720px;
+        z-index: 9999 !important;
+    }
+
+    .litepicker .container__months {
+        gap: 18px !important;
+    }
+
+    .litepicker .month-item {
+        padding: 0 !important;
+    }
+
+    .litepicker .month-item-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-height: 48px !important;
+        margin-bottom: 10px !important;
+        color: green !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .litepicker .month-item-name,
+    .litepicker .month-item-year {
+        color: green !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+    }
+
+    .litepicker .button-previous-month,
+    .litepicker .button-next-month {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 999px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: #6b7280 !important;
+        background: #f9fafb !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .litepicker .button-previous-month:hover,
+    .litepicker .button-next-month:hover {
+        background: #ede9fe !important;
+        color: green !important;
+    }
+
+    .litepicker .month-item-weekdays-row {
+        margin-bottom: 8px !important;
+    }
+
+    .litepicker .month-item-weekdays-row > div {
+        color: #6b7280 !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        text-transform: lowercase;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 34px !important;
+    }
+
+    .litepicker .month-item-calendar {
+        gap: 4px !important;
+    }
+
+    .litepicker .day-item {
+        width: 42px !important;
+        height: 42px !important;
+        max-width: 42px !important;
+        line-height: 42px !important;
+        border-radius: 999px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 15px !important;
+        font-weight: bold !important;
+        color: black !important;
+        transition: all 0.18s ease !important;
+        position: relative;
+        z-index: 1;
+    }
+
+    .litepicker .day-item:hover {
+        background: #f3f4f6 !important;
+        color: #111827 !important;
+    }
+
+    .litepicker .day-item.is-today {
+        border: 1.5px solid #9ca3af !important;
+        color: #111827 !important;
+        background: #fff !important;
+    }
+
+    .litepicker .day-item.is-start-date,
+    .litepicker .day-item.is-end-date {
+        background: green !important;
+        color: #fff !important;
+        font-weight: 700 !important;
+     
+    }
+
+    .litepicker .day-item.is-in-range {
+        background: #ede9fe !important;
+        color: green !important;
+        border-radius: 0 !important;
+    }
+
+    .litepicker .day-item.is-start-date.is-in-range {
+        border-radius: 999px 0 0 999px !important;
+    }
+
+    .litepicker .day-item.is-end-date.is-in-range {
+        border-radius: 0 999px 999px 0 !important;
+    }
+
+    .litepicker .day-item.is-start-date.is-end-date {
+        border-radius: 999px !important;
+    }
+
+    .litepicker .day-item.is-locked {
+        color: #d1d5db !important;
+    }
+
+    .litepicker .container__footer {
+        border-top: 1px solid #f3f4f6 !important;
+        margin-top: 12px !important;
+        padding-top: 12px !important;
+    }
+
+    .litepicker .container__footer .button-cancel,
+    .litepicker .container__footer .button-apply {
+        font-weight: 600 !important;
+        padding: 10px 16px !important;
+    }
+
+    .litepicker .container__footer .button-apply {
+        background: #156f3e !important;
+        border-color: #156f3e !important;
+    }
+
+    .litepicker .container__footer .button-cancel {
+        color: #6b7280 !important;
+    }
+
+    /* Cache les dropdowns moches si jamais Litepicker les affiche */
+    .litepicker select {
+        appearance: none !important;
+        border: 1px solid #e5e7eb !important;
+        padding: 6px 28px 6px 10px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #374151 !important;
+        background-color: #fff !important;
+        background-image: none !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+        .litepicker {
+            min-width: auto !important;
+            width: calc(100vw - 24px) !important;
+            padding: 14px !important;
+            border-radius: 20px !important;
+        }
+
+        .litepicker .container__months {
+            display: block !important;
+        }
+
+        .litepicker .month-item + .month-item {
+            margin-top: 16px !important;
+        }
+
+        .litepicker .day-item {
+            width: 38px !important;
+            height: 38px !important;
+            max-width: 38px !important;
+            line-height: 38px !important;
+            font-size: 14px !important;
+        }
+    }
+</style>
 </head>
 
 <body>
@@ -55,29 +254,29 @@ if (isset($_POST['deconnect_account'])) {
             </p>
         </div>
 
-       <div class="search-card-wrapper hidden md:block shadow-md">
+        <div class="search-card-wrapper hidden md:block shadow-md">
             <h3 class="hero-search-title">Reserver votre voyage</h3>
             <div class="search-card">
                 <form action="listevoyageretour.php" method="post" class="search-form">
 
                     <div class="trip-options">
                         <label class="trip-option">
-                            <input type="radio" id="inlineRadio1" name="inlineRadioOptions" value="option1" checked>
+                            <input type="radio" id="desktop_trip_oneway" name="inlineRadioOptions" value="option1" checked>
                             <span>Aller simple</span>
                         </label>
 
                         <label class="trip-option">
-                            <input type="radio" id="inlineRadio2" name="inlineRadioOptions" value="option2">
+                            <input type="radio" id="desktop_trip_roundtrip" name="inlineRadioOptions" value="option2">
                             <span>Aller-Retour</span>
                         </label>
                     </div>
 
                     <div class="search-fields">
                         <div class="field-group">
-                            <label for="input1">
+                            <label for="desktop_input1">
                                 <i class="bi bi-geo-alt"></i> DE :
                             </label>
-                            <select id="input1" name="input1" class="select2">
+                            <select id="desktop_input1" name="input1" class="select2">
                                 <?php
                                 $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
                                 $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
@@ -91,10 +290,10 @@ if (isset($_POST['deconnect_account'])) {
                         </div>
 
                         <div class="field-group">
-                            <label for="input2">
+                            <label for="desktop_input2">
                                 <i class="bi bi-geo-alt"></i> A :
                             </label>
-                            <select id="input2" name="input2" class="select2">
+                            <select id="desktop_input2" name="input2" class="select2">
                                 <?php
                                 $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
                                 $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
@@ -108,13 +307,28 @@ if (isset($_POST['deconnect_account'])) {
                         </div>
 
                         <div class="field-group">
-                            <label for="input3">Date départ :</label>
-                            <input type="date" id="input3" name="input3">
+                            <label for="desktop_depart_display">Date départ :</label>
+                            <input
+                                type="text"
+                                id="desktop_depart_display"
+                                placeholder="jj/mm/aaaa"
+                                readonly
+                                class="w-full cursor-pointer"
+                            >
+                            <input type="hidden" id="desktop_depart_date" name="input3">
                         </div>
 
                         <div class="field-group">
-                            <label for="input4">Date retour :</label>
-                            <input type="date" id="input4" name="input4" disabled>
+                            <label for="desktop_return_display">Date retour :</label>
+                            <input
+                                type="text"
+                                id="desktop_return_display"
+                                placeholder="jj/mm/aaaa"
+                                readonly
+                                disabled
+                                class="w-full cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-100"
+                            >
+                            <input type="hidden" id="desktop_return_date" name="input4">
                         </div>
 
                         <div class="field-group submit-group">
@@ -127,126 +341,129 @@ if (isset($_POST['deconnect_account'])) {
         </div>
     </section>
 
-    
-
     <main class="home-main">
 
-       <section class="block md:hidden px-4 py-5 bg-white">
-    <div class="w-full max-w-md mx-auto relative z-[5]">
-        <h3 class="text-center text-[20px] font-bold text-[#46e37b] pb-3 leading-tight">
-            Reserver votre voyage
-        </h3>
+        <section class="block md:hidden px-4 py-5 bg-white">
+            <div class="w-full max-w-md mx-auto relative z-[5]">
+                <h3 class="text-center text-[20px] font-bold text-[#46e37b] pb-3 leading-tight">
+                    Reserver votre voyage
+                </h3>
 
-        <div class="bg-white/95 rounded-[24px] shadow-[0_8px_24px_rgba(0,0,0,0.12)] px-4 py-5">
-            <form action="listevoyageretour.php" method="post" class="flex flex-col gap-5">
+                <div class="bg-white/95 shadow-md px-4 py-5">
+                    <form action="listevoyageretour.php" method="post" class="flex flex-col gap-5">
 
-                <div class="flex flex-wrap items-center gap-6">
-                    <label class="flex items-center gap-2 text-black text-[15px] font-bold">
-                        <input
-                            type="radio"
-                            id="inlineRadio1"
-                            name="inlineRadioOptions"
-                            value="option1"
-                            checked
-                            class="w-[18px] h-[18px] accent-[#18884c]"
-                        >
-                        <span>Aller simple</span>
-                    </label>
+                        <div class="flex flex-wrap items-center gap-6">
+                            <label class="flex items-center gap-2 text-black text-[15px] font-bold">
+                                <input
+                                    type="radio"
+                                    id="mobile_trip_oneway"
+                                    name="inlineRadioOptions"
+                                    value="option1"
+                                    checked
+                                    class="w-[18px] h-[18px] accent-[#18884c]"
+                                >
+                                <span>Aller simple</span>
+                            </label>
 
-                    <label class="flex items-center gap-2 text-black text-[15px] font-bold">
-                        <input
-                            type="radio"
-                            id="inlineRadio2"
-                            name="inlineRadioOptions"
-                            value="option2"
-                            class="w-[18px] h-[18px] accent-[#18884c]"
-                        >
-                        <span>Aller-Retour</span>
-                    </label>
+                            <label class="flex items-center gap-2 text-black text-[15px] font-bold">
+                                <input
+                                    type="radio"
+                                    id="mobile_trip_roundtrip"
+                                    name="inlineRadioOptions"
+                                    value="option2"
+                                    class="w-[18px] h-[18px] accent-[#18884c]"
+                                >
+                                <span>Aller-Retour</span>
+                            </label>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4">
+
+                            <div class="flex flex-col min-w-0">
+                                <label for="mobile_input1" class="mb-2 text-[#156f3e] text-[15px] font-extrabold flex items-center gap-2">
+                                    <i class="bi bi-geo-alt text-[#18884c]"></i> DE :
+                                </label>
+                                <select
+                                    id="mobile_input1"
+                                    name="input1"
+                                    class="select2 w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none"
+                                >
+                                    <?php
+                                    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+                                    $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
+                                    $response = $bdd->query($query);
+                                    while ($donnee = $response->fetch()) {
+                                        $destination = $donnee['Nom_ville'];
+                                        echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+
+                            <div class="flex flex-col min-w-0">
+                                <label for="mobile_input2" class="mb-2 text-[#156f3e] text-[15px] font-extrabold flex items-center gap-2">
+                                    <i class="bi bi-geo-alt text-[#18884c]"></i> A :
+                                </label>
+                                <select
+                                    id="mobile_input2"
+                                    name="input2"
+                                    class="select2 w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none"
+                                >
+                                    <?php
+                                    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+                                    $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
+                                    $response = $bdd->query($query);
+                                    while ($donnee = $response->fetch()) {
+                                        $destination = $donnee['Nom_ville'];
+                                        echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+
+                            <div class="flex flex-col min-w-0">
+                                <label for="mobile_depart_display" class="mb-2 text-[#156f3e] text-[15px] font-extrabold">
+                                    Date départ :
+                                </label>
+                                <input
+                                    type="text"
+                                    id="mobile_depart_display"
+                                    placeholder="jj/mm/aaaa"
+                                    readonly
+                                    class="w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none cursor-pointer"
+                                >
+                                <input type="hidden" id="mobile_depart_date" name="input3">
+                            </div>
+
+                            <div class="flex flex-col min-w-0">
+                                <label for="mobile_return_display" class="mb-2 text-[#156f3e] text-[15px] font-extrabold">
+                                    Date retour :
+                                </label>
+                                <input
+                                    type="text"
+                                    id="mobile_return_display"
+                                    placeholder="jj/mm/aaaa"
+                                    readonly
+                                    disabled
+                                    class="w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none cursor-pointer disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+                                >
+                                <input type="hidden" id="mobile_return_date" name="input4">
+                            </div>
+
+                            <div class="flex flex-col min-w-0">
+                                <input
+                                    type="submit"
+                                    value="Valider"
+                                    class="w-full h-[50px] rounded-[12px] border-0 bg-[#156f3e] text-white text-[15px] font-extrabold cursor-pointer"
+                                >
+                            </div>
+
+                        </div>
+                    </form>
                 </div>
+            </div>
+        </section>
 
-                <div class="grid grid-cols-1 gap-4">
-
-                    <div class="flex flex-col min-w-0">
-                        <label for="input1" class="mb-2 text-[#156f3e] text-[15px] font-extrabold flex items-center gap-2">
-                            <i class="bi bi-geo-alt text-[#18884c]"></i> DE :
-                        </label>
-                        <select
-                            id="input1"
-                            name="input1"
-                            class="select2 w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none"
-                        >
-                            <?php
-                            $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-                            $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
-                            $response = $bdd->query($query);
-                            while ($donnee = $response->fetch()) {
-                                $destination = $donnee['Nom_ville'];
-                                echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
-                            }
-                            ?>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-col min-w-0">
-                        <label for="input2" class="mb-2 text-[#156f3e] text-[15px] font-extrabold flex items-center gap-2">
-                            <i class="bi bi-geo-alt text-[#18884c]"></i> A :
-                        </label>
-                        <select
-                            id="input2"
-                            name="input2"
-                            class="select2 w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none"
-                        >
-                            <?php
-                            $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-                            $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
-                            $response = $bdd->query($query);
-                            while ($donnee = $response->fetch()) {
-                                $destination = $donnee['Nom_ville'];
-                                echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
-                            }
-                            ?>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-col min-w-0">
-                        <label for="input3" class="mb-2 text-[#156f3e] text-[15px] font-extrabold">
-                            Date départ :
-                        </label>
-                        <input
-                            type="date"
-                            id="input3"
-                            name="input3"
-                            class="w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none"
-                        >
-                    </div>
-
-                    <div class="flex flex-col min-w-0">
-                        <label for="input4" class="mb-2 text-[#156f3e] text-[15px] font-extrabold">
-                            Date retour :
-                        </label>
-                        <input
-                            type="date"
-                            id="input4"
-                            name="input4"
-                            disabled
-                            class="w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none disabled:bg-gray-100 disabled:text-gray-400"
-                        >
-                    </div>
-
-                    <div class="flex flex-col min-w-0">
-                        <input
-                            type="submit"
-                            value="Valider"
-                            class="w-full h-[50px] rounded-[12px] border-0 bg-[#156f3e] text-white text-[15px] font-extrabold cursor-pointer"
-                        >
-                    </div>
-
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
         <section class="actions-section">
             <h2 class="actions-title">
                 Gérer vos trajets et vos reservations sans soucis grâce à vos identifiants de reservation sur votre billet de voyage.
@@ -261,17 +478,15 @@ if (isset($_POST['deconnect_account'])) {
 
         <div id="modalContainer"></div>
 
-            <section>
+        <section>
             <?php include 'includes/service-bus-card.php'; ?>
         </section>
 
         <section class="map-section">
-          
             <div class="map-box">
                 <?php include 'map.php'; ?>
             </div>
         </section>
-    
 
         <section class="presentation-section">
             <div class="presentation-grid">
@@ -313,7 +528,7 @@ if (isset($_POST['deconnect_account'])) {
 
         <section class="carousel-section">
             <h2 class="actu font-bold justify-start max-w-[1350px] text-2xl pb-5">
-               Profitez de toutes les dernières actualités de génral voyage qui vous informe sur tout ce qu'il y'a de nouveaux ainsi que les promotions 
+                Profitez de toutes les dernières actualités de génral voyage qui vous informe sur tout ce qu'il y'a de nouveaux ainsi que les promotions
             </h2>
 
             <div class="carousel home-carousel"
@@ -336,7 +551,7 @@ if (isset($_POST['deconnect_account'])) {
                         <div class="destination-card-body">
                             <div class="destination-card-title">Tokyo</div>
                             <p class="text-sm">A blend of modern technology and traditional culture.</p>
-                             <a href="/article.php">Lire l'article</a>
+                            <a href="/article.php">Lire l'article</a>
                         </div>
                     </div>
                 </div>
@@ -347,7 +562,7 @@ if (isset($_POST['deconnect_account'])) {
                         <div class="destination-card-body">
                             <div class="destination-card-title">Paris</div>
                             <p class="text-sm">The City of Light, known for its romance and iconic landmarks.</p>
-                             <a href="/article.php">Lire l'article</a>
+                            <a href="/article.php">Lire l'article</a>
                         </div>
                     </div>
                 </div>
@@ -358,7 +573,7 @@ if (isset($_POST['deconnect_account'])) {
                         <div class="destination-card-body">
                             <div class="destination-card-title">Location de bus</div>
                             <p class="text-sm">Désormais vous pouvez reserver et louer vos bus en ligne.</p>
-                             <a href="/article.php">Lire l'article</a>
+                            <a href="/article.php">Lire l'article</a>
                         </div>
                     </div>
                 </div>
@@ -369,29 +584,29 @@ if (isset($_POST['deconnect_account'])) {
                         <div class="destination-card-body">
                             <div class="destination-card-title">Tokyo</div>
                             <p class="text-sm">A blend of modern technology and traditional culture.</p>
-                             <a href="/article.php">Lire l'article</a>
+                            <a href="/article.php">Lire l'article</a>
                         </div>
                     </div>
                 </div>
 
-                 <div class="carousel-cell">
+                <div class="carousel-cell">
                     <div class="destination-card">
                         <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
                         <div class="destination-card-body">
                             <div class="destination-card-title">Nouvel agence</div>
                             <p class="text-sm">général voyage vous informe qu'un nouvel agence sera à Douala.</p>
-                             <a href="/article.php">Lire l'article</a>
+                            <a href="/article.php">Lire l'article</a>
                         </div>
                     </div>
                 </div>
 
-                 <div class="carousel-cell">
+                <div class="carousel-cell">
                     <div class="destination-card">
                         <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
                         <div class="destination-card-body">
                             <div class="destination-card-title">Tokyo</div>
                             <p class="text-sm">A blend of modern technology and traditional culture.</p>
-                             <a href="/article.php">Lire l'article</a>
+                            <a href="/article.php">Lire l'article</a>
                         </div>
                     </div>
                 </div>
@@ -416,8 +631,132 @@ if (isset($_POST['deconnect_account'])) {
 
     <div id="modalMessage"></div>
 
-    <?php include 'includes/scrollToUp.php'?>
+    <?php include 'includes/scrollToUp.php' ?>
     <?php include 'includes/footer.php'; ?>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function setupBookingForm(formSelector, startDisplayId, endDisplayId, startHiddenId, endHiddenId) {
+                const form = document.querySelector(formSelector);
+                if (!form) return;
+
+                const startDisplay = document.getElementById(startDisplayId);
+                const endDisplay = document.getElementById(endDisplayId);
+                const startHidden = document.getElementById(startHiddenId);
+                const endHidden = document.getElementById(endHiddenId);
+
+                const radios = form.querySelectorAll('input[name="inlineRadioOptions"]');
+                let picker = null;
+
+                function getTripMode() {
+                    const checked = form.querySelector('input[name="inlineRadioOptions"]:checked');
+                    return checked ? checked.value : 'option1';
+                }
+
+                function clearDates() {
+                    startDisplay.value = '';
+                    endDisplay.value = '';
+                    startHidden.value = '';
+                    endHidden.value = '';
+                }
+
+                function createPicker(singleMode = true) {
+                    if (picker) {
+                        picker.destroy();
+                    }
+
+                    picker = new Litepicker({
+                        element: startDisplay,
+                        elementEnd: singleMode ? null : endDisplay,
+                        singleMode: singleMode,
+                        numberOfMonths: 2,
+                        numberOfColumns: 2,
+                        autoApply: true,
+                        minDate: new Date(),
+                        lang: 'fr-FR',
+                        format: 'DD/MM/YYYY',
+                        dropdowns: {
+                            minYear: new Date().getFullYear(),
+                            maxYear: new Date().getFullYear() + 2,
+                            months: true,
+                            years: true
+                        },
+                        setup: (pickerInstance) => {
+                            pickerInstance.on('selected', (date1, date2) => {
+                                if (date1) {
+                                    startDisplay.value = date1.format('DD/MM/YYYY');
+                                    startHidden.value = date1.format('YYYY-MM-DD');
+                                }
+
+                                if (!singleMode && date2) {
+                                    endDisplay.value = date2.format('DD/MM/YYYY');
+                                    endHidden.value = date2.format('YYYY-MM-DD');
+                                }
+
+                                if (singleMode) {
+                                    endDisplay.value = '';
+                                    endHidden.value = '';
+                                }
+                            });
+                        }
+                    });
+                }
+
+                function updateMode() {
+                    const isRoundTrip = getTripMode() === 'option2';
+
+                    clearDates();
+
+                    if (isRoundTrip) {
+                        endDisplay.disabled = false;
+                        createPicker(false);
+                    } else {
+                        endDisplay.disabled = true;
+                        endDisplay.value = '';
+                        endHidden.value = '';
+                        createPicker(true);
+                    }
+                }
+
+                radios.forEach((radio) => {
+                    radio.addEventListener('change', updateMode);
+                });
+
+                form.addEventListener('submit', function (e) {
+                    const isRoundTrip = getTripMode() === 'option2';
+
+                    if (!startHidden.value) {
+                        e.preventDefault();
+                        alert('Veuillez sélectionner une date de départ.');
+                        return;
+                    }
+
+                    if (isRoundTrip && !endHidden.value) {
+                        e.preventDefault();
+                        alert('Veuillez sélectionner une date de retour.');
+                    }
+                });
+
+                updateMode();
+            }
+
+            setupBookingForm(
+                '.search-card form',
+                'desktop_depart_display',
+                'desktop_return_display',
+                'desktop_depart_date',
+                'desktop_return_date'
+            );
+
+            setupBookingForm(
+                'section.block.md\\:hidden form',
+                'mobile_depart_display',
+                'mobile_return_display',
+                'mobile_depart_date',
+                'mobile_return_date'
+            );
+        });
+    </script>
 
     <script src="Javascript/Accueil.js"></script>
 </body>
