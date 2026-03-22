@@ -23,10 +23,10 @@ if (isset($_POST['delete_voyage']) && !empty($_POST['id_voyage'])) {
     $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
-        header('Location: listevoyadmin.php?success=delete');
+        header('Location: listevoyage.php?success=delete');
         exit;
     } else {
-        header('Location: listevoyadmin.php?error=delete');
+        header('Location: listevoyage.php?error=delete');
         exit;
     }
 }
@@ -41,17 +41,17 @@ $conditions = [];
 $params = [];
 
 if (!empty($_GET['villeDepart'])) {
-    $conditions[] = "villeDepart = :villeDepart";
+    $conditions[] = "v.villeDepart = :villeDepart";
     $params[':villeDepart'] = $_GET['villeDepart'];
 }
 
 if (!empty($_GET['villeArrivee'])) {
-    $conditions[] = "villeArrivee = :villeArrivee";
+    $conditions[] = "v.villeArrivee = :villeArrivee";
     $params[':villeArrivee'] = $_GET['villeArrivee'];
 }
 
 if (!empty($_GET['jourDepart'])) {
-    $conditions[] = "jourDepart = :jourDepart";
+    $conditions[] = "v.jourDepart = :jourDepart";
     $params[':jourDepart'] = $_GET['jourDepart'];
 }
 
@@ -67,7 +67,7 @@ $start = ($page - 1) * $limit;
 /* =========================
    TOTAL
 ========================= */
-$countQuery = "SELECT COUNT(*) FROM voyage" . $whereClause;
+$countQuery = "SELECT COUNT(*) FROM voyage v" . $whereClause;
 $countStmt = $conn->prepare($countQuery);
 
 foreach ($params as $key => $value) {
@@ -81,7 +81,18 @@ $total_pages = ceil($total_voyages / $limit);
 /* =========================
    LISTE DES VOYAGES
 ========================= */
-$query = "SELECT * FROM voyage" . $whereClause . " ORDER BY jourDepart DESC LIMIT :start, :limit";
+$query = "
+    SELECT 
+        v.*,
+        COUNT(r.id_reservation) AS total_reservations
+    FROM voyage v
+    LEFT JOIN reservation r ON r.idVoyage = v.idVoyage
+    $whereClause
+    GROUP BY v.idVoyage
+    ORDER BY v.jourDepart DESC, v.heureDepart DESC
+    LIMIT :start, :limit
+";
+
 $resultat = $conn->prepare($query);
 
 foreach ($params as $key => $value) {
@@ -169,7 +180,7 @@ ob_start();
 
         <!-- Bouton reset -->
         <div class="flex gap-3">
-            <a href="listevoyadmin.php" class="bg-red-500 text-white h-12 px-6 flex items-center justify-center rounded-lg transition duration-300 hover:bg-red-600 hover:scale-105">
+            <a href="listevoyage.php" class="bg-red-500 text-white h-12 px-6 flex items-center justify-center rounded-lg transition duration-300 hover:bg-red-600 hover:scale-105">
                 Réinitialiser
             </a>
         </div>
@@ -190,6 +201,8 @@ ob_start();
                 <th class="p-2">Type de Bus</th>
                 <th class="p-2">Prix</th>
                 <th class="p-2">Date</th>
+                <th class="p-2 text-center">Réservations</th>
+                <th class="p-2 text-center">Passagers</th>
                 <th class="p-2">Actions</th>
             </tr>
         </thead>
@@ -207,6 +220,20 @@ ob_start();
                         <td class="p-2"><?= htmlspecialchars($donne['typeBus']) ?></td>
                         <td class="p-2"><?= htmlspecialchars($donne['prix']) ?></td>
                         <td class="p-2"><?= htmlspecialchars($donne['jourDepart']) ?></td>
+
+                        <td class="p-2 text-center">
+                            <span class="inline-flex items-center justify-center min-w-[40px] px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-bold">
+                                <?= (int)$donne['total_reservations'] ?>
+                            </span>
+                        </td>
+
+                        <td class="p-2 text-center">
+                            <a href="voyage_reservations.php?idVoyage=<?= (int)$donne['idVoyage'] ?>"
+                               class="bg-indigo-600 text-white px-3 py-2 rounded hover:bg-indigo-700 inline-block">
+                                Voir passagers
+                            </a>
+                        </td>
+
                         <td class="p-2">
                             <div class="flex space-x-2">
                                 <form method="post" action="modifier.php">
@@ -225,7 +252,7 @@ ob_start();
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="11" class="text-center p-4 text-gray-500">Aucun voyage trouvé.</td>
+                    <td colspan="13" class="text-center p-4 text-gray-500">Aucun voyage trouvé.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
@@ -310,7 +337,7 @@ $adminContent = ob_get_clean();
 $adminTitle = 'Liste des voyages';
 $adminUserName = 'Alex Stephane';
 $adminWelcome = 'Bienvenu dans votre espace Administrateur ! ! !';
-$baseUrl = '';
+$baseUrl = './';
 
 include __DIR__ . '/../includes/layoutadmin.php';
 ?>

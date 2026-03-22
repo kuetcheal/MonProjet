@@ -35,6 +35,11 @@ try {
     $filters = [];
     $conditions = [];
 
+    if (!empty($_GET['idVoyage'])) {
+        $conditions[] = "r.idVoyage = :idVoyage";
+        $filters['idVoyage'] = (int) $_GET['idVoyage'];
+    }
+
     if (!empty($_GET['villeDepart'])) {
         $conditions[] = "v.villeDepart = :villeDepart";
         $filters['villeDepart'] = $_GET['villeDepart'];
@@ -108,6 +113,15 @@ ob_start();
     <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Liste des Réservations</h1>
 
     <form method="GET" id="filterForm" class="bg-white p-5 mb-6 rounded shadow-md flex flex-wrap items-center justify-between gap-6">
+        <input
+            type="number"
+            name="idVoyage"
+            value="<?= htmlspecialchars($_GET['idVoyage'] ?? '') ?>"
+            placeholder="N° Voyage"
+            onchange="document.getElementById('filterForm').submit()"
+            class="w-40 h-12 border rounded px-3 text-base text-gray-700"
+        >
+
         <select
             name="villeDepart"
             onchange="document.getElementById('filterForm').submit()"
@@ -167,7 +181,7 @@ ob_start();
                     <th class="py-2 px-4">Prénom</th>
                     <th class="py-2 px-4">Téléphone</th>
                     <th class="py-2 px-4">Email</th>
-                    <th class="py-2 px-4">ID Voyage</th>
+                    <th class="py-2 px-4">N° Voyage</th>
                     <th class="py-2 px-4">Ville départ</th>
                     <th class="py-2 px-4">Ville arrivée</th>
                     <th class="py-2 px-4">Date</th>
@@ -228,7 +242,7 @@ $adminContent = ob_get_clean();
 $adminTitle = 'Liste des réservations';
 $adminUserName = 'Alex Stephane';
 $adminWelcome = 'Bienvenu dans votre espace Administrateur ! ! !';
-$baseUrl = '../';
+$baseUrl = './';
 
 include __DIR__ . '/../includes/layoutadmin.php';
 ?>
