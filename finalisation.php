@@ -2,35 +2,10 @@
 session_start();
 require __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/includes/seat_helpers.php';
+require_once __DIR__ . '/Reservation/reservation_helpers.php';
 
 use Mailjet\Client;
 use Mailjet\Resources;
-
-function generateInvoice($nom, $prenom, $telephone, $email, $reservationNumber, $numeroSiege, $depart, $arrivee, $date, $idVoyage, $prix)
-{
-    $pdf = new \TCPDF();
-    $pdf->AddPage();
-    $pdf->SetFont('dejavusans', '', 12);
-
-    $html = "
-    <h1 style='text-align:center;color:#16a34a;'>Facture de Réservation</h1>
-    <table border='1' cellpadding='8'>
-        <tr><th><b>Nom</b></th><td>$nom $prenom</td></tr>
-        <tr><th><b>Email</b></th><td>$email</td></tr>
-        <tr><th><b>Téléphone</b></th><td>$telephone</td></tr>
-        <tr><th><b>Départ</b></th><td>$depart</td></tr>
-        <tr><th><b>Arrivée</b></th><td>$arrivee</td></tr>
-        <tr><th><b>Date</b></th><td>$date</td></tr>
-        <tr><th><b>ID Voyage</b></th><td>$idVoyage</td></tr>
-        <tr><th><b>Réservation</b></th><td>$reservationNumber</td></tr>
-        <tr><th><b>Siège</b></th><td>$numeroSiege</td></tr>
-        <tr><th><b>Total</b></th><td>$prix FCFA</td></tr>
-    </table>
-    ";
-
-    $pdf->writeHTML($html, true, false, true, false, '');
-    return $pdf->Output('', 'S');
-}
 
 function postToDolibarr($url, $apiKey, array $data)
 {
@@ -68,22 +43,22 @@ try {
         throw new Exception('Erreur : données du formulaire manquantes.');
     }
 
-    $nom = htmlspecialchars(trim($_POST['nom']));
-    $prenom = htmlspecialchars(trim($_POST['prenom']));
+    $nom = trim($_POST['nom']);
+    $prenom = trim($_POST['prenom']);
     $email = filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL);
-    $telephone = htmlspecialchars(trim($_POST['telephone']));
-    $numeroSiege = (int)trim($_POST['selectedSeat']);
-    $reservationNumber = htmlspecialchars(trim($_POST['reservationNumber']));
+    $telephone = trim($_POST['telephone']);
+    $numeroSiege = (int) trim($_POST['selectedSeat']);
+    $reservationNumber = trim($_POST['reservationNumber']);
     $deliveryMethod = trim($_POST['deliveryMethod'] ?? 'email');
 
     if ($numeroSiege <= 0) {
         throw new Exception('Erreur : aucun siège sélectionné.');
     }
 
-    $depart = $_POST['depart'] ?? $_SESSION['depart'] ?? '';
-    $arrivee = $_POST['arrivee'] ?? $_SESSION['arrivee'] ?? '';
-    $date = $_POST['dateVoyage'] ?? $_SESSION['date'] ?? '';
-    $idVoyage = (int)($_POST['idVoyage'] ?? $_SESSION['idVoyage'] ?? 0);
+    $depart = trim($_POST['depart'] ?? $_SESSION['depart'] ?? '');
+    $arrivee = trim($_POST['arrivee'] ?? $_SESSION['arrivee'] ?? '');
+    $date = trim($_POST['dateVoyage'] ?? $_SESSION['date'] ?? '');
+    $idVoyage = (int) ($_POST['idVoyage'] ?? $_SESSION['idVoyage'] ?? 0);
     $prix = isset($_POST['prixTotal']) ? (float) $_POST['prixTotal'] : (float) ($_SESSION['prix'] ?? 0);
 
     if ($idVoyage <= 0) {
@@ -95,7 +70,7 @@ try {
         throw new Exception('Voyage introuvable.');
     }
 
-    $nombrePlaces = (int)($voyage['nombrePlaces'] ?? 0);
+    $nombrePlaces = (int) ($voyage['nombrePlaces'] ?? 0);
     if ($numeroSiege > $nombrePlaces) {
         throw new Exception('Le siège sélectionné dépasse la capacité du bus.');
     }
@@ -111,6 +86,8 @@ try {
     $_SESSION['prix'] = $prix;
 
     $etat = 0;
+    $qrToken = generateQrToken($reservationNumber, $telephone, $idVoyage, $numeroSiege);
+    $qrUrl = buildTicketQrUrl($qrToken);
 
     $bdd->beginTransaction();
 
@@ -125,8 +102,10 @@ try {
             Etat,
             Numero_reservation,
             Numero_siege,
-            prix_reservation
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            prix_reservation,
+            qr_token,
+            ticket_status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ';
 
     $stmt = $bdd->prepare($requete);
@@ -140,12 +119,14 @@ try {
         $etat,
         $reservationNumber,
         $numeroSiege,
-        $prix
+        $prix,
+        $qrToken,
+        'valid'
     ]);
 
     $bdd->commit();
 
-    $pdfOutput = generateInvoice(
+    $pdfOutput = generateInvoicePdf(
         $nom,
         $prenom,
         $telephone,
@@ -156,7 +137,8 @@ try {
         $arrivee,
         $date,
         $idVoyage,
-        $prix
+        $prix,
+        $qrUrl
     );
 
     $emailMessage = 'Envoi email non demandé.';
@@ -168,36 +150,39 @@ try {
             ['version' => 'v3.1']
         );
 
+        $emailHtml = buildReservationEmailHtml(
+            $nom,
+            $prenom,
+            $telephone,
+            $reservationNumber,
+            $numeroSiege,
+            $depart,
+            $arrivee,
+            $date,
+            $idVoyage,
+            $prix
+        );
+
         $body = [
             'Messages' => [
                 [
                     'From' => [
                         'Email' => 'akuetche55@gmail.com',
-                        'Name' => 'Easy travel',
+                        'Name' => 'Easy Travel',
                     ],
                     'To' => [
                         [
                             'Email' => $email,
-                            'Name' => $nom,
+                            'Name' => $nom . ' ' . $prenom,
                         ],
                     ],
-                    'Subject' => 'Confirmation de Réservation',
-                    'TextPart' => 'Votre facture est attachée à cet email.',
-                    'HTMLPart' => "
-                        <h1>Détails de la réservation</h1>
-                        <p><strong>ID Voyage :</strong> $idVoyage</p>
-                        <p><strong>Passager :</strong> $nom $prenom</p>
-                        <p><strong>Téléphone :</strong> $telephone</p>
-                        <p><strong>Numéro de Référence :</strong> $reservationNumber</p>
-                        <p><strong>Numéro de siège :</strong> $numeroSiege</p>
-                        <p><strong>Départ :</strong> $depart</p>
-                        <p><strong>Arrivée :</strong> $arrivee</p>
-                        <p><strong>Date :</strong> $date</p>
-                    ",
+                    'Subject' => 'Confirmation de réservation - Easy Travel',
+                    'TextPart' => "Votre réservation a bien été confirmée. Référence : {$reservationNumber}.",
+                    'HTMLPart' => $emailHtml,
                     'Attachments' => [
                         [
                             'ContentType' => 'application/pdf',
-                            'Filename' => 'facture.pdf',
+                            'Filename' => 'billet-reservation.pdf',
                             'Base64Content' => base64_encode($pdfOutput),
                         ],
                     ],
@@ -255,11 +240,16 @@ try {
     }
 
     $messageTitle = 'Réservation finalisée';
+    $messageLines[] = 'Votre réservation a bien été enregistrée.';
     $messageLines[] = $emailMessage;
     $messageLines[] = $dolibarrMessage;
     $messageLines[] = 'Redirection en cours vers l’accueil...';
 
 } catch (Exception $e) {
+    if (isset($bdd) && $bdd instanceof PDO && $bdd->inTransaction()) {
+        $bdd->rollBack();
+    }
+
     $messageTitle = 'Échec de traitement';
     $messageLines[] = $e->getMessage();
 }
@@ -273,14 +263,28 @@ try {
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Finalisation</title>
 </head>
-<body class="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-    <div class="max-w-2xl w-full bg-green-600 text-white p-8 rounded-2xl text-center shadow-xl">
-        <h1 class="text-3xl font-bold mb-4"><?= htmlspecialchars($messageTitle) ?></h1>
+<body class="min-h-screen bg-gradient-to-br from-green-50 to-slate-100 flex items-center justify-center px-4">
+    <div class="max-w-2xl w-full bg-white border border-green-100 shadow-2xl rounded-3xl overflow-hidden">
+        <div class="bg-green-600 text-white p-8 text-center">
+            <h1 class="text-3xl font-bold mb-2"><?= htmlspecialchars($messageTitle) ?></h1>
+            <p class="text-green-100">Traitement de votre réservation Easy Travel</p>
+        </div>
 
-        <div class="space-y-2 text-lg">
-            <?php foreach ($messageLines as $line): ?>
-                <p><?= htmlspecialchars($line) ?></p>
-            <?php endforeach; ?>
+        <div class="p-8">
+            <div class="space-y-3 text-slate-700 text-lg">
+                <?php foreach ($messageLines as $line): ?>
+                    <div class="flex items-start gap-3 bg-slate-50 rounded-xl px-4 py-3 border border-slate-100">
+                        <span class="text-green-600 font-bold">✓</span>
+                        <p><?= htmlspecialchars($line) ?></p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a href="Accueil.php" class="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-xl transition">
+                    Retour à l’accueil
+                </a>
+            </div>
         </div>
     </div>
 </body>
