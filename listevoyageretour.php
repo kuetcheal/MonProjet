@@ -322,7 +322,7 @@ session_start();
             </div>
         </div>
     </div>
-";
+      ";
 
         if ($type === 'simple') {
             $action = "

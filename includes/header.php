@@ -44,7 +44,7 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
             <a href="Accueil.php" class="gv-header__link gv-header__link--active">Accueil</a>
             <a href="reservations.php" class="gv-header__link">Réservations</a>
             <a href="services.php" class="gv-header__link">Services</a>
-            <a href="contact.php" class="gv-header__link">Nos contacts</a>
+            <a href="Contact/contact.php" class="gv-header__link">Nous contacter</a>
             <a href="<?= htmlspecialchars($offerLink) ?>" class="gv-header__link">
                 <?= htmlspecialchars($offerLabel) ?>
             </a>
@@ -84,7 +84,7 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
         <a href="Accueil.php" class="gv-mobile-drawer__link gv-mobile-drawer__link--active">Accueil</a>
         <a href="reservations.php" class="gv-mobile-drawer__link">Réservations</a>
         <a href="services.php" class="gv-mobile-drawer__link">Services</a>
-        <a href="contact.php" class="gv-mobile-drawer__link">Nos contacts</a>
+        <a href="Contact/contact.php" class="gv-mobile-drawer__link">Nous contacter</a>
         <a href="<?= htmlspecialchars($offerLink) ?>" class="gv-mobile-drawer__link">
             <?= htmlspecialchars($offerLabel) ?>
         </a>
