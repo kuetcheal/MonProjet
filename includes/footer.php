@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
 <footer class="relative z-50 mt-10 bg-gradient-to-r from-[#04152d] via-[#02142b] to-[#000f24] text-white border-t border-white/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-10">
@@ -9,7 +11,7 @@
                     Recevez nos nouveautés, nos offres et nos informations utiles directement par email.
                 </p>
 
-                <h3 class="text-sm font-semibold mb-3 text-green">Inscrivez-vous à notre newsletter</h3>
+                <h3 class="text-sm font-semi-bold mb-3 text-white">Inscrivez-vous à notre newsletter</h3>
 
                 <form class="flex flex-col sm:flex-row gap-3">
                     <input
@@ -19,7 +21,7 @@
                     />
                     <button
                         type="submit"
-                        class="px-5 py-3 rounded-xl bg-gradient-to-r from-[#ff4f88] to-[#c43b7a] hover:opacity-90 text-white font-semibold transition whitespace-nowrap"
+                        class="px-5 py-3 rounded-sm bg-gradient-to-r from-[#ff4f88] to-[#c43b7a] hover:opacity-90 text-white font-semibold transition whitespace-nowrap"
                     >
                         S'inscrire
                     </button>
@@ -54,14 +56,14 @@
                         <span class="font-semibold text-white">Adresse :</span> 12 rue des exemples, Paris
                     </li>
                     <li>
-                        <span class="font-semibold text-white">Heures :</span> Lun - Ven, 9h - 17h
+                        <span class="font-semibold text-white">Heures :</span> Lun - Dim, 24h/24
                     </li>
                 </ul>
             </div>
 
             <!-- Bloc 3 -->
             <div>
-                <h2 class="text-xl font-bold mb-4 text-white">MOBILIIS</h2>
+                <h2 class="text-xl font-bold mb-4 text-white">EASYTRAVEL</h2>
                 <ul class="space-y-3 text-sm">
                     <li><a href="#" class="text-white/80 hover:text-pink-300 transition">Nos offres</a></li>
                     <li><a href="#" class="text-white/80 hover:text-pink-300 transition">Parrainage</a></li>
@@ -97,14 +99,12 @@
         <!-- Bas du footer -->
         <div class="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
             <p class="text-sm text-white/60 text-center md:text-left">
-                &copy; 2024 MOBILIIS. Tous droits réservés.
+                &copy; 2026 EasyTravel. Tous droits réservés.
             </p>
 
-            <p class="text-sm text-pink-300 font-medium text-center md:text-right">
+            <p class="text-sm text-white font-bold text-center md:text-right">
                 Alex KUETCHE
             </p>
         </div>
     </div>
 </footer>
-
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

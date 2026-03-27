@@ -1,294 +1,203 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<div class="gv-map-header">
-    <h2 class="gv-map-main-title">Nos destinations de voyage au Cameroun</h2>
-    <p class="gv-map-summary">
-        Voyagez sur le plus grand réseau camerounais de bus longue distance avec au moins 10 destinations !
-    </p>
-</div>
-<div class="gv-map-component">
 
-
-    <div class="gv-map-layout">
-        <div class="gv-map-sidebar">
-            <ul class="gv-map-destination-list">
-                <li class="gv-map-destination-item" data-lat="4.0511" data-lng="9.7679" data-name="Douala" data-address="Bonanjo, Douala">
-                    <div class="gv-map-destination-row">
-                        <strong>Douala</strong>
-                        <span>Adresse : Bonanjo, Douala</span>
-                    </div>
-                </li>
-
-                <li class="gv-map-destination-item" data-lat="3.8480" data-lng="11.5021" data-name="Yaoundé-Mvan" data-address="Mvan, Yaoundé">
-                    <div class="gv-map-destination-row">
-                        <strong>Yaoundé-Mvan</strong>
-                        <span>Adresse : Mvan, Yaoundé</span>
-                    </div>
-                </li>
-
-                <li class="gv-map-destination-item" data-lat="3.80816" data-lng="10.13257" data-name="Édéa" data-address="Centre-ville, Édéa">
-                    <div class="gv-map-destination-row">
-                        <strong>Édéa</strong>
-                        <span>Adresse : Centre-ville, Édéa</span>
-                    </div>
-                </li>
-
-                <li class="gv-map-destination-item" data-lat="5.47775" data-lng="10.41759" data-name="Bafoussam" data-address="Centre-ville, Bafoussam">
-                    <div class="gv-map-destination-row">
-                        <strong>Bafoussam</strong>
-                        <span>Adresse : Centre-ville, Bafoussam</span>
-                    </div>
-                </li>
-
-                <li class="gv-map-destination-item" data-lat="2.93718" data-lng="9.90793" data-name="Kribi" data-address="Centre-ville, Kribi">
-                    <div class="gv-map-destination-row">
-                        <strong>Kribi</strong>
-                        <span>Adresse : Centre-ville, Kribi</span>
-                    </div>
-                </li>
-
-                <li class="gv-map-destination-item" data-lat="5.62825" data-lng="10.25439" data-name="Mbouda" data-address="Centre-ville, Mbouda">
-                    <div class="gv-map-destination-row">
-                        <strong>Mbouda</strong>
-                        <span>Adresse : Centre-ville, Mbouda</span>
-                    </div>
-                </li>
-
-                <li class="gv-map-destination-item" data-lat="9.3274" data-lng="13.3931" data-name="Garoua" data-address="Centre-ville, Garoua">
-                    <div class="gv-map-destination-row">
-                        <strong>Garoua</strong>
-                        <span>Adresse : Centre-ville, Garoua</span>
-                    </div>
-                </li>
-
-                <li class="gv-map-destination-item" data-lat="4.02429" data-lng="9.21492" data-name="Limbe" data-address="Centre-ville, Limbe">
-                    <div class="gv-map-destination-row">
-                        <strong>Limbe</strong>
-                        <span>Adresse : Centre-ville, Limbe</span>
-                    </div>
-                </li>
-
-                <li class="gv-map-destination-item" data-lat="10.5956" data-lng="14.3247" data-name="Maroua" data-address="Centre-ville, Maroua">
-                    <div class="gv-map-destination-row">
-                        <strong>Maroua</strong>
-                        <span>Adresse : Centre-ville, Maroua</span>
-                    </div>
-                </li>
-
-                <li class="gv-map-destination-item" data-lat="5.9631" data-lng="10.1591" data-name="Bamenda" data-address="Centre-ville, Bamenda">
-                    <div class="gv-map-destination-row">
-                        <strong>Bamenda</strong>
-                        <span>Adresse : Centre-ville, Bamenda</span>
-                    </div>
-                </li>
-            </ul>
+<section class="w-full bg-[#f7f7f7]">
+    <div class="max-w-[1350px] mx-auto px-3 md:px-5 py-10 md:py-14">
+        <div class="text-left mb-5 md:mb-7">
+            <h2 class="m-0 mb-3 text-[#177043] text-[1.55rem] md:text-[1.5rem] xl:text-[1.9rem] font-bold leading-[1.15]">
+                Nos destinations de voyage au Cameroun
+            </h2>
+            <p class="m-0 max-w-[1100px] text-[#111] text-[0.95rem] md:text-[1rem] xl:text-[1.15rem] leading-[1.5] md:leading-[1.6] text-left">
+                Voyagez sur le plus grand réseau camerounais de bus longue distance avec au moins 10 destinations !
+            </p>
         </div>
 
-        <div class="gv-map-canvas-wrap">
-            <div id="gv-leaflet-map"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-[420px_1fr] w-full bg-white overflow-hidden min-h-auto lg:min-h-[760px]">
+            <div class="p-[16px] md:p-[22px_18px] xl:p-[24px_22px] border-b lg:border-b-0 lg:border-r border-[#ececec] overflow-y-auto">
+                <ul class="list-none m-0 p-0 flex flex-col gap-3">
+                    <li
+                        class="gv-map-destination-item p-[12px_14px] md:p-[12px_16px] bg-[#f8faf8] border border-[#e6efe7] cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#eaf7ed] hover:border-[#b8dfbf] hover:-translate-y-[1px]"
+                        data-lat="4.0511"
+                        data-lng="9.7679"
+                        data-name="Douala"
+                        data-address="Bonanjo, Douala"
+                    >
+                        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
+                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                                Douala
+                            </strong>
+                            <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
+                                Adresse : Bonanjo, Douala
+                            </span>
+                        </div>
+                    </li>
+
+                    <li
+                        class="gv-map-destination-item p-[12px_14px] md:p-[12px_16px] bg-[#f8faf8] border border-[#e6efe7] cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#eaf7ed] hover:border-[#b8dfbf] hover:-translate-y-[1px]"
+                        data-lat="3.8480"
+                        data-lng="11.5021"
+                        data-name="Yaoundé-Mvan"
+                        data-address="Mvan, Yaoundé"
+                    >
+                        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
+                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                                Yaoundé-Mvan
+                            </strong>
+                            <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
+                                Adresse : Mvan, Yaoundé
+                            </span>
+                        </div>
+                    </li>
+
+                    <li
+                        class="gv-map-destination-item p-[12px_14px] md:p-[12px_16px] bg-[#f8faf8] border border-[#e6efe7] cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#eaf7ed] hover:border-[#b8dfbf] hover:-translate-y-[1px]"
+                        data-lat="3.80816"
+                        data-lng="10.13257"
+                        data-name="Édéa"
+                        data-address="Centre-ville, Édéa"
+                    >
+                        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
+                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                                Édéa
+                            </strong>
+                            <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
+                                Adresse : Centre-ville, Édéa
+                            </span>
+                        </div>
+                    </li>
+
+                    <li
+                        class="gv-map-destination-item p-[12px_14px] md:p-[12px_16px] bg-[#f8faf8] border border-[#e6efe7] cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#eaf7ed] hover:border-[#b8dfbf] hover:-translate-y-[1px]"
+                        data-lat="5.47775"
+                        data-lng="10.41759"
+                        data-name="Bafoussam"
+                        data-address="Centre-ville, Bafoussam"
+                    >
+                        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
+                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                                Bafoussam
+                            </strong>
+                            <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
+                                Adresse : Centre-ville, Bafoussam
+                            </span>
+                        </div>
+                    </li>
+
+                    <li
+                        class="gv-map-destination-item p-[12px_14px] md:p-[12px_16px] bg-[#f8faf8] border border-[#e6efe7] cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#eaf7ed] hover:border-[#b8dfbf] hover:-translate-y-[1px]"
+                        data-lat="2.93718"
+                        data-lng="9.90793"
+                        data-name="Kribi"
+                        data-address="Centre-ville, Kribi"
+                    >
+                        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
+                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                                Kribi
+                            </strong>
+                            <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
+                                Adresse : Centre-ville, Kribi
+                            </span>
+                        </div>
+                    </li>
+
+                    <li
+                        class="gv-map-destination-item p-[12px_14px] md:p-[12px_16px] bg-[#f8faf8] border border-[#e6efe7] cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#eaf7ed] hover:border-[#b8dfbf] hover:-translate-y-[1px]"
+                        data-lat="5.62825"
+                        data-lng="10.25439"
+                        data-name="Mbouda"
+                        data-address="Centre-ville, Mbouda"
+                    >
+                        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
+                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                                Mbouda
+                            </strong>
+                            <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
+                                Adresse : Centre-ville, Mbouda
+                            </span>
+                        </div>
+                    </li>
+
+                    <li
+                        class="gv-map-destination-item p-[12px_14px] md:p-[12px_16px] bg-[#f8faf8] border border-[#e6efe7] cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#eaf7ed] hover:border-[#b8dfbf] hover:-translate-y-[1px]"
+                        data-lat="9.3274"
+                        data-lng="13.3931"
+                        data-name="Garoua"
+                        data-address="Centre-ville, Garoua"
+                    >
+                        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
+                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                                Garoua
+                            </strong>
+                            <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
+                                Adresse : Centre-ville, Garoua
+                            </span>
+                        </div>
+                    </li>
+
+                    <li
+                        class="gv-map-destination-item p-[12px_14px] md:p-[12px_16px] bg-[#f8faf8] border border-[#e6efe7] cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#eaf7ed] hover:border-[#b8dfbf] hover:-translate-y-[1px]"
+                        data-lat="4.02429"
+                        data-lng="9.21492"
+                        data-name="Limbe"
+                        data-address="Centre-ville, Limbe"
+                    >
+                        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
+                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                                Limbe
+                            </strong>
+                            <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
+                                Adresse : Centre-ville, Limbe
+                            </span>
+                        </div>
+                    </li>
+
+                    <li
+                        class="gv-map-destination-item p-[12px_14px] md:p-[12px_16px] bg-[#f8faf8] border border-[#e6efe7] cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#eaf7ed] hover:border-[#b8dfbf] hover:-translate-y-[1px]"
+                        data-lat="10.5956"
+                        data-lng="14.3247"
+                        data-name="Maroua"
+                        data-address="Centre-ville, Maroua"
+                    >
+                        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
+                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                                Maroua
+                            </strong>
+                            <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
+                                Adresse : Centre-ville, Maroua
+                            </span>
+                        </div>
+                    </li>
+
+                    <li
+                        class="gv-map-destination-item p-[12px_14px] md:p-[12px_16px] bg-[#f8faf8] border border-[#e6efe7] cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#eaf7ed] hover:border-[#b8dfbf] hover:-translate-y-[1px]"
+                        data-lat="5.9631"
+                        data-lng="10.1591"
+                        data-name="Bamenda"
+                        data-address="Centre-ville, Bamenda"
+                    >
+                        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
+                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                                Bamenda
+                            </strong>
+                            <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
+                                Adresse : Centre-ville, Bamenda
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="w-full h-full min-h-[420px] md:min-h-[560px] lg:min-h-[760px]">
+                <div id="gv-leaflet-map" class="w-full h-full min-h-[420px] md:min-h-[560px] lg:min-h-[760px]"></div>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 <style>
-    .gv-map-component {
-        width: 100%;
-        height: 100%;
-        background: #f8f8f8;
-    }
-
-    .gv-map-header {
-        text-align: start;
-        margin-bottom: 28px;
-
-    }
-
-    .gv-map-main-title {
-        margin: 0 0 12px;
-        color: #177043;
-        font-size: 2.5rem;
-        font-weight: bold;
-        line-height: 1.15;
-        justify-content: start;
-        align-items: start;
-    }
-
-    .gv-map-summary {
-        margin: 0 auto;
-        max-width: 1100px;
-        color: #111;
-        font-size: 1.15rem;
-        line-height: 1.6;
-        text-align: left;
-    }
-
-    .gv-map-layout {
-        display: grid;
-        grid-template-columns: 420px 1fr;
-        min-height: 760px;
-        width: 100%;
-        background: #fff;
-        overflow: hidden;
-    }
-
-    .gv-map-sidebar {
-        padding: 24px 22px;
-        border-right: 1px solid #ececec;
-        overflow-y: auto;
-    }
-
-    .gv-map-destination-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .gv-map-destination-item {
-        padding: 12px 16px;
-
-        background: #f8faf8;
-        border: 1px solid #e6efe7;
-        cursor: pointer;
-        transition: all 0.22s ease;
-    }
-
-    .gv-map-destination-item:hover,
     .gv-map-destination-item.is-active {
         background: #eaf7ed;
         border-color: #b8dfbf;
         transform: translateY(-1px);
-    }
-
-    .gv-map-destination-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        flex-wrap: nowrap;
-    }
-
-    .gv-map-destination-item strong {
-        display: block;
-        color: #177043;
-        font-size: 1.05rem;
-        font-weight: 800;
-        margin: 0;
-        white-space: nowrap;
-        flex-shrink: 0;
-    }
-
-    .gv-map-destination-item span {
-        color: #444;
-        font-size: 0.95rem;
-        line-height: 1.4;
-        display: block;
-        margin: 0;
-        text-align: right;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex: 1;
-    }
-
-    .gv-map-canvas-wrap {
-        width: 100%;
-        height: 100%;
-        min-height: 760px;
-    }
-
-    #gv-leaflet-map {
-        width: 100%;
-        height: 100%;
-        min-height: 760px;
-    }
-
-    @media (max-width: 1200px) {
-        .gv-map-main-title {
-            font-size: 2.4rem;
-        }
-
-        .gv-map-summary {
-            font-size: 1.05rem;
-        }
-
-        .gv-map-destination-row {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .gv-map-destination-item span {
-            text-align: left;
-            white-space: normal;
-            overflow: visible;
-            text-overflow: unset;
-        }
-    }
-
-    @media (max-width: 991px) {
-        .gv-map-layout {
-            grid-template-columns: 1fr;
-            min-height: auto;
-        }
-
-        .gv-map-sidebar {
-            border-right: 0;
-            border-bottom: 1px solid #ececec;
-            padding: 22px 18px;
-        }
-
-        .gv-map-main-title {
-            font-size: 2rem;
-            text-align: center;
-        }
-
-        .gv-map-summary {
-            text-align: center;
-            font-size: 1rem;
-        }
-
-        .gv-map-canvas-wrap,
-        #gv-leaflet-map {
-            min-height: 560px;
-        }
-    }
-
-    @media (max-width: 767px) {
-        .gv-map-header {
-            margin-bottom: 20px;
-            padding: 10px 14px 0;
-        }
-
-        .gv-map-main-title {
-            font-size: 1.55rem;
-        }
-
-        .gv-map-summary {
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .gv-map-sidebar {
-            padding: 16px 14px;
-        }
-
-        .gv-map-destination-item {
-            padding: 12px 14px;
-        }
-
-        .gv-map-destination-item strong {
-            font-size: 0.98rem;
-        }
-
-        .gv-map-destination-item span {
-            font-size: 0.9rem;
-        }
-
-        .gv-map-canvas-wrap,
-        #gv-leaflet-map {
-            min-height: 420px;
-        }
     }
 </style>
 

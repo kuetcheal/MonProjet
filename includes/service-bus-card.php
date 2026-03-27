@@ -1,5 +1,5 @@
 <section class="py-14">
-    <div class="max-w-[1420px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-[1370px] mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-white  shadow-lg overflow-hidden">
             
             <div class="relative h-72 lg:h-full min-h-[320px]">

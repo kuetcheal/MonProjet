@@ -464,17 +464,35 @@ if (isset($_POST['deconnect_account'])) {
             </div>
         </section>
 
-        <section class="actions-section">
-            <h2 class="actions-title">
-                Gérer vos trajets et vos reservations sans soucis grâce à vos identifiants de reservation sur votre billet de voyage.
-            </h2>
+     <section class="relative z-[2] max-w-[1350px] mx-auto px-3 md:px-5 pt-[80px] md:pt-[170px] pb-[25px]">
+    
+    <h2 class="mb-[30px] text-left text-black text-[20px] md:text-[24px] lg:text-[28px] font-bold leading-[1.3]">
+        Gérer vos trajets et vos réservations sans soucis grâce à vos identifiants de réservation sur votre billet de voyage.
+    </h2>
 
-            <div class="action-buttons">
-                <button class="action-btn" id="openModalButton">Gérer ma réservation</button>
-                <button class="action-btn">Localiser mon trajet</button>
-                <button class="action-btn">Besoin d'aide</button>
-            </div>
-        </section>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        
+        <button
+            id="openModalButton"
+            class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]"
+        >
+            Gérer ma réservation
+        </button>
+
+        <button
+            class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]"
+        >
+            Localiser mon trajet
+        </button>
+
+        <button
+            class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]"
+        >
+            Besoin d'aide
+        </button>
+
+    </div>
+</section>
 
         <div id="modalContainer"></div>
 
@@ -482,143 +500,211 @@ if (isset($_POST['deconnect_account'])) {
             <?php include 'includes/service-bus-card.php'; ?>
         </section>
 
-        <section class="map-section">
-            <div class="map-box">
+        <section >
+         
                 <?php include 'map.php'; ?>
-            </div>
+           
         </section>
 
-        <section class="presentation-section">
-            <div class="presentation-grid">
-                <div class="presentation-image-box">
-                    <img src="https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg"
-                        alt="Bus EasyTravel"
-                        class="presentation-image">
-                </div>
-
-                <div class="presentation-text">
-                    <h2>EasyTravel est le plus grand réseau camerounais de transport personnel inter-urbain !</h2>
-
-                    <p>
-                        Depuis 2000, <strong>Général Voyage</strong> agrandit continuellement son réseau
-                        camerounais et dessert chaque jour plus de 100 destinations dont plus de 30 villes au Cameroun.
-                        Notre objectif est de rendre le Cameroun vert !
-                        Le réseau de Général Voyage s’étend du Sud à l'Est jusqu’au Grand Nord.
-                        Découvrez notre <a href="#">carte interactive</a>
-                        ou réservez dès maintenant pour <strong>Yaoundé, Kribi, Bamenda, Edea, Banga</strong> et bien d’autres.
-                    </p>
-
-                    <h3>C’est simple et confortable</h3>
-
-                    <p>
-                        Voyager n’a jamais été aussi simple avec Général Voyage.
-                        Notre personnel serviable et notre site web détaillé vous accompagnent de la réservation jusqu’à l’arrivée.
-                        Vous pouvez <a href="#">acheter votre billet en ligne</a>
-                        ou même au dernier moment auprès du conducteur.
-                    </p>
-
-                    <p>
-                        Nos bus garantissent <strong>une place assise avec espace pour vos jambes</strong>,
-                        <strong>Wi-fi gratuit</strong>,
-                        <strong>prises électriques</strong> et des snacks à petit prix !
-                    </p>
-                </div>
+       <section class="bg-white py-[60px]">
+    <div class="max-w-[1350px] mx-auto px-3 md:px-5">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-[38px] items-start">
+            <div class="w-full">
+                <img
+                    src="https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg"
+                    alt="Bus EasyTravel"
+                    class="w-full h-[260px] sm:h-[360px] md:h-[420px] lg:h-[520px] object-cover"
+                >
             </div>
-        </section>
 
-        <section class="carousel-section">
-            <h2 class="actu font-bold justify-start max-w-[1350px] text-2xl pb-5">
-                Profitez de toutes les dernières actualités de génral voyage qui vous informe sur tout ce qu'il y'a de nouveaux ainsi que les promotions
-            </h2>
+            <div>
+                <h2 class="m-0 mb-[18px] text-[#177043] text-[1.35rem] md:text-[1.55rem] lg:text-[1.7rem] font-bold leading-snug">
+                    EasyTravel est le plus grand réseau camerounais de transport personnel inter-urbain !
+                </h2>
 
-            <div class="carousel home-carousel"
-                data-flickity='{ "cellAlign": "left", "contain": true, "wrapAround": false, "pageDots": true }'>
+                <p class="text-[#555] text-[0.98rem] md:text-[1.02rem] lg:text-[1.05rem] leading-[1.8] mb-4">
+                    Depuis 2000, <strong class="text-black font-bold">Général Voyage</strong> agrandit continuellement son réseau
+                    camerounais et dessert chaque jour plus de 100 destinations dont plus de 30 villes au Cameroun.
+                    Notre objectif est de rendre le Cameroun vert !
+                    Le réseau de Général Voyage s’étend du Sud à l'Est jusqu’au Grand Nord.
+                    Découvrez notre
+                    <a href="#" class="text-[#2e8b57] underline">carte interactive</a>
+                    ou réservez dès maintenant pour <strong class="text-black font-bold">Yaoundé, Kribi, Bamenda, Edea, Banga</strong> et bien d’autres.
+                </p>
 
-                <div class="carousel-cell">
-                    <div class="destination-card">
-                        <img src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b" alt="City" />
-                        <div class="destination-card-body">
-                            <div class="destination-card-title">Promotion </div>
-                            <p class="text-sm">la période de vacances arrive profitez de la reduction jusqu'a -10%.</p>
-                            <a href="/article.php">Lire l'article</a>
-                        </div>
-                    </div>
-                </div>
+                <h3 class="mt-[22px] mb-3 text-[#2e8b57] text-[1.15rem] md:text-[1.28rem] lg:text-[1.4rem] font-bold">
+                    C’est simple et confortable
+                </h3>
 
-                <div class="carousel-cell">
-                    <div class="destination-card">
-                        <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
-                        <div class="destination-card-body">
-                            <div class="destination-card-title">Tokyo</div>
-                            <p class="text-sm">A blend of modern technology and traditional culture.</p>
-                            <a href="/article.php">Lire l'article</a>
-                        </div>
-                    </div>
-                </div>
+                <p class="text-[#555] text-[0.98rem] md:text-[1.02rem] lg:text-[1.05rem] leading-[1.8] mb-4">
+                    Voyager n’a jamais été aussi simple avec Général Voyage.
+                    Notre personnel serviable et notre site web détaillé vous accompagnent de la réservation jusqu’à l’arrivée.
+                    Vous pouvez <a href="#" class="text-[#2e8b57] underline">acheter votre billet en ligne</a>
+                    ou même au dernier moment auprès du conducteur.
+                </p>
 
-                <div class="carousel-cell">
-                    <div class="destination-card">
-                        <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e" alt="Paris" />
-                        <div class="destination-card-body">
-                            <div class="destination-card-title">Paris</div>
-                            <p class="text-sm">The City of Light, known for its romance and iconic landmarks.</p>
-                            <a href="/article.php">Lire l'article</a>
-                        </div>
-                    </div>
-                </div>
+                <p class="text-[#555] text-[0.98rem] md:text-[1.02rem] lg:text-[1.05rem] leading-[1.8] mb-0">
+                    Nos bus garantissent <strong class="text-black font-bold">une place assise avec espace pour vos jambes</strong>,
+                    <strong class="text-black font-bold">Wi-fi gratuit</strong>,
+                    <strong class="text-black font-bold">prises électriques</strong> et des snacks à petit prix !
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 
-                <div class="carousel-cell">
-                    <div class="destination-card">
-                        <img src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b" alt="City" />
-                        <div class="destination-card-body">
-                            <div class="destination-card-title">Location de bus</div>
-                            <p class="text-sm">Désormais vous pouvez reserver et louer vos bus en ligne.</p>
-                            <a href="/article.php">Lire l'article</a>
-                        </div>
-                    </div>
-                </div>
+        <section class="bg-[#f8f7f7] py-[55px] pb-[95px]">
+    <div class="max-w-[1370px] mx-auto px-3">
+        <h2 class="text-xl md:text-3xl text-[#177043] font-bold pb-5 text-left md:px-5 px-3">
+            Profitez de toutes les dernières actualités de général voyage 
+        </h2>
 
-                <div class="carousel-cell">
-                    <div class="destination-card">
-                        <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
-                        <div class="destination-card-body">
-                            <div class="destination-card-title">Tokyo</div>
-                            <p class="text-sm">A blend of modern technology and traditional culture.</p>
-                            <a href="/article.php">Lire l'article</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-cell">
-                    <div class="destination-card">
-                        <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
-                        <div class="destination-card-body">
-                            <div class="destination-card-title">Nouvel agence</div>
-                            <p class="text-sm">général voyage vous informe qu'un nouvel agence sera à Douala.</p>
-                            <a href="/article.php">Lire l'article</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-cell">
-                    <div class="destination-card">
-                        <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad" alt="Tokyo" />
-                        <div class="destination-card-body">
-                            <div class="destination-card-title">Tokyo</div>
-                            <p class="text-sm">A blend of modern technology and traditional culture.</p>
-                            <a href="/article.php">Lire l'article</a>
-                        </div>
+        <div
+            class="carousel home-carousel"
+            data-flickity='{ "cellAlign": "left", "contain": true, "wrapAround": false, "pageDots": true }'
+        >
+            <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                    <img
+                        src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b"
+                        alt="City"
+                        class="w-full h-[150px] md:h-[220px] object-cover block"
+                    />
+                    <div class="p-[10px]">
+                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Promotion</div>
+                        <p class="text-sm mb-3">
+                            la période de vacances arrive profitez de la reduction.
+                        </p>
+                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                            Lire l'article
+                        </a>
                     </div>
                 </div>
             </div>
-        </section>
+
+            <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                    <img
+                        src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
+                        alt="Tokyo"
+                         class="w-full h-[150px] md:h-[220px] object-cover block"
+                    />
+                    <div class="p-[10px]">
+                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Tokyo</div>
+                        <p class="text-sm mb-3">
+                            A blend of modern technology and traditional culture.
+                        </p>
+                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                            Lire l'article
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+           <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                    <img
+                        src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e"
+                        alt="Paris"
+                         class="w-full h-[150px] md:h-[220px] object-cover block"
+                    />
+                    <div class="p-[10px]">
+                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Paris</div>
+                        <p class="text-sm mb-3">
+                            The City of Light, known for its romance and iconic landmarks.
+                        </p>
+                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                            Lire l'article
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                    <img
+                        src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b"
+                        alt="City"
+                         class="w-full h-[150px] md:h-[220px] object-cover block"
+                    />
+                    <div class="p-[10px]">
+                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Location de bus</div>
+                        <p class="text-sm mb-3">
+                            Désormais vous pouvez reserver et louer vos bus en ligne.
+                        </p>
+                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                            Lire l'article
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                    <img
+                        src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
+                        alt="Tokyo"
+                         class="w-full h-[150px] md:h-[220px] object-cover block"
+                    />
+                    <div class="p-[10px]">
+                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Tokyo</div>
+                        <p class="text-sm mb-3">
+                            A blend of modern technology and traditional culture.
+                        </p>
+                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                            Lire l'article
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+          <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                    <img
+                        src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
+                        alt="Tokyo"
+                        class="w-full h-[150px] md:h-[220px] object-cover block"
+                    />
+                    <div class="p-[10px]">
+                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Nouvel agence</div>
+                        <p class="text-sm mb-3">
+                            général voyage vous informe qu'un nouvel agence sera à Douala.
+                        </p>
+                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                            Lire l'article
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+          <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                    <img
+                        src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
+                        alt="Tokyo"
+                        class="w-full h-[150px] md:h-[220px] object-cover block"
+                    />
+                    <div class="p-[10px]">
+                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Tokyo</div>
+                        <p class="text-sm mb-3">
+                            A blend of modern technology and traditional culture.
+                        </p>
+                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                            Lire l'article
+                        </a>
+                    </div>
+                </div>
+            </div>
+           </div>
+       </div>
+         </section>
     </main>
 
     <!-- <div class="chat-floating">
         <i class="fa fa-comments" id="openChat"></i>
     </div> -->
 
-    <div id="chatModal" class="chat-modal">
+    <!-- <div id="chatModal" class="chat-modal">
         <div class="chat-modal-header">
             <span>Assistance Mobiliis</span>
             <span id="closeChat" class="chat-close">
@@ -627,7 +713,7 @@ if (isset($_POST['deconnect_account'])) {
         </div>
 
         <iframe src="Cookies/chat.php" width="100%" height="100%" frameborder="0"></iframe>
-    </div>
+    </div> -->
 
     <div id="modalMessage"></div>
 

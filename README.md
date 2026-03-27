@@ -39,5 +39,46 @@ C’est plus facile à déboguer, plus léger, et ça garde une solution de seco
 
 
 
+
 ### on utilise Flatpickr  comme librairie pour la gestion des calendriers
 ### on utilise intl-tel-input (LA référence) comme librairie pour gérer l'indice international des numéros
+
+
+
+
+Les API Google Mpas pour gérer la géolocalisation
+- ### Geocoding API permet de transformer les adresses en coordonnées longitude et latitude interprétable par un GPS,  on peut également faire le chemin inverse c'est-à-dire tranformer la longitude et latitude en adresse.
+- ### Routes API : calculer la distance réelle par route et le temps estimé. Google met en avant Routes API pour les trajets, et plusieurs anciens services de directions/distance sont désormais legacy ou dépréciés.
+- #### Geolocation API : permet de géolocaliser un appareil via un antenne relais ou bien un point d'accès WIFI
+- ### Maps JavaScript API : afficher la carte et les marqueurs.
+- ### Roads API :  permets de tracer un ittinéraire pris par un utilisateur. il prend des coordonnées GPS brutes et les rattache aux routes connues par Google.
+Tu as surtout 2 endpoints utiles pour ton cas : *snapToRoads : pour une suite de points GPS d’un véhicule en mouvement. * nearestRoads : pour un ou plusieurs points indépendants
+L’architecture recommandée pour ton projet PHP + JS + MySQL
+
+Le plus propre, c’est cette architecture : 
+### Côté chauffeur / véhicule
+Le téléphone du chauffeur ou un boîtier GPS envoie toutes les 5 à 15 secondes :
+latitude
+longitude
+date/heure
+vitesse éventuelle
+identifiant du trajet / véhicule
+Côté serveur PHP
+
+### Ton backend :
+reçoit les coordonnées,
+appelle la Roads API pour corriger la position,
+enregistre la position dans MySQL,
+expose une route API du style :
+GET /api/trajet/vehicule-position.php?id_trajet=123
+Côté client
+
+### Le site client :
+récupère sa propre position avec navigator.geolocation,
+charge la carte Google Maps,
+interroge régulièrement ton backend,
+affiche :
+la position actuelle du véhicule,
+sa distance,
+éventuellement son temps estimé d’arrivée.
+La géolocalisation navigateur fonctionne avec getCurrentPosition() ou watchPosition(), mais elle exige un contexte sécurisé HTTPS et l’autorisation explicite de l’utilisateur
