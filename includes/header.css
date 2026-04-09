@@ -330,6 +330,83 @@
     background: #6b7280;
 }
 
+
+
+
+/* Boutons FR / EN */
+.gv-header__lang {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+/* état actif */
+.gv-header__lang.is-active {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Version mobile */
+.gv-mobile-drawer__lang {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* Empêcher Google de toucher le header */
+.notranslate {
+  translate: no;
+}
+
+/* =========================
+   Google Translate - FIX TOTAL
+   ========================= */
+
+/* Ancienne barre */
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+/* Nouvelle barre Google (IMPORTANT) */
+.VIpgJd-ZVi9od-ORHb,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-aZ2wEe-OiiCO,
+.VIpgJd-yAWNEb-L7lbkb,
+.VIpgJd-ZVi9od-xl07Ob-lTBxed,
+.VIpgJd-ZVi9od-ORHb-OEVmcd {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+}
+
+/* Reset décalage */
+body {
+  top: 0 !important;
+  margin-top: 0 !important;
+  position: static !important;
+}
+
+/* Supprime conteneur injecté */
+body > .skiptranslate {
+  display: none !important;
+}
+
+/* Supprime surlignage */
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+
+
+
+
+
+
 @media (max-width: 1100px) {
     .gv-header__desktop-nav {
         display: none;

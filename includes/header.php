@@ -34,7 +34,7 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
 
 <link rel="stylesheet" href="/MonProjet/includes/header.css">
 
-<header class="gv-header">
+<header class="gv-header notranslate">
     <div class="gv-header__inner">
         <a href="Accueil.php" class="gv-header__brand">
            <img src="/MonProjet/pictures/logo-general.jpg" alt="Logo Général Voyage" class="gv-header__logo">
@@ -53,19 +53,20 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
             </a>
         </nav>
 
-        <div class="gv-header__actions">
-            <button type="button" class="gv-header__lang">FR</button>
+       <div class="gv-header__actions">
+    <button type="button" id="gvLangFr" class="gv-header__lang is-active">FR</button>
+    <button type="button" id="gvLangEn" class="gv-header__lang">EN</button>
 
-            <?php if ($isLoggedIn): ?>
-                <button type="button" class="gv-header__profile-btn" onclick="gvOpenModal('gvAccountModal')">
-                    <img id="profil" src="pictures/OIP.jpg" alt="Profil" class="gv-header__profile-img">
-                </button>
-            <?php endif; ?>
+    <?php if ($isLoggedIn): ?>
+        <button type="button" class="gv-header__profile-btn" onclick="gvOpenModal('gvAccountModal')">
+            <img id="profil" src="pictures/OIP.jpg" alt="Profil" class="gv-header__profile-img">
+        </button>
+    <?php endif; ?>
 
-            <button id="gvBurgerButton" type="button" class="gv-header__burger" aria-label="Ouvrir le menu">
-                <i class="fa fa-bars"></i>
-            </button>
-        </div>
+    <button id="gvBurgerButton" type="button" class="gv-header__burger" aria-label="Ouvrir le menu">
+        <i class="fa fa-bars"></i>
+    </button>
+</div>
     </div>
 </header>
 
@@ -207,6 +208,10 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
         </div>
     </div>
 <?php endif; ?>
+
+<div id="google_translate_element" style="display: none;"></div>
+
+<script src="/MonProjet/Javascript/google-translate.js"></script>
 
 <script>
     function gvOpenModal(id) {
