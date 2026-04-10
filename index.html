@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Google Maps</title>
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<h2>Ma première carte</h2>
+<div id="map"></div>
+
+<script>
+  function initMap() {
+    const position = { lat: 43.6119, lng: 3.8772 }; 
+
+       const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 13,
+        center: position,
+      });
+
+      new google.maps.Marker({
+        position: position,
+        map: map,
+        title: "Montpellier",
+      });
+  }
+</script>
+
+<script async
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDGz1y0BX_Ca_YJitOavFu-8_K188MBYQ&callback=initMap">
+</script>
+
+</body>
+</html>

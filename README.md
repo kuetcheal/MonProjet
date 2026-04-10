@@ -82,3 +82,9 @@ la position actuelle du véhicule,
 sa distance,
 éventuellement son temps estimé d’arrivée.
 La géolocalisation navigateur fonctionne avec getCurrentPosition() ou watchPosition(), mais elle exige un contexte sécurisé HTTPS et l’autorisation explicite de l’utilisateur
+
+
+
+clé API MAPS Geocoding : AIzaSyBDGz1y0BX_Ca_YJitOavFu-8_K188MBYQ
+
+CLÉ API MAPS (backend) : AIzaSyDmFDvlGgo1AMnTIv57tiPTfaSfq_NMZwE

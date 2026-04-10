@@ -324,13 +324,18 @@ session_start();
     </div>
       ";
 
-        if ($type === 'simple') {
-            $action = "
-                <form method='post' action='{$formAction}' class='w-full flex justify-end'>
-                    <input type='hidden' name='idVoyage' value='{$id}'>
-                    <input type='submit' value='Continuer' class='bg-green-600 hover:bg-green-700 text-white font-bold text-[11px] sm:text-[13px] md:text-[15px] px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 transition min-w-[92px] sm:min-w-[120px] md:min-w-[130px]'>
-                </form>
-            ";
+       if ($type === 'simple') {
+    $action = "
+        <button
+            class='continuer-btn-simple bg-green-600 hover:bg-green-700 text-white font-bold text-[11px] sm:text-[13px] md:text-[15px] px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 transition min-w-[92px] sm:min-w-[120px] md:min-w-[130px]'
+            data-id='{$id}'
+            data-price='{$prix}'
+            data-depart='" . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "'
+            data-arrive='" . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "'
+            data-time='{$heureDepart}'>
+            Continuer
+        </button>
+    ";
             echo "<div class='mb-4 sm:mb-5'>" . sprintf($cardBody, $action) . "</div>";
         } else {
             $action = "
@@ -457,6 +462,24 @@ session_start();
             if (!el) return;
             el.classList.toggle('hidden');
         }
+
+        document.querySelectorAll('.continuer-btn-simple').forEach(button => {
+         button.addEventListener('click', function () {
+
+        const params = new URLSearchParams({
+            priceAller: this.dataset.price,
+            priceRetour: 0,
+            departAller: this.dataset.depart,
+            arriveAller: this.dataset.arrive,
+            timeAller: this.dataset.time,
+            departRetour: '',
+            arriveRetour: '',
+            timeRetour: ''
+        });
+
+        window.location.href = 'recap.php?' + params.toString();
+        });
+        });
 
         document.addEventListener('DOMContentLoaded', function () {
             let selectedTrips = { aller: null, retour: null };
