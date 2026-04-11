@@ -3,31 +3,94 @@
 <head>
   <title>Test Google Maps</title>
   <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+    }
+
+    h2 {
+      padding: 20px;
+      margin: 0;
+    }
+
     #map {
       height: 500px;
       width: 100%;
     }
   </style>
 </head>
+
 <body>
-<h2>Ma première carte</h2>
+
+<h2>Suivi véhicule</h2>
 <div id="map"></div>
 
 <script>
-  function initMap() {
-    const position = { lat: 43.6119, lng: 3.8772 }; 
+let map;
+let userMarker;
+let vehicleMarker;
 
-       const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 13,
-        center: position,
-      });
+// Position véhicule (simulation)
+let vehiclePos = { lat: 43.6047, lng: 3.8796 };
 
-      new google.maps.Marker({
-        position: position,
+// Initialisation carte
+function initMap() {
+
+  map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 13,
+    center: vehiclePos,
+  });
+
+  // Marker véhicule
+  vehicleMarker = new google.maps.Marker({
+    position: vehiclePos,
+    map: map,
+    title: "Véhicule",
+    icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+  });
+
+  // Récupérer position utilisateur
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+
+      const userPos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      console.log("Ma position :", userPos);
+
+      // Marker utilisateur
+      userMarker = new google.maps.Marker({
+        position: userPos,
         map: map,
-        title: "Montpellier",
+        title: "Moi",
+        icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
       });
+
+      // Centrer carte entre les deux
+      map.setCenter(userPos);
+
+    }, () => {
+      alert("Autorise la géolocalisation !");
+    });
   }
+
+  // Lancer mouvement véhicule
+  moveVehicle();
+}
+
+
+// Simulation mouvement véhicule
+function moveVehicle() {
+  setInterval(() => {
+    vehiclePos.lat += 0.0005;
+    vehiclePos.lng += 0.0002;
+
+    vehicleMarker.setPosition(vehiclePos);
+
+  }, 2000);
+}
 </script>
 
 <script async
