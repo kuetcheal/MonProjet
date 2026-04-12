@@ -479,11 +479,12 @@ if (isset($_POST['deconnect_account'])) {
             Gérer ma réservation
         </button>
 
-        <button
-            class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]"
-        >
-            Localiser mon trajet
-        </button>
+       <a
+    href="localiser-trajet.php"
+    class="flex items-center justify-center h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]"
+>
+    Localiser mon trajet
+</a>
 
         <button
             class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]"
