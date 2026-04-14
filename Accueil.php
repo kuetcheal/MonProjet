@@ -39,200 +39,200 @@ if (isset($_POST['deconnect_account'])) {
 
     <title>Accueil</title>
 
-<style>
-    .litepicker {
-        font-family: 'Inter', Arial, sans-serif;
-        background: #ffffff !important;
-        border: 1px solid #e5e7eb !important;
-        padding: 18px 18px 14px !important;
-        min-width: 720px;
-        z-index: 9999 !important;
-    }
-
-    .litepicker .container__months {
-        gap: 18px !important;
-    }
-
-    .litepicker .month-item {
-        padding: 0 !important;
-    }
-
-    .litepicker .month-item-header {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        min-height: 48px !important;
-        margin-bottom: 10px !important;
-        color: green !important;
-        font-weight: 700 !important;
-        font-size: 16px !important;
-        border-bottom: 1px solid #f3f4f6;
-    }
-
-    .litepicker .month-item-name,
-    .litepicker .month-item-year {
-        color: green !important;
-        font-weight: 700 !important;
-        font-size: 16px !important;
-    }
-
-    .litepicker .button-previous-month,
-    .litepicker .button-next-month {
-        width: 36px !important;
-        height: 36px !important;
-        border-radius: 999px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        color: #6b7280 !important;
-        background: #f9fafb !important;
-        transition: all 0.2s ease !important;
-    }
-
-    .litepicker .button-previous-month:hover,
-    .litepicker .button-next-month:hover {
-        background: #ede9fe !important;
-        color: green !important;
-    }
-
-    .litepicker .month-item-weekdays-row {
-        margin-bottom: 8px !important;
-    }
-
-    .litepicker .month-item-weekdays-row > div {
-        color: #6b7280 !important;
-        font-size: 13px !important;
-        font-weight: 700 !important;
-        text-transform: lowercase;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        height: 34px !important;
-    }
-
-    .litepicker .month-item-calendar {
-        gap: 4px !important;
-    }
-
-    .litepicker .day-item {
-        width: 42px !important;
-        height: 42px !important;
-        max-width: 42px !important;
-        line-height: 42px !important;
-        border-radius: 999px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        font-size: 15px !important;
-        font-weight: bold !important;
-        color: black !important;
-        transition: all 0.18s ease !important;
-        position: relative;
-        z-index: 1;
-    }
-
-    .litepicker .day-item:hover {
-        background: #f3f4f6 !important;
-        color: #111827 !important;
-    }
-
-    .litepicker .day-item.is-today {
-        border: 1.5px solid #9ca3af !important;
-        color: #111827 !important;
-        background: #fff !important;
-    }
-
-    .litepicker .day-item.is-start-date,
-    .litepicker .day-item.is-end-date {
-        background: green !important;
-        color: #fff !important;
-        font-weight: 700 !important;
-     
-    }
-
-    .litepicker .day-item.is-in-range {
-        background: #ede9fe !important;
-        color: green !important;
-        border-radius: 0 !important;
-    }
-
-    .litepicker .day-item.is-start-date.is-in-range {
-        border-radius: 999px 0 0 999px !important;
-    }
-
-    .litepicker .day-item.is-end-date.is-in-range {
-        border-radius: 0 999px 999px 0 !important;
-    }
-
-    .litepicker .day-item.is-start-date.is-end-date {
-        border-radius: 999px !important;
-    }
-
-    .litepicker .day-item.is-locked {
-        color: #d1d5db !important;
-    }
-
-    .litepicker .container__footer {
-        border-top: 1px solid #f3f4f6 !important;
-        margin-top: 12px !important;
-        padding-top: 12px !important;
-    }
-
-    .litepicker .container__footer .button-cancel,
-    .litepicker .container__footer .button-apply {
-        font-weight: 600 !important;
-        padding: 10px 16px !important;
-    }
-
-    .litepicker .container__footer .button-apply {
-        background: #156f3e !important;
-        border-color: #156f3e !important;
-    }
-
-    .litepicker .container__footer .button-cancel {
-        color: #6b7280 !important;
-    }
-
-    /* Cache les dropdowns moches si jamais Litepicker les affiche */
-    .litepicker select {
-        appearance: none !important;
-        border: 1px solid #e5e7eb !important;
-        padding: 6px 28px 6px 10px !important;
-        font-size: 14px !important;
-        font-weight: 600 !important;
-        color: #374151 !important;
-        background-color: #fff !important;
-        background-image: none !important;
-        box-shadow: none !important;
-        outline: none !important;
-    }
-
-    /* Mobile */
-    @media (max-width: 768px) {
+    <style>
         .litepicker {
-            min-width: auto !important;
-            width: calc(100vw - 24px) !important;
-            padding: 14px !important;
-            border-radius: 20px !important;
+            font-family: 'Inter', Arial, sans-serif;
+            background: #ffffff !important;
+            border: 1px solid #e5e7eb !important;
+            padding: 18px 18px 14px !important;
+            min-width: 720px;
+            z-index: 9999 !important;
         }
 
         .litepicker .container__months {
-            display: block !important;
+            gap: 18px !important;
         }
 
-        .litepicker .month-item + .month-item {
-            margin-top: 16px !important;
+        .litepicker .month-item {
+            padding: 0 !important;
+        }
+
+        .litepicker .month-item-header {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-height: 48px !important;
+            margin-bottom: 10px !important;
+            color: green !important;
+            font-weight: 700 !important;
+            font-size: 16px !important;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .litepicker .month-item-name,
+        .litepicker .month-item-year {
+            color: green !important;
+            font-weight: 700 !important;
+            font-size: 16px !important;
+        }
+
+        .litepicker .button-previous-month,
+        .litepicker .button-next-month {
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 999px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: #6b7280 !important;
+            background: #f9fafb !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .litepicker .button-previous-month:hover,
+        .litepicker .button-next-month:hover {
+            background: #ede9fe !important;
+            color: green !important;
+        }
+
+        .litepicker .month-item-weekdays-row {
+            margin-bottom: 8px !important;
+        }
+
+        .litepicker .month-item-weekdays-row>div {
+            color: #6b7280 !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            text-transform: lowercase;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            height: 34px !important;
+        }
+
+        .litepicker .month-item-calendar {
+            gap: 4px !important;
         }
 
         .litepicker .day-item {
-            width: 38px !important;
-            height: 38px !important;
-            max-width: 38px !important;
-            line-height: 38px !important;
-            font-size: 14px !important;
+            width: 42px !important;
+            height: 42px !important;
+            max-width: 42px !important;
+            line-height: 42px !important;
+            border-radius: 999px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 15px !important;
+            font-weight: bold !important;
+            color: black !important;
+            transition: all 0.18s ease !important;
+            position: relative;
+            z-index: 1;
         }
-    }
-</style>
+
+        .litepicker .day-item:hover {
+            background: #f3f4f6 !important;
+            color: #111827 !important;
+        }
+
+        .litepicker .day-item.is-today {
+            border: 1.5px solid #9ca3af !important;
+            color: #111827 !important;
+            background: #fff !important;
+        }
+
+        .litepicker .day-item.is-start-date,
+        .litepicker .day-item.is-end-date {
+            background: green !important;
+            color: #fff !important;
+            font-weight: 700 !important;
+
+        }
+
+        .litepicker .day-item.is-in-range {
+            background: #ede9fe !important;
+            color: green !important;
+            border-radius: 0 !important;
+        }
+
+        .litepicker .day-item.is-start-date.is-in-range {
+            border-radius: 999px 0 0 999px !important;
+        }
+
+        .litepicker .day-item.is-end-date.is-in-range {
+            border-radius: 0 999px 999px 0 !important;
+        }
+
+        .litepicker .day-item.is-start-date.is-end-date {
+            border-radius: 999px !important;
+        }
+
+        .litepicker .day-item.is-locked {
+            color: #d1d5db !important;
+        }
+
+        .litepicker .container__footer {
+            border-top: 1px solid #f3f4f6 !important;
+            margin-top: 12px !important;
+            padding-top: 12px !important;
+        }
+
+        .litepicker .container__footer .button-cancel,
+        .litepicker .container__footer .button-apply {
+            font-weight: 600 !important;
+            padding: 10px 16px !important;
+        }
+
+        .litepicker .container__footer .button-apply {
+            background: #156f3e !important;
+            border-color: #156f3e !important;
+        }
+
+        .litepicker .container__footer .button-cancel {
+            color: #6b7280 !important;
+        }
+
+        /* Cache les dropdowns moches si jamais Litepicker les affiche */
+        .litepicker select {
+            appearance: none !important;
+            border: 1px solid #e5e7eb !important;
+            padding: 6px 28px 6px 10px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #374151 !important;
+            background-color: #fff !important;
+            background-image: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .litepicker {
+                min-width: auto !important;
+                width: calc(100vw - 24px) !important;
+                padding: 14px !important;
+                border-radius: 20px !important;
+            }
+
+            .litepicker .container__months {
+                display: block !important;
+            }
+
+            .litepicker .month-item+.month-item {
+                margin-top: 16px !important;
+            }
+
+            .litepicker .day-item {
+                width: 38px !important;
+                height: 38px !important;
+                max-width: 38px !important;
+                line-height: 38px !important;
+                font-size: 14px !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -313,8 +313,7 @@ if (isset($_POST['deconnect_account'])) {
                                 id="desktop_depart_display"
                                 placeholder="jj/mm/aaaa"
                                 readonly
-                                class="w-full cursor-pointer"
-                            >
+                                class="w-full cursor-pointer">
                             <input type="hidden" id="desktop_depart_date" name="input3">
                         </div>
 
@@ -326,8 +325,7 @@ if (isset($_POST['deconnect_account'])) {
                                 placeholder="jj/mm/aaaa"
                                 readonly
                                 disabled
-                                class="w-full cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-100"
-                            >
+                                class="w-full cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-100">
                             <input type="hidden" id="desktop_return_date" name="input4">
                         </div>
 
@@ -360,8 +358,7 @@ if (isset($_POST['deconnect_account'])) {
                                     name="inlineRadioOptions"
                                     value="option1"
                                     checked
-                                    class="w-[18px] h-[18px] accent-[#18884c]"
-                                >
+                                    class="w-[18px] h-[18px] accent-[#18884c]">
                                 <span>Aller simple</span>
                             </label>
 
@@ -371,8 +368,7 @@ if (isset($_POST['deconnect_account'])) {
                                     id="mobile_trip_roundtrip"
                                     name="inlineRadioOptions"
                                     value="option2"
-                                    class="w-[18px] h-[18px] accent-[#18884c]"
-                                >
+                                    class="w-[18px] h-[18px] accent-[#18884c]">
                                 <span>Aller-Retour</span>
                             </label>
                         </div>
@@ -386,8 +382,7 @@ if (isset($_POST['deconnect_account'])) {
                                 <select
                                     id="mobile_input1"
                                     name="input1"
-                                    class="select2 w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none"
-                                >
+                                    class="select2 w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none">
                                     <?php
                                     $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
                                     $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
@@ -407,8 +402,7 @@ if (isset($_POST['deconnect_account'])) {
                                 <select
                                     id="mobile_input2"
                                     name="input2"
-                                    class="select2 w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none"
-                                >
+                                    class="select2 w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none">
                                     <?php
                                     $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
                                     $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
@@ -430,8 +424,7 @@ if (isset($_POST['deconnect_account'])) {
                                     id="mobile_depart_display"
                                     placeholder="jj/mm/aaaa"
                                     readonly
-                                    class="w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none cursor-pointer"
-                                >
+                                    class="w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none cursor-pointer">
                                 <input type="hidden" id="mobile_depart_date" name="input3">
                             </div>
 
@@ -445,8 +438,7 @@ if (isset($_POST['deconnect_account'])) {
                                     placeholder="jj/mm/aaaa"
                                     readonly
                                     disabled
-                                    class="w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none cursor-pointer disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
-                                >
+                                    class="w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none cursor-pointer disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
                                 <input type="hidden" id="mobile_return_date" name="input4">
                             </div>
 
@@ -454,8 +446,7 @@ if (isset($_POST['deconnect_account'])) {
                                 <input
                                     type="submit"
                                     value="Valider"
-                                    class="w-full h-[50px] rounded-[12px] border-0 bg-[#156f3e] text-white text-[15px] font-extrabold cursor-pointer"
-                                >
+                                    class="w-full h-[50px] rounded-[12px] border-0 bg-[#156f3e] text-white text-[15px] font-extrabold cursor-pointer">
                             </div>
 
                         </div>
@@ -464,257 +455,232 @@ if (isset($_POST['deconnect_account'])) {
             </div>
         </section>
 
-     <section class="relative z-[2] max-w-[1350px] mx-auto px-3 md:px-5 pt-[80px] md:pt-[170px] pb-[25px]">
-    
-    <h2 class="mb-[30px] text-left text-black text-[20px] md:text-[24px] lg:text-[28px] font-bold leading-[1.3]">
-        Gérer vos trajets et vos réservations sans soucis grâce à vos identifiants de réservation sur votre billet de voyage.
-    </h2>
+        <section class="relative z-[2] max-w-[1350px] mx-auto px-3 md:px-5 pt-[80px] md:pt-[170px] pb-[25px]">
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-        
-        <button
-            id="openModalButton"
-            class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]"
-        >
-            Gérer ma réservation
-        </button>
+            <h2 class="mb-[30px] text-left text-black text-[20px] md:text-[24px] lg:text-[28px] font-bold leading-[1.3]">
+                Gérer vos trajets et vos réservations sans soucis grâce à vos identifiants de réservation sur votre billet de voyage.
+            </h2>
 
-       <a
-    href="localiser-trajet.php"
-    class="flex items-center justify-center h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]"
->
-    Localiser mon trajet
-</a>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
 
-        <button
-            class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]"
-        >
-            Besoin d'aide
-        </button>
+                <button
+                    id="openModalButton"
+                    class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]">
+                    Gérer ma réservation
+                </button>
 
-    </div>
-</section>
+                <button
+                    id="openTrackingModalButton"
+                    type="button"
+                    class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]">
+                    Localiser mon trajet
+                </button>
+
+                <button
+                    class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]">
+                    Besoin d'aide
+                </button>
+
+            </div>
+        </section>
 
         <div id="modalContainer"></div>
+        <?php include 'geolocalisation/formulaire-localisation.php'; ?>
 
         <section>
             <?php include 'includes/service-bus-card.php'; ?>
         </section>
 
-        <section >
-         
-                <?php include 'map.php'; ?>
-           
+        <section>
+
+            <?php include 'map.php'; ?>
+
         </section>
 
-       <section class="bg-white py-[60px]">
-    <div class="max-w-[1350px] mx-auto px-3 md:px-5">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-[38px] items-start">
-            <div class="w-full">
-                <img
-                    src="https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg"
-                    alt="Bus EasyTravel"
-                    class="w-full h-[260px] sm:h-[360px] md:h-[420px] lg:h-[520px] object-cover"
-                >
+        <section class="bg-white py-[60px]">
+            <div class="max-w-[1350px] mx-auto px-3 md:px-5">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-[38px] items-start">
+                    <div class="w-full">
+                        <img
+                            src="https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg"
+                            alt="Bus EasyTravel"
+                            class="w-full h-[260px] sm:h-[360px] md:h-[420px] lg:h-[520px] object-cover">
+                    </div>
+
+                    <div>
+                        <h2 class="m-0 mb-[18px] text-[#177043] text-[1.35rem] md:text-[1.55rem] lg:text-[1.7rem] font-bold leading-snug">
+                            EasyTravel est le plus grand réseau camerounais de transport personnel inter-urbain !
+                        </h2>
+
+                        <p class="text-[#555] text-[0.98rem] md:text-[1.02rem] lg:text-[1.05rem] leading-[1.8] mb-4">
+                            Depuis 2000, <strong class="text-black font-bold">Général Voyage</strong> agrandit continuellement son réseau
+                            camerounais et dessert chaque jour plus de 100 destinations dont plus de 30 villes au Cameroun.
+                            Notre objectif est de rendre le Cameroun vert !
+                            Le réseau de Général Voyage s’étend du Sud à l'Est jusqu’au Grand Nord.
+                            Découvrez notre
+                            <a href="#" class="text-[#2e8b57] underline">carte interactive</a>
+                            ou réservez dès maintenant pour <strong class="text-black font-bold">Yaoundé, Kribi, Bamenda, Edea, Banga</strong> et bien d’autres.
+                        </p>
+
+                        <h3 class="mt-[22px] mb-3 text-[#2e8b57] text-[1.15rem] md:text-[1.28rem] lg:text-[1.4rem] font-bold">
+                            C’est simple et confortable
+                        </h3>
+
+                        <p class="text-[#555] text-[0.98rem] md:text-[1.02rem] lg:text-[1.05rem] leading-[1.8] mb-4">
+                            Voyager n’a jamais été aussi simple avec Général Voyage.
+                            Notre personnel serviable et notre site web détaillé vous accompagnent de la réservation jusqu’à l’arrivée.
+                            Vous pouvez <a href="#" class="text-[#2e8b57] underline">acheter votre billet en ligne</a>
+                            ou même au dernier moment auprès du conducteur.
+                        </p>
+
+                        <p class="text-[#555] text-[0.98rem] md:text-[1.02rem] lg:text-[1.05rem] leading-[1.8] mb-0">
+                            Nos bus garantissent <strong class="text-black font-bold">une place assise avec espace pour vos jambes</strong>,
+                            <strong class="text-black font-bold">Wi-fi gratuit</strong>,
+                            <strong class="text-black font-bold">prises électriques</strong> et des snacks à petit prix !
+                        </p>
+                    </div>
+                </div>
             </div>
-
-            <div>
-                <h2 class="m-0 mb-[18px] text-[#177043] text-[1.35rem] md:text-[1.55rem] lg:text-[1.7rem] font-bold leading-snug">
-                    EasyTravel est le plus grand réseau camerounais de transport personnel inter-urbain !
-                </h2>
-
-                <p class="text-[#555] text-[0.98rem] md:text-[1.02rem] lg:text-[1.05rem] leading-[1.8] mb-4">
-                    Depuis 2000, <strong class="text-black font-bold">Général Voyage</strong> agrandit continuellement son réseau
-                    camerounais et dessert chaque jour plus de 100 destinations dont plus de 30 villes au Cameroun.
-                    Notre objectif est de rendre le Cameroun vert !
-                    Le réseau de Général Voyage s’étend du Sud à l'Est jusqu’au Grand Nord.
-                    Découvrez notre
-                    <a href="#" class="text-[#2e8b57] underline">carte interactive</a>
-                    ou réservez dès maintenant pour <strong class="text-black font-bold">Yaoundé, Kribi, Bamenda, Edea, Banga</strong> et bien d’autres.
-                </p>
-
-                <h3 class="mt-[22px] mb-3 text-[#2e8b57] text-[1.15rem] md:text-[1.28rem] lg:text-[1.4rem] font-bold">
-                    C’est simple et confortable
-                </h3>
-
-                <p class="text-[#555] text-[0.98rem] md:text-[1.02rem] lg:text-[1.05rem] leading-[1.8] mb-4">
-                    Voyager n’a jamais été aussi simple avec Général Voyage.
-                    Notre personnel serviable et notre site web détaillé vous accompagnent de la réservation jusqu’à l’arrivée.
-                    Vous pouvez <a href="#" class="text-[#2e8b57] underline">acheter votre billet en ligne</a>
-                    ou même au dernier moment auprès du conducteur.
-                </p>
-
-                <p class="text-[#555] text-[0.98rem] md:text-[1.02rem] lg:text-[1.05rem] leading-[1.8] mb-0">
-                    Nos bus garantissent <strong class="text-black font-bold">une place assise avec espace pour vos jambes</strong>,
-                    <strong class="text-black font-bold">Wi-fi gratuit</strong>,
-                    <strong class="text-black font-bold">prises électriques</strong> et des snacks à petit prix !
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
         <section class="bg-[#f8f7f7] py-[55px] pb-[95px]">
-    <div class="max-w-[1370px] mx-auto px-3">
-        <h2 class="text-xl md:text-3xl text-[#177043] font-bold pb-5 text-left md:px-5 px-3">
-            Profitez de toutes les dernières actualités de général voyage 
-        </h2>
+            <div class="max-w-[1370px] mx-auto px-3">
+                <h2 class="text-xl md:text-3xl text-[#177043] font-bold pb-5 text-left md:px-5 px-3">
+                    Profitez de toutes les dernières actualités de général voyage
+                </h2>
 
-        <div
-            class="carousel home-carousel"
-            data-flickity='{ "cellAlign": "left", "contain": true, "wrapAround": false, "pageDots": true }'
-        >
-            <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
-                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
-                    <img
-                        src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b"
-                        alt="City"
-                        class="w-full h-[150px] md:h-[220px] object-cover block"
-                    />
-                    <div class="p-[10px]">
-                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Promotion</div>
-                        <p class="text-sm mb-3">
-                            la période de vacances arrive profitez de la reduction.
-                        </p>
-                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
-                            Lire l'article
-                        </a>
+                <div
+                    class="carousel home-carousel"
+                    data-flickity='{ "cellAlign": "left", "contain": true, "wrapAround": false, "pageDots": true }'>
+                    <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                        <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                            <img
+                                src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b"
+                                alt="City"
+                                class="w-full h-[150px] md:h-[220px] object-cover block" />
+                            <div class="p-[10px]">
+                                <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Promotion</div>
+                                <p class="text-sm mb-3">
+                                    la période de vacances arrive profitez de la reduction.
+                                </p>
+                                <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                                    Lire l'article
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                        <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                            <img
+                                src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
+                                alt="Tokyo"
+                                class="w-full h-[150px] md:h-[220px] object-cover block" />
+                            <div class="p-[10px]">
+                                <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Tokyo</div>
+                                <p class="text-sm mb-3">
+                                    A blend of modern technology and traditional culture.
+                                </p>
+                                <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                                    Lire l'article
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                        <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                            <img
+                                src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e"
+                                alt="Paris"
+                                class="w-full h-[150px] md:h-[220px] object-cover block" />
+                            <div class="p-[10px]">
+                                <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Paris</div>
+                                <p class="text-sm mb-3">
+                                    The City of Light, known for its romance and iconic landmarks.
+                                </p>
+                                <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                                    Lire l'article
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                        <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                            <img
+                                src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b"
+                                alt="City"
+                                class="w-full h-[150px] md:h-[220px] object-cover block" />
+                            <div class="p-[10px]">
+                                <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Location de bus</div>
+                                <p class="text-sm mb-3">
+                                    Désormais vous pouvez reserver et louer vos bus en ligne.
+                                </p>
+                                <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                                    Lire l'article
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                        <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                            <img
+                                src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
+                                alt="Tokyo"
+                                class="w-full h-[150px] md:h-[220px] object-cover block" />
+                            <div class="p-[10px]">
+                                <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Tokyo</div>
+                                <p class="text-sm mb-3">
+                                    A blend of modern technology and traditional culture.
+                                </p>
+                                <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                                    Lire l'article
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                        <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                            <img
+                                src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
+                                alt="Tokyo"
+                                class="w-full h-[150px] md:h-[220px] object-cover block" />
+                            <div class="p-[10px]">
+                                <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Nouvel agence</div>
+                                <p class="text-sm mb-3">
+                                    général voyage vous informe qu'un nouvel agence sera à Douala.
+                                </p>
+                                <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                                    Lire l'article
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
+                        <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
+                            <img
+                                src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
+                                alt="Tokyo"
+                                class="w-full h-[150px] md:h-[220px] object-cover block" />
+                            <div class="p-[10px]">
+                                <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Tokyo</div>
+                                <p class="text-sm mb-3">
+                                    A blend of modern technology and traditional culture.
+                                </p>
+                                <a href="/article.php" class="text-blue-600 font-medium hover:underline">
+                                    Lire l'article
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
-                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
-                    <img
-                        src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
-                        alt="Tokyo"
-                         class="w-full h-[150px] md:h-[220px] object-cover block"
-                    />
-                    <div class="p-[10px]">
-                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Tokyo</div>
-                        <p class="text-sm mb-3">
-                            A blend of modern technology and traditional culture.
-                        </p>
-                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
-                            Lire l'article
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-           <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
-                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
-                    <img
-                        src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e"
-                        alt="Paris"
-                         class="w-full h-[150px] md:h-[220px] object-cover block"
-                    />
-                    <div class="p-[10px]">
-                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Paris</div>
-                        <p class="text-sm mb-3">
-                            The City of Light, known for its romance and iconic landmarks.
-                        </p>
-                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
-                            Lire l'article
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
-                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
-                    <img
-                        src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b"
-                        alt="City"
-                         class="w-full h-[150px] md:h-[220px] object-cover block"
-                    />
-                    <div class="p-[10px]">
-                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Location de bus</div>
-                        <p class="text-sm mb-3">
-                            Désormais vous pouvez reserver et louer vos bus en ligne.
-                        </p>
-                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
-                            Lire l'article
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
-                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
-                    <img
-                        src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
-                        alt="Tokyo"
-                         class="w-full h-[150px] md:h-[220px] object-cover block"
-                    />
-                    <div class="p-[10px]">
-                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Tokyo</div>
-                        <p class="text-sm mb-3">
-                            A blend of modern technology and traditional culture.
-                        </p>
-                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
-                            Lire l'article
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-          <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
-                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
-                    <img
-                        src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
-                        alt="Tokyo"
-                        class="w-full h-[150px] md:h-[220px] object-cover block"
-                    />
-                    <div class="p-[10px]">
-                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Nouvel agence</div>
-                        <p class="text-sm mb-3">
-                            général voyage vous informe qu'un nouvel agence sera à Douala.
-                        </p>
-                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
-                            Lire l'article
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-          <div class="carousel-cell w-[240px] sm:w-[260px] md:w-[320px] mr-4 md:mr-5">
-                <div class="bg-white overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.1)]">
-                    <img
-                        src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
-                        alt="Tokyo"
-                        class="w-full h-[150px] md:h-[220px] object-cover block"
-                    />
-                    <div class="p-[10px]">
-                        <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">Tokyo</div>
-                        <p class="text-sm mb-3">
-                            A blend of modern technology and traditional culture.
-                        </p>
-                        <a href="/article.php" class="text-blue-600 font-medium hover:underline">
-                            Lire l'article
-                        </a>
-                    </div>
-                </div>
-            </div>
-           </div>
-       </div>
-         </section>
+        </section>
     </main>
-
-    <!-- <div class="chat-floating">
-        <i class="fa fa-comments" id="openChat"></i>
-    </div> -->
-
-    <!-- <div id="chatModal" class="chat-modal">
-        <div class="chat-modal-header">
-            <span>Assistance Mobiliis</span>
-            <span id="closeChat" class="chat-close">
-                <i class="fas fa-times"></i>
-            </span>
-        </div>
-
-        <iframe src="Cookies/chat.php" width="100%" height="100%" frameborder="0"></iframe>
-    </div> -->
 
     <div id="modalMessage"></div>
 
@@ -722,7 +688,7 @@ if (isset($_POST['deconnect_account'])) {
     <?php include 'includes/footer.php'; ?>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             function setupBookingForm(formSelector, startDisplayId, endDisplayId, startHiddenId, endHiddenId) {
                 const form = document.querySelector(formSelector);
                 if (!form) return;
@@ -809,7 +775,7 @@ if (isset($_POST['deconnect_account'])) {
                     radio.addEventListener('change', updateMode);
                 });
 
-                form.addEventListener('submit', function (e) {
+                form.addEventListener('submit', function(e) {
                     const isRoundTrip = getTripMode() === 'option2';
 
                     if (!startHidden.value) {
@@ -842,6 +808,37 @@ if (isset($_POST['deconnect_account'])) {
                 'mobile_depart_date',
                 'mobile_return_date'
             );
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const trackingModal = document.getElementById('trackingModal');
+            const openTrackingModalButton = document.getElementById('openTrackingModalButton');
+            const closeTrackingModal = document.getElementById('closeTrackingModal');
+
+            if (openTrackingModalButton && trackingModal) {
+                openTrackingModalButton.addEventListener('click', function() {
+                    trackingModal.classList.remove('hidden');
+                    trackingModal.classList.add('flex');
+                });
+            }
+
+            if (closeTrackingModal && trackingModal) {
+                closeTrackingModal.addEventListener('click', function() {
+                    trackingModal.classList.remove('flex');
+                    trackingModal.classList.add('hidden');
+                });
+            }
+
+            if (trackingModal) {
+                trackingModal.addEventListener('click', function(e) {
+                    if (e.target === trackingModal) {
+                        trackingModal.classList.remove('flex');
+                        trackingModal.classList.add('hidden');
+                    }
+                });
+            }
         });
     </script>
 

@@ -1,6 +1,18 @@
 <?php
 session_start();
+
+if (
+    !isset($_SESSION['tracking_access']) ||
+    $_SESSION['tracking_access'] !== true ||
+    !isset($_SESSION['tracking_reservation'])
+) {
+    header('Location: Accueil.php');
+    exit;
+}
+
+$reservation = $_SESSION['tracking_reservation'];
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -93,6 +105,10 @@ session_start();
     <div class="info-box">
         <h2>Suivi du véhicule</h2>
         <p>Cette page affiche votre position et celle du véhicule.</p>
+        <p>
+    Réservation : <strong><?= htmlspecialchars($reservation['Numero_reservation']) ?></strong><br>
+    Client : <strong><?= htmlspecialchars($reservation['prenom'] . ' ' . $reservation['nom']) ?></strong>
+</p>
 
         <div class="stats">
             <div class="stat-card">
@@ -120,7 +136,8 @@ session_start();
     let userMarker = null;
     let vehicleMarker = null;
     let routeLine = null;
-    let bounds;
+    let bounds = null;
+    let firstLoad = true;
 
     const distanceValue = document.getElementById("distanceValue");
     const durationValue = document.getElementById("durationValue");
@@ -141,33 +158,37 @@ session_start();
         if (hours > 0) {
             return `${hours} h ${minutes} min`;
         }
+
         return `${minutes} min`;
     }
 
     function formatDistance(distanceMeters) {
-        if (!distanceMeters && distanceMeters !== 0) return "Indisponible";
+        if (distanceMeters === null || distanceMeters === undefined) {
+            return "Indisponible";
+        }
 
         if (distanceMeters < 1000) {
             return `${distanceMeters} m`;
         }
+
         return `${(distanceMeters / 1000).toFixed(1)} km`;
     }
 
-    async function drawRealRoute(userPos, vehiclePos) {
+    async function drawRealRoute(userPos, currentVehiclePos) {
         try {
             statusValue.textContent = "Calcul de l’itinéraire...";
 
             const url =
                 `geolocalisation/get-route.php?originLat=${encodeURIComponent(userPos.lat)}` +
                 `&originLng=${encodeURIComponent(userPos.lng)}` +
-                `&destLat=${encodeURIComponent(vehiclePos.lat)}` +
-                `&destLng=${encodeURIComponent(vehiclePos.lng)}`;
+                `&destLat=${encodeURIComponent(currentVehiclePos.lat)}` +
+                `&destLng=${encodeURIComponent(currentVehiclePos.lng)}`;
 
             const response = await fetch(url);
             const data = await response.json();
 
-            if (!data.success || !data.encodedPolyline) {
-                console.error(data);
+            if (!response.ok || !data.success || !data.encodedPolyline) {
+                console.error("Erreur API route :", data);
                 distanceValue.textContent = "Erreur";
                 durationValue.textContent = "Erreur";
                 statusValue.textContent = "Erreur de calcul";
@@ -195,7 +216,12 @@ session_start();
 
             bounds = new google.maps.LatLngBounds();
             decodedPath.forEach(point => bounds.extend(point));
-            map.fitBounds(bounds);
+
+            // Ajuster la vue uniquement au premier chargement
+            if (firstLoad) {
+                map.fitBounds(bounds);
+                firstLoad = false;
+            }
 
         } catch (error) {
             console.error(error);
