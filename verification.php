@@ -1,57 +1,32 @@
 <?php
 session_start();
-?>
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Document</title>
-    <!-- <link rel="stylesheet" href="verification.css"> -->
-</head>
-
-<body>
-
-
-    <?php
-require 'vendor/autoload.php';
 use Mailjet\Resources;
 
-// Traitement du formulaire d'inscription
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'], $_POST['prenom'],$_POST['email'], $_POST['phone'], $_POST['password'])) {
-    // Récupération des données du formulaire
-    $nom = $_POST['nom'];
-    $prenom = $_POST['prenom'];
-    $email = $_POST['email'];
-    $phone = $_POST['phone'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hachage du mot de passe
+// Fonction pour générer un code de confirmation aléatoire
+function genererCodeVerification()
+{
+    return rand(100000, 999999);
+}
 
-    // Génération d'un code de vérification
-    $veri = uniqid('', true);
-    $code = substr($veri, -4);
+// Fonction d'envoi d'email via Mailjet
+function envoyerCodeVerificationMailjet(string $email, string $nom, string $code): bool
+{
+    $mj = new \Mailjet\Client(
+        MAILJET_PUBLIC_KEY,
+        MAILJET_PRIVATE_KEY,
+        true,
+        ['version' => 'v3.1']
+    );
 
-    // Initialisation de la session
-    $_SESSION['nom'] = $nom;
-    $_SESSION['prenom'] = $prenom;
-    $_SESSION['phone'] = $phone;
-    $_SESSION['email'] = $email;
-    $_SESSION['password'] = $password;
-    $_SESSION['code'] = $code;
-
-    // Configuration de l'API Mailjet
-    $mj = new \Mailjet\Client('f163a8d176afbcb29aae519bf6c5e181', 'bf285777b4d59f84a43855ae1b40f96d', true, ['version' => 'v3.1']);
-
-    // Construction du corps de l'email
     $body = [
         'Messages' => [
             [
                 'From' => [
-                    'Email' => 'akuetche55@gmail.com',
-                    'Name' => 'Easy travel',
+                    'Email' => MAIL_FROM_EMAIL,
+                    'Name' => MAIL_FROM_NAME,
                 ],
                 'To' => [
                     [
@@ -66,84 +41,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nom'], $_POST['prenom
         ],
     ];
 
-    // Envoi de l'email
     try {
         $response = $mj->post(Resources::$Email, ['body' => $body]);
-        if ($response->success()) {
-            echo 'Email sent successfully.';
-        } else {
-            echo 'Failed to send email: '.$response->getData()['ErrorMessage'];
-        }
+        return $response->success();
     } catch (Exception $e) {
-        echo 'Message could not be sent. Mailer Error: '.$e->getMessage();
+        return false;
     }
 }
-?>
 
-    <header>
-        <nav>
-            <div class="header-picture">
-                <img src="logo général.jpg" alt="logo site" />
-            </div>
-            <div class="nav-bar">
-                <ul>
-                    <li class="items">
-                        <select id="select" name="select" aria-placeholder="2 places">
-                            <option value="option1">Français</option>
-                            <option value="option2">Anglais</option>
+$message = '';
 
-                        </select>
-                    </li>
-                    <li class="items"><a href="#"><i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i></a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+// Traitement du formulaire d'inscription
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    isset($_POST['nom'], $_POST['prenom'], $_POST['email'], $_POST['phone'], $_POST['password'])
+) {
+    $nom = trim($_POST['nom']);
+    $prenom = trim($_POST['prenom']);
+    $email = trim($_POST['email']);
+    $phone = trim($_POST['phone']);
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    <div class="container">
-        <h3>Un code de confirmation a été envoyé dans votre email, veuillez le saisir dans ce champ.</h3>
-        <form method="post" action="#">
-            <input type="text" name="verification"><br><br>
-            <button type="submit" name="valider">Valider</button>
-            <button type="submit" name="renvoyer">Renvoyer le code</button>
-        </form>
-    </div>
+    $veri = uniqid('', true);
+    $code = substr($veri, -4);
 
+    $_SESSION['nom'] = $nom;
+    $_SESSION['prenom'] = $prenom;
+    $_SESSION['phone'] = $phone;
+    $_SESSION['email'] = $email;
+    $_SESSION['password'] = $password;
+    $_SESSION['code'] = $code;
 
-
-    <?php
-
-
-// Fonction pour générer un code de confirmation aléatoire
-function genererCodeVerification() {
-    return rand(100000, 999999); // Génère un code à 6 chiffres
+    if (envoyerCodeVerificationMailjet($email, $nom, $code)) {
+        $message = "Un code de confirmation a été envoyé à votre adresse email.";
+    } else {
+        $message = "Erreur lors de l'envoi de l'email de confirmation.";
+    }
 }
 
 // Vérifier si l'utilisateur a cliqué sur le bouton "Renvoyer"
 if (isset($_POST['renvoyer'])) {
-    // Générer un nouveau code de confirmation
-    $nouveauCode = genererCodeVerification();
-    $_SESSION['code'] = $nouveauCode;
-
-    // Envoyer le nouveau code à l'email de l'utilisateur
-    $to = $_SESSION['email'];
-    $subject = "Votre nouveau code de confirmation";
-    $message = "Votre nouveau code de confirmation est : $nouveauCode";
-    $headers = "From: noreply@votresite.com"; // Modifier l'adresse email de l'expéditeur
-
-    if (mail($to, $subject, $message, $headers)) {
-        echo "Un nouveau code de confirmation a été envoyé à votre adresse email.";
+    if (!isset($_SESSION['email'], $_SESSION['nom'])) {
+        $message = "Session expirée. Veuillez recommencer l'inscription.";
     } else {
-        echo "Erreur lors de l'envoi du nouveau code.";
+        $nouveauCode = genererCodeVerification();
+        $_SESSION['code'] = $nouveauCode;
+
+        if (envoyerCodeVerificationMailjet($_SESSION['email'], $_SESSION['nom'], (string) $nouveauCode)) {
+            $message = "Un nouveau code de confirmation a été envoyé à votre adresse email.";
+        } else {
+            $message = "Erreur lors de l'envoi du nouveau code.";
+        }
     }
 }
 
 // Vérifier si l'utilisateur a cliqué sur le bouton "Valider"
 if (isset($_POST['valider'])) {
-    if ($_SESSION['code'] == $_POST['verification']) {
+    if (!isset($_SESSION['code'], $_POST['verification'])) {
+        $message = "Aucun code à vérifier.";
+    } elseif ((string) $_SESSION['code'] === trim($_POST['verification'])) {
         try {
-            // Connexion à la base de données locale
-            $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+            $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+            $bdd = new PDO($dsn, DB_USER, DB_PASS);
             $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $nom = $_SESSION['nom'];
@@ -152,8 +111,24 @@ if (isset($_POST['valider'])) {
             $motpasse = $_SESSION['password'];
             $phone = $_SESSION['phone'];
 
-            // Insérer les informations dans votre base de données locale
-            $requette = $bdd->prepare('INSERT INTO user (user_name, user_firstname, user_password, user_mail, user_phone, verification) VALUES (:nom, :prenom, :motpasse, :email, :phone, :veri)');
+            $requette = $bdd->prepare('
+                INSERT INTO user (
+                    user_name,
+                    user_firstname,
+                    user_password,
+                    user_mail,
+                    user_phone,
+                    verification
+                ) VALUES (
+                    :nom,
+                    :prenom,
+                    :motpasse,
+                    :email,
+                    :phone,
+                    :veri
+                )
+            ');
+
             $requette->bindParam(':nom', $nom);
             $requette->bindParam(':prenom', $prenom);
             $requette->bindParam(':motpasse', $motpasse);
@@ -162,152 +137,181 @@ if (isset($_POST['valider'])) {
             $requette->bindParam(':veri', $_SESSION['code']);
 
             if ($requette->execute()) {
-                // Créer un tiers dans Dolibarr via l'API REST
-                $dolibarr_url = 'http://localhost:100/dolibarr/api/index.php/thirdparties';
-                $api_key = '809d8187e33a2186b77a7b780ee5fe8219554e79';
-                
-                // Préparer les données du tiers à envoyer à l'API
-                $data = array(
+                $data = [
                     'name' => $nom . ' ' . $prenom,
-                    'address' => '', // Ajoutez une adresse si disponible
-                    'zip' => '', // Ajoutez un code postal si disponible
-                    'town' => '', // Ajoutez une ville si disponible
+                    'address' => '',
+                    'zip' => '',
+                    'town' => '',
                     'email' => $email,
-                    'client' => 1 // 1 si c'est un client, 0 sinon
-                );
+                    'client' => 1
+                ];
 
-                $options = array(
-                    'http' => array(
+                $options = [
+                    'http' => [
                         'header'  => "Content-type: application/json\r\n" .
-                                     "DOLAPIKEY: $api_key\r\n",
+                                      "DOLAPIKEY: " . DOLIBARR_API_KEY . "\r\n",
                         'method'  => 'POST',
                         'content' => json_encode($data)
-                    )
-                );
+                    ]
+                ];
 
-                $context  = stream_context_create($options);
-                $result = file_get_contents($dolibarr_url, false, $context);
+                $context = stream_context_create($options);
+                $result = file_get_contents(DOLIBARR_API_URL, false, $context);
 
-                if ($result === FALSE) {
-                    echo 'Erreur lors de la création du tiers dans Dolibarr.';
+                if ($result === false) {
+                    $message = "Erreur lors de la création du tiers dans Dolibarr.";
                 } else {
-                    // Redirection vers Accueil.php en cas de succès
                     header('Location: Accueil.php');
                     exit;
                 }
             } else {
-                echo 'Erreur lors de l\'insertion dans la base de données.';
+                $message = "Erreur lors de l'insertion dans la base de données.";
             }
         } catch (PDOException $e) {
-            echo 'Erreur : '.$e->getMessage();
+            $message = "Erreur de base de données.";
         }
     } else {
-        echo 'Incompatibilité du code, veuillez insérer le bon code reçu.';
+        $message = "Incompatibilité du code, veuillez insérer le bon code reçu.";
     }
 }
 ?>
 
+<!DOCTYPE html>
+<html lang="fr">
 
-
-
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-    body {
-        background-color: aliceblue;
-    }
+        body {
+            background-color: aliceblue;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
 
-    header {
-        width: 100%;
-        background-color: green;
-        height: 100px;
-    }
+        header {
+            width: 100%;
+            background-color: green;
+            height: 100px;
+        }
 
-    nav {
-        width: 100%;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+        nav {
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    img {
-        width: 120px;
-        height: 80px;
-        margin-top: 20px;
-    }
+        .header-picture {
+            margin-left: 40px;
+        }
 
-    .items a {
-        text-decoration: none;
-        color: whitesmoke;
-        font-size: 20px;
-        margin-right: 40PX;
-        padding: 0 15px;
-    }
+        img {
+            height: 60px;
+            width: 100px;
+            margin-top: 20px;
+        }
 
+        .nav-bar {
+            margin-right: 30px;
+        }
 
-    .nav-bar ul {
-        display: flex;
-        list-style-type: none;
-    }
+        .nav-bar ul {
+            display: flex;
+            list-style-type: none;
+        }
 
-    .header-picture {
-        margin-left: 40px;
+        .items a {
+            text-decoration: none;
+            color: whitesmoke;
+            font-size: 20px;
+            margin-right: 40px;
+            padding: 0 15px;
+        }
 
-    }
+        .container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            max-width: 500px;
+            margin: 75px auto 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            background: #fff;
+        }
 
-    img {
+        h3 {
+            margin-top: 0;
+        }
 
-        height: 60px;
-        width: 100px;
-    }
+        input[type="text"] {
+            padding: 8px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 50%;
+        }
 
-    .nav-bar {
-        margin-right: 30px;
-    }
+        button[type="submit"] {
+            padding: 10px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 8px;
+        }
 
-
-    .container {
-        border: 1px solid #ccc;
-        /* bordure grise de 1 pixel */
-        padding: 10px;
-        /* marges intérieures de 10 pixels */
-        max-width: 500px;
-        /* largeur maximale de 500 pixels */
-        margin: 0 auto;
-        /* centrage horizontal */
-        height: 200px;
-        margin-top: 75px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    h2 {
-        font-size: 1.5rem;
-        /* taille de police de 1,5 fois la taille par défaut */
-        margin-bottom: 10px;
-        /* espace de 10 pixels en dessous */
-    }
-
-    input[type="text"] {
-        padding: 5px;
-        font-size: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        width: 50%;
-        /* largeur de 100% du conteneur */
-    }
-
-    button[type="submit"] {
-        padding: 10px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        width: '150px';
-        font-size: '16px';
-    }
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f3f3f3;
+            border-left: 4px solid green;
+        }
     </style>
+</head>
+
+<body>
+
+<header>
+    <nav>
+        <div class="header-picture">
+            <img src="logo général.jpg" alt="logo site">
+        </div>
+        <div class="nav-bar">
+            <ul>
+                <li class="items">
+                    <select id="select" name="select" aria-placeholder="2 places">
+                        <option value="option1">Français</option>
+                        <option value="option2">Anglais</option>
+                    </select>
+                </li>
+                <li class="items">
+                    <a href="#"><i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+    <h3>Un code de confirmation a été envoyé dans votre email, veuillez le saisir dans ce champ.</h3>
+
+    <form method="post" action="#">
+        <input type="text" name="verification" required><br><br>
+        <button type="submit" name="valider">Valider</button>
+        <button type="submit" name="renvoyer">Renvoyer le code</button>
+    </form>
+
+    <?php if (!empty($message)): ?>
+        <div class="message">
+            <?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?>
+        </div>
+    <?php endif; ?>
+</div>
 
 </body>
-
 </html>
