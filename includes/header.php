@@ -26,7 +26,7 @@ if ($isLoggedIn) {
 $userEmail = $isLoggedIn ? ($_SESSION['user_mail'] ?? '') : '';
 
 $offerLabel = $isLoggedIn ? 'Mes offres' : 'Inscription';
-$offerLink = $isLoggedIn ? 'offres.php' : 'inscription.php';
+$offerLink = $isLoggedIn ? 'offres/offres.php' : 'inscription.php';
 
 $easyLabel = 'EasyTravel';
 $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
