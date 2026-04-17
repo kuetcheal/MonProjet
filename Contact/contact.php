@@ -17,85 +17,7 @@ try {
 ob_start();
 ?>
 
-<section class="relative overflow-hidden bg-gradient-to-br from-green-50 via-white to-emerald-50">
-    <div class="absolute inset-0 opacity-30 pointer-events-none">
-        <div class="absolute top-0 left-0 w-72 h-72 bg-green-200 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 right-0 w-96 h-96 bg-emerald-200 rounded-full blur-3xl"></div>
-    </div>
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div>
-                <span class="inline-flex items-center rounded-full bg-green-100 text-green-700 px-4 py-1 text-sm font-semibold">
-                    EasyTravel • Contact Agence
-                </span>
-
-                <h1 class="mt-6 text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
-                    Contactez notre agence et
-                    <span class="text-green-600">préparez votre voyage</span>
-                    en toute sérénité
-                </h1>
-
-                <p class="mt-6 text-lg text-slate-600 leading-8 max-w-2xl">
-                    Une question sur un trajet, une réservation, un départ ou une destination ?
-                    Notre équipe vous répond rapidement et vous accompagne pour trouver la meilleure solution.
-                </p>
-
-                <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div class="bg-white/90 backdrop-blur  shadow-md border border-green-100 p-5">
-                        <div class="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center text-green-700 mb-3">
-                            <i class="fa fa-phone text-lg"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-800">Réponse rapide</h3>
-                        <p class="text-sm text-slate-600 mt-1">Notre équipe traite vos demandes dans les meilleurs délais.</p>
-                    </div>
-
-                    <div class="bg-white/90 backdrop-blur  shadow-md border border-green-100 p-5">
-                        <div class="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center text-green-700 mb-3">
-                            <i class="fa fa-map-marker text-lg"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-800">Agences disponibles</h3>
-                        <p class="text-sm text-slate-600 mt-1">Choisissez facilement la ville ou l’agence qui vous convient.</p>
-                    </div>
-
-                    <div class="bg-white/90 backdrop-blur rounded-2xl shadow-md border border-green-100 p-5">
-                        <div class="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center text-green-700 mb-3">
-                            <i class="fa fa-bus text-lg"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-800">Assistance voyage</h3>
-                        <p class="text-sm text-slate-600 mt-1">Réservations, horaires, trajets et renseignements en un seul endroit.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="relative">
-                <div class="relative rounded-[8px] overflow-hidden shadow-2xl min-h-[380px] lg:min-h-[520px]">
-                    <img
-                        src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80"
-                        alt="Contact EasyTravel"
-                        class="absolute inset-0 w-full h-full object-cover"
-                    >
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-
-                    <div class="absolute bottom-0 left-0 right-0 p-8">
-                        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 text-white">
-                            <p class="uppercase tracking-[0.2em] text-xs text-green-200 mb-3">Service client</p>
-                            <h2 class="text-2xl font-bold mb-2">Voyagez avec confiance</h2>
-                            <p class="text-white/85 leading-7">
-                                Nous vous accompagnons avant, pendant et après votre réservation pour une expérience fluide et rassurante.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hidden lg:block absolute -bottom-6 -left-6 bg-white shadow-xl rounded-2xl px-5 py-4 border border-green-100">
-                    <p class="text-sm text-slate-500">Agence EasyTravel</p>
-                    <p class="text-lg font-bold text-slate-800">Toujours proche de vous</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <section class="py-16 bg-[#f8fafc]">
     <div class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -183,7 +105,7 @@ ob_start();
 
                         <div class="relative min-h-[320px] lg:min-h-full">
                             <img
-                                src="https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1200&q=80"
+                                src="https://img.freepik.com/photos-premium/transport-tourisme-voyage-route-concept-personnes-groupe-passagers-touristes-heureux-bus-voyage_380164-170876.jpg"
                                 alt="Agence voyage"
                                 class="absolute inset-0 w-full h-full object-cover"
                             >

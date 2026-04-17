@@ -223,7 +223,7 @@ session_start();
         return $html;
     }
 
-    function renderVoyageCard(array $voyage, string $type = 'simple', string $formAction = 'payment.php')
+    function renderVoyageCard(array $voyage, string $type = 'simple')
     {
         $id = htmlspecialchars($voyage['idVoyage']);
         $heureDepart = htmlspecialchars(substr($voyage['heureDepart'], 0, 5));
@@ -249,93 +249,90 @@ session_start();
         ";
 
         $cardBody = "
-    <div class='bg-white shadow-md border border-gray-100 px-2 py-3 sm:px-4 sm:py-4 md:px-5 transition hover:shadow-md w-full'>
+        <div class='bg-white shadow-md border border-gray-100 px-2 py-3 sm:px-4 sm:py-4 md:px-5 transition hover:shadow-md w-full'>
 
-        <!-- Ligne 1 -->
-        <div class='grid grid-cols-3 items-center gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4'>
-            <div class='text-left'>
-                <span class='text-[13px] sm:text-[16px] md:text-[22px] font-extrabold text-slate-800'>{$heureDepart}</span>
+            <div class='grid grid-cols-3 items-center gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4'>
+                <div class='text-left'>
+                    <span class='text-[13px] sm:text-[16px] md:text-[22px] font-extrabold text-slate-800'>{$heureDepart}</span>
+                </div>
+
+                <div class='flex items-center justify-center gap-1 sm:gap-2 md:gap-3'>
+                    <span class='w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 rounded-full bg-slate-700'></span>
+                    <span class='h-[2px] w-5 sm:w-8 md:w-16 bg-slate-300'></span>
+                    <span class='text-[13px] sm:text-[16px] md:text-[22px] font-extrabold text-slate-800'>{$heureArrivee}</span>
+                    <span class='h-[2px] w-5 sm:w-8 md:w-16 bg-slate-300'></span>
+                    <span class='w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 rounded-full bg-slate-700'></span>
+                </div>
+
+                <div class='text-right'>
+                    <p class='text-[13px] sm:text-[16px] md:text-[20px] leading-none font-extrabold text-black'>
+                        {$prix}<span class='text-[9px] sm:text-[10px] md:text-[14px] ml-1'>FCFA</span>
+                    </p>
+                </div>
             </div>
 
-            <div class='flex items-center justify-center gap-1 sm:gap-2 md:gap-3'>
-                <span class='w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 rounded-full bg-slate-700'></span>
-                <span class='h-[2px] w-5 sm:w-8 md:w-16 bg-slate-300'></span>
-                <span class='text-[13px] sm:text-[16px] md:text-[22px] font-extrabold text-slate-800'>{$heureArrivee}</span>
-                <span class='h-[2px] w-5 sm:w-8 md:w-16 bg-slate-300'></span>
-                <span class='w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 rounded-full bg-slate-700'></span>
+            <div class='grid grid-cols-3 items-start gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4'>
+                <div class='flex items-start gap-1.5 sm:gap-2 min-w-0'>
+                    <i class='bi bi-geo-alt text-[16px] sm:text-[18px] md:text-[22px] mt-0.5 shrink-0'></i>
+                    {$departHtml}
+                </div>
+
+                <div class='flex items-start justify-center gap-1.5 sm:gap-2 min-w-0'>
+                    <i class='bi bi-geo-alt text-[16px] sm:text-[18px] md:text-[22px] mt-0.5 shrink-0'></i>
+                    {$arriveeHtml}
+                </div>
+
+                <div class='flex justify-end min-w-0'>
+                    {$typeHtml}
+                </div>
             </div>
 
-            <div class='text-right'>
-                <p class='text-[13px] sm:text-[16px] md:text-[20px] leading-none font-extrabold text-black'>
-                    {$prix}<span class='text-[9px] sm:text-[10px] md:text-[14px] ml-1'>FCFA</span>
-                </p>
+            <div class='grid grid-cols-3 items-center gap-2 sm:gap-3 md:gap-4'>
+                <div class='text-left min-w-0'>
+                    <button
+                        type='button'
+                        class='text-blue-600 hover:underline font-medium text-[11px] sm:text-[13px] md:text-[15px]'
+                        onclick=\"toggleDetails('{$detailsId}')\">
+                        Détails du trajet
+                    </button>
+                </div>
+
+                <div class='flex justify-center min-w-0'>
+                    {$amenitiesHtml}
+                </div>
+
+                <div class='flex justify-end min-w-0'>
+                    %s
+                </div>
+            </div>
+
+            <div id='{$detailsId}' class='hidden mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200'>
+                <div class='grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-[12px] sm:text-sm text-slate-600'>
+                    <div>
+                        <p><strong>Départ :</strong> " . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "</p>
+                        <p><strong>Heure départ :</strong> {$heureDepart}</p>
+                    </div>
+                    <div>
+                        <p><strong>Arrivée :</strong> " . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "</p>
+                        <p><strong>Heure arrivée :</strong> {$heureArrivee}</p>
+                    </div>
+                </div>
             </div>
         </div>
+        ";
 
-        <!-- Ligne 2 -->
-        <div class='grid grid-cols-3 items-start gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4'>
-            <div class='flex items-start gap-1.5 sm:gap-2 min-w-0'>
-                <i class='bi bi-geo-alt text-[16px] sm:text-[18px] md:text-[22px] mt-0.5 shrink-0'></i>
-                {$departHtml}
-            </div>
-
-            <div class='flex items-start justify-center gap-1.5 sm:gap-2 min-w-0'>
-                <i class='bi bi-geo-alt text-[16px] sm:text-[18px] md:text-[22px] mt-0.5 shrink-0'></i>
-                {$arriveeHtml}
-            </div>
-
-            <div class='flex justify-end min-w-0'>
-                {$typeHtml}
-            </div>
-        </div>
-
-        <!-- Ligne 3 -->
-        <div class='grid grid-cols-3 items-center gap-2 sm:gap-3 md:gap-4'>
-            <div class='text-left min-w-0'>
+        if ($type === 'simple') {
+            $action = "
                 <button
-                    type='button'
-                    class='text-blue-600 hover:underline font-medium text-[11px] sm:text-[13px] md:text-[15px]'
-                    onclick=\"toggleDetails('{$detailsId}')\">
-                    Détails du trajet
+                    class='continuer-btn-simple bg-green-600 hover:bg-green-700 text-white font-bold text-[11px] sm:text-[13px] md:text-[15px] px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 transition min-w-[92px] sm:min-w-[120px] md:min-w-[130px]'
+                    data-id='{$id}'
+                    data-price='{$prix}'
+                    data-depart='" . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "'
+                    data-arrive='" . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "'
+                    data-time='{$heureDepart}'>
+                    Continuer
                 </button>
-            </div>
-
-            <div class='flex justify-center min-w-0'>
-                {$amenitiesHtml}
-            </div>
-
-            <div class='flex justify-end min-w-0'>
-                %s
-            </div>
-        </div>
-
-        <div id='{$detailsId}' class='hidden mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200'>
-            <div class='grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-[12px] sm:text-sm text-slate-600'>
-                <div>
-                    <p><strong>Départ :</strong> " . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "</p>
-                    <p><strong>Heure départ :</strong> {$heureDepart}</p>
-                </div>
-                <div>
-                    <p><strong>Arrivée :</strong> " . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "</p>
-                    <p><strong>Heure arrivée :</strong> {$heureArrivee}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-      ";
-
-       if ($type === 'simple') {
-    $action = "
-        <button
-            class='continuer-btn-simple bg-green-600 hover:bg-green-700 text-white font-bold text-[11px] sm:text-[13px] md:text-[15px] px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 transition min-w-[92px] sm:min-w-[120px] md:min-w-[130px]'
-            data-id='{$id}'
-            data-price='{$prix}'
-            data-depart='" . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "'
-            data-arrive='" . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "'
-            data-time='{$heureDepart}'>
-            Continuer
-        </button>
-    ";
+            ";
             echo "<div class='mb-4 sm:mb-5'>" . sprintf($cardBody, $action) . "</div>";
         } else {
             $action = "
@@ -381,7 +378,7 @@ session_start();
                     <?php if (!empty($Depart) && !empty($Arrivee) && !empty($date)): ?>
                         <?php if (!empty($voyagesAller)): ?>
                             <?php foreach ($voyagesAller as $donne): ?>
-                                <?php renderVoyageCard($donne, 'simple', 'payment.php'); ?>
+                                <?php renderVoyageCard($donne, 'simple'); ?>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <p class="text-center text-gray-500 text-base sm:text-lg mt-10">Aucun voyage disponible pour cette recherche.</p>
@@ -464,21 +461,21 @@ session_start();
         }
 
         document.querySelectorAll('.continuer-btn-simple').forEach(button => {
-         button.addEventListener('click', function () {
+            button.addEventListener('click', function () {
+                const params = new URLSearchParams({
+                    idVoyageAller: this.dataset.id,
+                    priceAller: this.dataset.price,
+                    priceRetour: 0,
+                    departAller: this.dataset.depart,
+                    arriveAller: this.dataset.arrive,
+                    timeAller: this.dataset.time,
+                    departRetour: '',
+                    arriveRetour: '',
+                    timeRetour: ''
+                });
 
-        const params = new URLSearchParams({
-            priceAller: this.dataset.price,
-            priceRetour: 0,
-            departAller: this.dataset.depart,
-            arriveAller: this.dataset.arrive,
-            timeAller: this.dataset.time,
-            departRetour: '',
-            arriveRetour: '',
-            timeRetour: ''
-        });
-
-        window.location.href = 'recap.php?' + params.toString();
-        });
+                window.location.href = 'recap.php?' + params.toString();
+            });
         });
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -492,11 +489,11 @@ session_start();
                     const parentCard = this.closest('[id^="conteneur-"]');
                     if (!parentCard) return;
 
-                    const id = parentCard.id;
+                    const cardId = parentCard.id;
                     const selected = selectedTrips[type];
 
                     if (selected) {
-                        const previousCard = document.getElementById(selected.id);
+                        const previousCard = document.getElementById(selected.cardId);
                         if (previousCard) {
                             const previousBox = previousCard.querySelector('div.bg-white');
                             if (previousBox) {
@@ -507,7 +504,8 @@ session_start();
                     }
 
                     selectedTrips[type] = {
-                        id,
+                        cardId: cardId,
+                        voyageId: this.dataset.id,
                         price: this.dataset.price,
                         depart: this.dataset.depart,
                         arrive: this.dataset.arrive,
@@ -522,6 +520,8 @@ session_start();
 
                     if (selectedTrips.aller && selectedTrips.retour) {
                         const params = new URLSearchParams({
+                            idVoyageAller: selectedTrips.aller.voyageId,
+                            idVoyageRetour: selectedTrips.retour.voyageId,
                             priceAller: selectedTrips.aller.price,
                             priceRetour: selectedTrips.retour.price,
                             departAller: selectedTrips.aller.depart,

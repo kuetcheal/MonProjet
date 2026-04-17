@@ -4,6 +4,7 @@ require_once __DIR__ . '/includes/seat_helpers.php';
 
 $prixTotal = isset($_GET['totalPrice']) ? (float) $_GET['totalPrice'] : 0;
 $idVoyage = $_POST['idVoyage'] ?? $_GET['idVoyage'] ?? $_SESSION['idVoyage'] ?? null;
+$flexOption = $_POST['flexOption'] ?? $_GET['flexOption'] ?? null;
 
 $dbError = '';
 $depart = '';
@@ -22,7 +23,10 @@ try {
         $voyage = getVoyageById($bdd, (int)$idVoyage);
 
         if ($voyage) {
-            $prixTotal = (float)($voyage['prix'] ?? $prixTotal);
+            // IMPORTANT :
+            // on ne réécrit plus $prixTotal avec le prix du voyage aller,
+            // sinon on perd le cumul aller + retour transmis depuis recap.php
+
             $depart = trim(($voyage['villeDepart'] ?? '') . (!empty($voyage['quartierDepart']) ? ' - ' . $voyage['quartierDepart'] : ''));
             $arrivee = trim(($voyage['villeArrivee'] ?? '') . (!empty($voyage['quartierArrivee']) ? ' - ' . $voyage['quartierArrivee'] : ''));
             $dateVoyage = $voyage['jourDepart'] ?? '';
@@ -35,6 +39,7 @@ try {
     $_SESSION['depart'] = $depart;
     $_SESSION['arrivee'] = $arrivee;
     $_SESSION['date'] = $dateVoyage;
+    $_SESSION['flexOption'] = $flexOption;
 } catch (Exception $e) {
     $dbError = "Échec de connexion à la base de données : " . $e->getMessage();
 }
@@ -96,6 +101,7 @@ ob_start();
                 <input type="hidden" name="dateVoyage" value="<?= htmlspecialchars($dateVoyage) ?>">
                 <input type="hidden" name="reservationNumber" value="<?= htmlspecialchars($reservationNumber) ?>">
                 <input type="hidden" name="prixTotal" value="<?= htmlspecialchars($prixTotal) ?>">
+                <input type="hidden" name="flexOption" value="<?= htmlspecialchars($flexOption ?? '') ?>">
                 <input type="hidden" name="telephone" id="telephone">
                 <input type="hidden" name="deliveryMethod" id="deliveryMethod" value="email">
 

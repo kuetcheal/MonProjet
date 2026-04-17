@@ -259,7 +259,7 @@
     height: 96px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #0f8d43;
+    border: none;
 }
 
 .gv-account-modal__upload-btn {

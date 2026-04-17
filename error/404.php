@@ -1,120 +1,67 @@
 <?php
+session_start();
 http_response_code(404);
+
+ob_start();
 ?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>404 - Page introuvable</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
+<section class="min-h-[70vh] flex items-center bg-[#f8f9fb] py-16">
+    <div class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            
+            <!-- Partie gauche -->
+            <div>
+                <p class="text-sm font-semibold uppercase tracking-widest text-green-700 mb-3">
+                    Erreur 404
+                </p>
 
-    body {
-      background: #f8f9fb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      padding: 20px;
-    }
+                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-green-700 mb-4">
+                    Oups !
+                </h1>
 
-    .container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: 1100px;
-      width: 100%;
-      gap: 40px;
-    }
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-4">
+                    Cette page n'existe pas (ou plus)
+                </h2>
 
-    .left {
-      flex: 1;
-    }
+                <p class="text-slate-600 text-lg mb-2">
+                    Le lien que vous avez suivi est peut-être incorrect, ou la page a été déplacée.
+                </p>
 
-    .left h1 {
-      font-size: 80px;
-      color: green;
-      margin-bottom: 10px;
-    }
+                <p class="text-slate-500 mb-8">
+                    Code d’erreur : 404
+                </p>
 
-    .left p {
-      font-size: 18px;
-      color: #333;
-      margin-bottom: 10px;
-    }
+                <div class="flex flex-wrap gap-4">
+                    <a
+                        href="/MonProjet/Accueil.php"
+                        class="inline-flex items-center justify-center px-6 py-3 bg-green-700 hover:bg-green-800 text-white font-semibold rounded-lg transition duration-300"
+                    >
+                        Retour à l'accueil
+                    </a>
 
-    .code {
-      color: #666;
-      margin-bottom: 20px;
-    }
+                    <a
+                        href="/MonProjet/contact/contact.php"
+                        class="inline-flex items-center justify-center px-6 py-3 border border-green-700 text-green-700 hover:bg-green-50 font-semibold rounded-lg transition duration-300"
+                    >
+                        Nous contacter
+                    </a>
+                </div>
+            </div>
 
-    .btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 12px 24px;
-      background: green;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      border-radius: 4px;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      background: green;
-    }
-
-    .right {
-      flex: 1;
-      text-align: center;
-    }
-
-    .right img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .left h1 {
-        font-size: 60px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="container">
-    <!-- Texte -->
-    <div class="left">
-      <h1>Oups !</h1>
-
-      <p><strong>Oops cette page n'existe pas (ou plus)</strong></p>
-      <p class="code">Code d’erreur : 404</p>
-
-      <a href="/MonProjet/Accueil.php" class="btn">
-        Retour à l'accueil
-      </a>
+            <!-- Partie droite -->
+            <div class="flex justify-center">
+                <img
+                    src="/MonProjet/pictures/error-pnj.webp"
+                    alt="Erreur 404"
+                    class="max-w-full h-auto object-contain"
+                >
+            </div>
+        </div>
     </div>
+</section>
 
-    <!-- Image -->
-    <div class="right">
-      <img src="/MonProjet/pictures/error-pnj.webp" alt="Erreur 404">
-    </div>
-  </div>
-
-</body>
-</html>
+<?php
+$title = '404 - Page introuvable';
+$content = ob_get_clean();
+include __DIR__ . '/../layouts/default.php';
+?>

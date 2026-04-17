@@ -88,3 +88,27 @@ La géolocalisation navigateur fonctionne avec getCurrentPosition() ou watchPosi
 clé API MAPS Geocoding : AIzaSyBDGz1y0BX_Ca_YJitOavFu-8_K188MBYQ
 
 CLÉ API MAPS (backend) : AIzaSyDmFDvlGgo1AMnTIv57tiPTfaSfq_NMZwE
+
+
+
+
+
+
+
+### politique de Relance des clients par email : 
+1. Définir les cas de relance D’abord, il faut savoir quels événements doivent déclencher une relance.
+Exemples très utiles pour ton projet 
+ Relance client : 
+- client inscrit mais n’a jamais acheté de billet
+- client inactif depuis 30 jours
+- client n’a pas terminé une réservation
+- client a acheté une fois, mais plus rien depuis longtemps
+ Relance commerciale : 
+promotion sur une destination
+nouvelle offre spéciale
+réduction temporaire
+rappel avant une période de voyage
+Relance service : 
+- rappeler un départ proche
+- rappeler une agence ou disponibilité
+- demander un avis après voyage
