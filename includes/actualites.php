@@ -45,7 +45,7 @@ try {
                                     <?= htmlspecialchars($actu['resume']) ?>
                                 </p>
 
-                                <a href="<?= htmlspecialchars($actu['lien']) ?>" class="text-blue-600 font-medium hover:underline">
+                                <a href="<?= htmlspecialchars($actu['lien']) ?>" class="text-[#2e8b57] font-medium underline">
                                     Lire l'article
                                 </a>
                             </div>

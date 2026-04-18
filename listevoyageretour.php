@@ -19,7 +19,7 @@ session_start();
 
     <div class="pb-5"></div>
 
-    <?php include 'filtre_secondaire.php'; ?>
+    <?php include 'includes/filtre_secondaire.php'; ?>
 
     <?php
     try {
