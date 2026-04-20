@@ -55,43 +55,65 @@ try {
         throw new Exception('Erreur : aucun siège sélectionné.');
     }
 
-    $depart = trim($_POST['depart'] ?? $_SESSION['depart'] ?? '');
-    $arrivee = trim($_POST['arrivee'] ?? $_SESSION['arrivee'] ?? '');
-    $date = trim($_POST['dateVoyage'] ?? $_SESSION['date'] ?? '');
-    $idVoyage = (int) ($_POST['idVoyage'] ?? $_SESSION['idVoyage'] ?? 0);
+    $idVoyageAller = (int)($_POST['idVoyageAller'] ?? $_SESSION['idVoyageAller'] ?? 0);
+    $idVoyageRetour = (int)($_POST['idVoyageRetour'] ?? $_SESSION['idVoyageRetour'] ?? 0);
+
+    $departAller = trim($_POST['departAller'] ?? $_SESSION['departAller'] ?? '');
+    $arriveAller = trim($_POST['arriveAller'] ?? $_SESSION['arriveAller'] ?? '');
+    $dateAller = trim($_POST['dateAller'] ?? $_SESSION['dateAller'] ?? '');
+    $timeAller = trim($_POST['timeAller'] ?? $_SESSION['timeAller'] ?? '');
+
+    $departRetour = trim($_POST['departRetour'] ?? $_SESSION['departRetour'] ?? '');
+    $arriveRetour = trim($_POST['arriveRetour'] ?? $_SESSION['arriveRetour'] ?? '');
+    $dateRetour = trim($_POST['dateRetour'] ?? $_SESSION['dateRetour'] ?? '');
+    $timeRetour = trim($_POST['timeRetour'] ?? $_SESSION['timeRetour'] ?? '');
+
+    $priceAller = isset($_POST['priceAller']) ? (float)$_POST['priceAller'] : (float)($_SESSION['priceAller'] ?? 0);
+    $priceRetour = isset($_POST['priceRetour']) ? (float)$_POST['priceRetour'] : (float)($_SESSION['priceRetour'] ?? 0);
     $prix = isset($_POST['prixTotal']) ? (float) $_POST['prixTotal'] : (float) ($_SESSION['prix'] ?? 0);
 
-    if ($idVoyage <= 0) {
-        throw new Exception('Erreur : idVoyage manquant.');
+    if ($idVoyageAller <= 0) {
+        throw new Exception('Erreur : voyage aller manquant.');
     }
 
-    $voyage = getVoyageById($bdd, $idVoyage);
-    if (!$voyage) {
-        throw new Exception('Voyage introuvable.');
+    $voyageAller = getVoyageById($bdd, $idVoyageAller);
+    if (!$voyageAller) {
+        throw new Exception('Voyage aller introuvable.');
     }
 
-    $nombrePlaces = (int) ($voyage['nombrePlaces'] ?? 0);
-    if ($numeroSiege > $nombrePlaces) {
-        throw new Exception('Le siège sélectionné dépasse la capacité du bus.');
+    $nombrePlacesAller = (int) ($voyageAller['nombrePlaces'] ?? 0);
+    if ($numeroSiege > $nombrePlacesAller) {
+        throw new Exception('Le siège sélectionné dépasse la capacité du bus pour le trajet aller.');
     }
 
-    if (!isSeatAvailable($bdd, $idVoyage, $numeroSiege)) {
-        throw new Exception('Cette place est déjà réservée. Veuillez revenir en arrière et en choisir une autre.');
+    if (!isSeatAvailable($bdd, $idVoyageAller, $numeroSiege)) {
+        throw new Exception('Cette place est déjà réservée pour le trajet aller.');
     }
 
-    $_SESSION['depart'] = $depart;
-    $_SESSION['arrivee'] = $arrivee;
-    $_SESSION['date'] = $date;
-    $_SESSION['idVoyage'] = $idVoyage;
+    $isRoundTrip = $idVoyageRetour > 0;
+
+    if ($isRoundTrip) {
+        $voyageRetour = getVoyageById($bdd, $idVoyageRetour);
+        if (!$voyageRetour) {
+            throw new Exception('Voyage retour introuvable.');
+        }
+
+        $nombrePlacesRetour = (int) ($voyageRetour['nombrePlaces'] ?? 0);
+        if ($numeroSiege > $nombrePlacesRetour) {
+            throw new Exception('Le siège sélectionné dépasse la capacité du bus pour le trajet retour.');
+        }
+
+        if (!isSeatAvailable($bdd, $idVoyageRetour, $numeroSiege)) {
+            throw new Exception('Cette place est déjà réservée pour le trajet retour.');
+        }
+    }
+
     $_SESSION['prix'] = $prix;
 
     $etat = 0;
-    $qrToken = generateQrToken($reservationNumber, $telephone, $idVoyage, $numeroSiege);
-    $qrUrl = buildTicketQrUrl($qrToken);
-
     $bdd->beginTransaction();
 
-    $requete = '
+    $insertSql = '
         INSERT INTO reservation (
             nom,
             prenom,
@@ -108,24 +130,54 @@ try {
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ';
 
-    $stmt = $bdd->prepare($requete);
+    $stmt = $bdd->prepare($insertSql);
+
+    $qrTokenAller = generateQrToken($reservationNumber . '-A', $telephone, $idVoyageAller, $numeroSiege);
+    $qrUrlAller = buildTicketQrUrl($qrTokenAller);
+
     $stmt->execute([
         $nom,
         $prenom,
         $telephone,
         $email,
-        $idVoyage,
+        $idVoyageAller,
         $numeroSiege,
         $etat,
         $reservationNumber,
         $numeroSiege,
-        $prix,
-        $qrToken,
+        $priceAller,
+        $qrTokenAller,
         'valid'
     ]);
 
+    $qrUrlRetour = null;
+
+    if ($isRoundTrip) {
+        $qrTokenRetour = generateQrToken($reservationNumber . '-R', $telephone, $idVoyageRetour, $numeroSiege);
+        $qrUrlRetour = buildTicketQrUrl($qrTokenRetour);
+
+        $stmt->execute([
+            $nom,
+            $prenom,
+            $telephone,
+            $email,
+            $idVoyageRetour,
+            $numeroSiege,
+            $etat,
+            $reservationNumber,
+            $numeroSiege,
+            $priceRetour,
+            $qrTokenRetour,
+            'valid'
+        ]);
+    }
+
     $bdd->commit();
 
+    /**
+     * Ici on suppose que tu vas adapter generateInvoicePdf()
+     * pour accepter aussi les infos du retour.
+     */
     $pdfOutput = generateInvoicePdf(
         $nom,
         $prenom,
@@ -133,12 +185,24 @@ try {
         $email,
         $reservationNumber,
         $numeroSiege,
-        $depart,
-        $arrivee,
-        $date,
-        $idVoyage,
+        $departAller,
+        $arriveAller,
+        $dateAller,
+        $idVoyageAller,
         $prix,
-        $qrUrl
+        $qrUrlAller,
+        [
+            'isRoundTrip' => $isRoundTrip,
+            'departRetour' => $departRetour,
+            'arriveRetour' => $arriveRetour,
+            'dateRetour' => $dateRetour,
+            'timeAller' => $timeAller,
+            'timeRetour' => $timeRetour,
+            'idVoyageRetour' => $idVoyageRetour,
+            'priceAller' => $priceAller,
+            'priceRetour' => $priceRetour,
+            'qrUrlRetour' => $qrUrlRetour
+        ]
     );
 
     $emailMessage = 'Envoi email non demandé.';
@@ -156,10 +220,10 @@ try {
             $telephone,
             $reservationNumber,
             $numeroSiege,
-            $depart,
-            $arrivee,
-            $date,
-            $idVoyage,
+            $departAller,
+            $arriveAller,
+            $dateAller,
+            $idVoyageAller,
             $prix
         );
 
@@ -216,7 +280,9 @@ try {
             'socid' => $socid,
             'lines' => [
                 [
-                    'desc' => 'Réservation pour le voyage de ' . $depart . ' à ' . $arrivee,
+                    'desc' => $isRoundTrip
+                        ? 'Réservation aller-retour : ' . $departAller . ' → ' . $arriveAller . ' / ' . $departRetour . ' → ' . $arriveRetour
+                        : 'Réservation pour le voyage de ' . $departAller . ' à ' . $arriveAller,
                     'subprice' => $prix,
                     'qty' => 1,
                     'tva_tx' => 0,
@@ -240,7 +306,9 @@ try {
     }
 
     $messageTitle = 'Réservation finalisée';
-    $messageLines[] = 'Votre réservation a bien été enregistrée.';
+    $messageLines[] = $isRoundTrip
+        ? 'Votre réservation aller-retour a bien été enregistrée.'
+        : 'Votre réservation a bien été enregistrée.';
     $messageLines[] = $emailMessage;
     $messageLines[] = $dolibarrMessage;
     $messageLines[] = 'Redirection en cours vers l’accueil...';

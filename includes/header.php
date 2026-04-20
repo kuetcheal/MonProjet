@@ -6,11 +6,11 @@ if (session_status() === PHP_SESSION_NONE) {
 if (isset($_POST['deconnect_account'])) {
     session_unset();
     session_destroy();
-    header('Location: connexion.php');
+    header('Location: /MonProjet/connexion.php');
     exit;
 }
 
-$isLoggedIn = isset($_SESSION['Id_compte']);
+$isLoggedIn = isset($_SESSION['Id_compte']) && !empty($_SESSION['Id_compte']);
 
 $userFullName = '';
 if ($isLoggedIn) {
@@ -24,27 +24,30 @@ if ($isLoggedIn) {
 }
 
 $userEmail = $isLoggedIn ? ($_SESSION['user_mail'] ?? '') : '';
+$userRole = $isLoggedIn ? ($_SESSION['user_role'] ?? 'client') : 'guest';
 
 $offerLabel = $isLoggedIn ? 'Mes offres' : 'Inscription';
-$offerLink = $isLoggedIn ? 'offres/offres.php' : 'inscription.php';
+$offerLink = $isLoggedIn ? '/MonProjet/offres/offres.php' : '/MonProjet/inscription.php';
 
 $easyLabel = 'EasyTravel';
-$easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
+$easyLink = $isLoggedIn ? '/MonProjet/Accueil.php' : '/MonProjet/connexion.php';
+
+$profileImage = '/MonProjet/pictures/OIP.jpg';
 ?>
 
 <link rel="stylesheet" href="/MonProjet/includes/header.css">
 
 <header class="gv-header notranslate">
     <div class="gv-header__inner">
-        <a href="Accueil.php" class="gv-header__brand">
-           <img src="/MonProjet/pictures/logo-general.jpg" alt="Logo Général Voyage" class="gv-header__logo">
+        <a href="/MonProjet/Accueil.php" class="gv-header__brand">
+            <img src="/MonProjet/pictures/logo-general.jpg" alt="Logo Général Voyage" class="gv-header__logo">
         </a>
 
         <nav class="gv-header__desktop-nav">
-            <a href="Accueil.php" class="gv-header__link gv-header__link--active">Accueil</a>
-            <a href="reservations.php" class="gv-header__link">Réservations</a>
-            <a href="services.php" class="gv-header__link">Services</a>
-            <a href="Contact/contact.php" class="gv-header__link">Nous contacter</a>
+            <a href="/MonProjet/Accueil.php" class="gv-header__link gv-header__link--active">Accueil</a>
+            <a href="/MonProjet/reservations.php" class="gv-header__link">Réservations</a>
+            <a href="/MonProjet/services.php" class="gv-header__link">Services</a>
+            <a href="/MonProjet/Contact/contact.php" class="gv-header__link">Nous contacter</a>
             <a href="<?= htmlspecialchars($offerLink) ?>" class="gv-header__link">
                 <?= htmlspecialchars($offerLabel) ?>
             </a>
@@ -53,20 +56,20 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
             </a>
         </nav>
 
-       <div class="gv-header__actions">
-    <button type="button" id="gvLangFr" class="gv-header__lang is-active">FR</button>
-    <button type="button" id="gvLangEn" class="gv-header__lang">EN</button>
+        <div class="gv-header__actions">
+            <button type="button" id="gvLangFr" class="gv-header__lang is-active">FR</button>
+            <button type="button" id="gvLangEn" class="gv-header__lang">EN</button>
 
-    <?php if ($isLoggedIn): ?>
-        <button type="button" class="gv-header__profile-btn" onclick="gvOpenModal('gvAccountModal')">
-            <img id="profil" src="pictures/OIP.jpg" alt="Profil" class="gv-header__profile-img">
-        </button>
-    <?php endif; ?>
+            <?php if ($isLoggedIn): ?>
+                <button type="button" class="gv-header__profile-btn" onclick="gvOpenModal('gvAccountModal')">
+                    <img id="profil" src="<?= htmlspecialchars($profileImage) ?>" alt="Profil" class="gv-header__profile-img">
+                </button>
+            <?php endif; ?>
 
-    <button id="gvBurgerButton" type="button" class="gv-header__burger" aria-label="Ouvrir le menu">
-        <i class="fa fa-bars"></i>
-    </button>
-</div>
+            <button id="gvBurgerButton" type="button" class="gv-header__burger" aria-label="Ouvrir le menu">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
     </div>
 </header>
 
@@ -74,7 +77,7 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
 
 <aside id="gvMobileDrawer" class="gv-mobile-drawer" aria-hidden="true">
     <div class="gv-mobile-drawer__header">
-        <img src="pictures/logo-general.jpg" alt="Logo Général Voyage" class="gv-mobile-drawer__logo">
+        <img src="/MonProjet/pictures/logo-general.jpg" alt="Logo Général Voyage" class="gv-mobile-drawer__logo">
 
         <button id="gvCloseDrawer" type="button" class="gv-mobile-drawer__close" aria-label="Fermer le menu">
             <i class="fa fa-times"></i>
@@ -82,10 +85,10 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
     </div>
 
     <nav class="gv-mobile-drawer__nav">
-        <a href="Accueil.php" class="gv-mobile-drawer__link gv-mobile-drawer__link--active">Accueil</a>
-        <a href="reservations.php" class="gv-mobile-drawer__link">Réservations</a>
-        <a href="services.php" class="gv-mobile-drawer__link">Services</a>
-        <a href="Contact/contact.php" class="gv-mobile-drawer__link">Nous contacter</a>
+        <a href="/MonProjet/Accueil.php" class="gv-mobile-drawer__link gv-mobile-drawer__link--active">Accueil</a>
+        <a href="/MonProjet/reservations.php" class="gv-mobile-drawer__link">Réservations</a>
+        <a href="/MonProjet/services.php" class="gv-mobile-drawer__link">Services</a>
+        <a href="/MonProjet/Contact/contact.php" class="gv-mobile-drawer__link">Nous contacter</a>
         <a href="<?= htmlspecialchars($offerLink) ?>" class="gv-mobile-drawer__link">
             <?= htmlspecialchars($offerLabel) ?>
         </a>
@@ -106,7 +109,7 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
             <hr class="gv-account-modal__divider">
 
             <div class="gv-account-modal__profile">
-                <img id="profil-pic" src="pictures/OIP.jpg" class="gv-account-modal__profile-img profil-pic-global" alt="Profil utilisateur">
+                <img id="profil-pic" src="<?= htmlspecialchars($profileImage) ?>" class="gv-account-modal__profile-img profil-pic-global" alt="Profil utilisateur">
                 <input type="file" id="input-file" accept="image/png, image/jpeg, image/jpg" hidden>
                 <label for="input-file" class="gv-account-modal__upload-btn">
                     Télécharger une image
@@ -122,15 +125,27 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
 
             <hr class="gv-account-modal__divider">
 
-            <div class="gv-account-modal__actions">
+            <div class="gv-account-modal__actions" style="display:flex; flex-direction:column; gap:12px;">
+                <a href="/MonProjet/Authentification/mon_compte.php" class="gv-account-modal__action gv-account-modal__action--primary" style="text-align:center; text-decoration:none;">
+                    Mon compte
+                </a>
+
+                <?php if ($userRole === 'client'): ?>
+                    <a href="/MonProjet/Authentification/devenir_chauffeur.php" class="gv-account-modal__action gv-account-modal__action--primary" style="text-align:center; text-decoration:none;">
+                        Devenir chauffeur
+                    </a>
+                <?php elseif ($userRole === 'client_chauffeur' || $userRole === 'chauffeur'): ?>
+                    <a href="/MonProjet/offres/offres.php" class="gv-account-modal__action gv-account-modal__action--primary" style="text-align:center; text-decoration:none;">
+                        Mes trajets proposés
+                    </a>
+                <?php endif; ?>
+
                 <button class="gv-account-modal__action gv-account-modal__action--danger" onclick="gvOpenModal('gvDeleteAccountModal')">
                     Supprimer
                 </button>
+
                 <button class="gv-account-modal__action gv-account-modal__action--neutral" onclick="gvOpenModal('gvLogoutModal')">
                     Se déconnecter
-                </button>
-                <button class="gv-account-modal__action gv-account-modal__action--primary">
-                    Modifier
                 </button>
             </div>
         </div>
@@ -146,7 +161,7 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
             <hr class="gv-account-modal__divider">
 
             <div class="gv-account-modal__profile">
-                <img src="pictures/OIP.jpg" class="gv-account-modal__profile-img profil-pic-global" alt="Profil utilisateur">
+                <img src="<?= htmlspecialchars($profileImage) ?>" class="gv-account-modal__profile-img profil-pic-global" alt="Profil utilisateur">
             </div>
 
             <hr class="gv-account-modal__divider">
@@ -181,7 +196,7 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
             <hr class="gv-account-modal__divider">
 
             <div class="gv-account-modal__profile">
-                <img src="pictures/OIP.jpg" class="gv-account-modal__profile-img profil-pic-global" alt="Profil utilisateur">
+                <img src="<?= htmlspecialchars($profileImage) ?>" class="gv-account-modal__profile-img profil-pic-global" alt="Profil utilisateur">
             </div>
 
             <hr class="gv-account-modal__divider">
@@ -246,17 +261,9 @@ $easyLink = $isLoggedIn ? 'Accueil.php' : 'connexion.php';
             document.body.style.overflow = '';
         }
 
-        if (burgerButton) {
-            burgerButton.addEventListener('click', openDrawer);
-        }
-
-        if (closeDrawerButton) {
-            closeDrawerButton.addEventListener('click', closeDrawer);
-        }
-
-        if (mobileBackdrop) {
-            mobileBackdrop.addEventListener('click', closeDrawer);
-        }
+        if (burgerButton) burgerButton.addEventListener('click', openDrawer);
+        if (closeDrawerButton) closeDrawerButton.addEventListener('click', closeDrawer);
+        if (mobileBackdrop) mobileBackdrop.addEventListener('click', closeDrawer);
 
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {

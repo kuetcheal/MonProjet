@@ -15,9 +15,24 @@ $departRetour = $_GET['departRetour'] ?? $_POST['departRetour'] ?? '';
 $arriveRetour = $_GET['arriveRetour'] ?? $_POST['arriveRetour'] ?? '';
 $timeRetour = $_GET['timeRetour'] ?? $_POST['timeRetour'] ?? '';
 
+$isRoundTrip = !empty($idVoyageRetour) && $priceRetour > 0;
+
 if ($idVoyageAller) {
-    $_SESSION['idVoyage'] = $idVoyageAller;
+    $_SESSION['idVoyageAller'] = $idVoyageAller;
 }
+if ($idVoyageRetour) {
+    $_SESSION['idVoyageRetour'] = $idVoyageRetour;
+}
+
+$_SESSION['priceAller'] = $priceAller;
+$_SESSION['priceRetour'] = $priceRetour;
+$_SESSION['departAller'] = $departAller;
+$_SESSION['arriveAller'] = $arriveAller;
+$_SESSION['timeAller'] = $timeAller;
+$_SESSION['departRetour'] = $departRetour;
+$_SESSION['arriveRetour'] = $arriveRetour;
+$_SESSION['timeRetour'] = $timeRetour;
+$_SESSION['tripMode'] = $isRoundTrip ? 'roundtrip' : 'oneway';
 
 $prixBase = $priceAller + $priceRetour;
 $montant15 = $prixBase * 0.15;
@@ -50,7 +65,7 @@ ob_start();
             </p>
         </div>
 
-        <?php if ($priceRetour > 0): ?>
+        <?php if ($isRoundTrip): ?>
             <div class="mb-6 border-l-4 border-blue-500 pl-4">
                 <h3 class="text-lg font-bold text-slate-700 mb-2">Trajet Retour</h3>
 
@@ -77,12 +92,7 @@ ob_start();
 
             <div class="space-y-3">
                 <label class="flex items-start gap-3 border rounded-xl p-4 cursor-pointer hover:border-green-500 transition bg-white">
-                    <input
-                        type="radio"
-                        name="flexOption"
-                        value="yes"
-                        class="mt-1 accent-green-600"
-                    >
+                    <input type="radio" name="flexOption" value="yes" class="mt-1 accent-green-600">
                     <div>
                         <p class="font-bold text-slate-800">
                             Ajouter la flexibilité (+ <?= number_format($montant15, 0, ',', ' ') ?> FCFA)
@@ -94,12 +104,7 @@ ob_start();
                 </label>
 
                 <label class="flex items-start gap-3 border rounded-xl p-4 cursor-pointer hover:border-red-400 transition bg-white">
-                    <input
-                        type="radio"
-                        name="flexOption"
-                        value="no"
-                        class="mt-1 accent-red-500"
-                    >
+                    <input type="radio" name="flexOption" value="no" class="mt-1 accent-red-500">
                     <div>
                         <p class="font-bold text-slate-800">
                             Ne pas ajouter l’option
@@ -131,7 +136,20 @@ ob_start();
 <script>
     const prixBase = <?= json_encode((float)$prixBase) ?>;
     const montant15 = <?= json_encode((float)$montant15) ?>;
+
     const idVoyageAller = <?= json_encode($idVoyageAller ?? '') ?>;
+    const idVoyageRetour = <?= json_encode($idVoyageRetour ?? '') ?>;
+
+    const priceAller = <?= json_encode((float)$priceAller) ?>;
+    const priceRetour = <?= json_encode((float)$priceRetour) ?>;
+
+    const departAller = <?= json_encode($departAller) ?>;
+    const arriveAller = <?= json_encode($arriveAller) ?>;
+    const timeAller = <?= json_encode($timeAller) ?>;
+
+    const departRetour = <?= json_encode($departRetour) ?>;
+    const arriveRetour = <?= json_encode($arriveRetour) ?>;
+    const timeRetour = <?= json_encode($timeRetour) ?>;
 
     const continueBtn = document.getElementById('continueBtn');
     const totalDisplay = document.getElementById('totalDisplay');
@@ -148,22 +166,10 @@ ob_start();
 
     function getCurrentTotal() {
         const option = getSelectedFlexOption();
-
-        if (option === 'yes') {
-            return prixBase + montant15;
-        }
-
-        return prixBase;
+        return option === 'yes' ? prixBase + montant15 : prixBase;
     }
 
     function updateDisplayedTotal() {
-        const selected = getSelectedFlexOption();
-
-        if (!selected) {
-            totalDisplay.textContent = formatFcfa(prixBase);
-            return;
-        }
-
         totalDisplay.textContent = formatFcfa(getCurrentTotal());
     }
 
@@ -186,11 +192,18 @@ ob_start();
             return;
         }
 
-        const totalPrice = getCurrentTotal();
-
         const params = new URLSearchParams({
-            idVoyage: idVoyageAller,
-            totalPrice: totalPrice,
+            idVoyageAller: idVoyageAller,
+            idVoyageRetour: idVoyageRetour,
+            priceAller: priceAller,
+            priceRetour: priceRetour,
+            departAller: departAller,
+            arriveAller: arriveAller,
+            timeAller: timeAller,
+            departRetour: departRetour,
+            arriveRetour: arriveRetour,
+            timeRetour: timeRetour,
+            totalPrice: getCurrentTotal(),
             flexOption: selected
         });
 

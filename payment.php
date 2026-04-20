@@ -3,13 +3,27 @@ session_start();
 require_once __DIR__ . '/includes/seat_helpers.php';
 
 $prixTotal = isset($_GET['totalPrice']) ? (float) $_GET['totalPrice'] : 0;
-$idVoyage = $_POST['idVoyage'] ?? $_GET['idVoyage'] ?? $_SESSION['idVoyage'] ?? null;
-$flexOption = $_POST['flexOption'] ?? $_GET['flexOption'] ?? null;
+
+$idVoyageAller = $_POST['idVoyageAller'] ?? $_GET['idVoyageAller'] ?? $_SESSION['idVoyageAller'] ?? null;
+$idVoyageRetour = $_POST['idVoyageRetour'] ?? $_GET['idVoyageRetour'] ?? $_SESSION['idVoyageRetour'] ?? null;
+
+$priceAller = isset($_GET['priceAller']) ? (float)$_GET['priceAller'] : (float)($_POST['priceAller'] ?? $_SESSION['priceAller'] ?? 0);
+$priceRetour = isset($_GET['priceRetour']) ? (float)$_GET['priceRetour'] : (float)($_POST['priceRetour'] ?? $_SESSION['priceRetour'] ?? 0);
+
+$flexOption = $_POST['flexOption'] ?? $_GET['flexOption'] ?? $_SESSION['flexOption'] ?? null;
 
 $dbError = '';
-$depart = '';
-$arrivee = '';
-$dateVoyage = '';
+
+$departAller = $_GET['departAller'] ?? $_POST['departAller'] ?? $_SESSION['departAller'] ?? '';
+$arriveAller = $_GET['arriveAller'] ?? $_POST['arriveAller'] ?? $_SESSION['arriveAller'] ?? '';
+$timeAller = $_GET['timeAller'] ?? $_POST['timeAller'] ?? $_SESSION['timeAller'] ?? '';
+
+$departRetour = $_GET['departRetour'] ?? $_POST['departRetour'] ?? $_SESSION['departRetour'] ?? '';
+$arriveRetour = $_GET['arriveRetour'] ?? $_POST['arriveRetour'] ?? $_SESSION['arriveRetour'] ?? '';
+$timeRetour = $_GET['timeRetour'] ?? $_POST['timeRetour'] ?? $_SESSION['timeRetour'] ?? '';
+
+$dateAller = '';
+$dateRetour = '';
 $nombrePlaces = 0;
 $reservedSeats = [];
 
@@ -17,29 +31,44 @@ try {
     $bdd = new PDO('mysql:host=localhost;dbname=bd_stock;charset=utf8', 'root', '');
     $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    if ($idVoyage) {
-        $_SESSION['idVoyage'] = $idVoyage;
+    if ($idVoyageAller) {
+        $_SESSION['idVoyageAller'] = $idVoyageAller;
 
-        $voyage = getVoyageById($bdd, (int)$idVoyage);
+        $voyageAller = getVoyageById($bdd, (int)$idVoyageAller);
+        if ($voyageAller) {
+            $departAller = trim(($voyageAller['villeDepart'] ?? '') . (!empty($voyageAller['quartierDepart']) ? ' - ' . $voyageAller['quartierDepart'] : ''));
+            $arriveAller = trim(($voyageAller['villeArrivee'] ?? '') . (!empty($voyageAller['quartierArrivee']) ? ' - ' . $voyageAller['quartierArrivee'] : ''));
+            $dateAller = $voyageAller['jourDepart'] ?? '';
+            $timeAller = substr($voyageAller['heureDepart'] ?? '', 0, 5);
+            $nombrePlaces = (int)($voyageAller['nombrePlaces'] ?? 0);
+            $reservedSeats = getReservedSeats($bdd, (int)$idVoyageAller);
+        }
+    }
 
-        if ($voyage) {
-            // IMPORTANT :
-            // on ne réécrit plus $prixTotal avec le prix du voyage aller,
-            // sinon on perd le cumul aller + retour transmis depuis recap.php
+    if ($idVoyageRetour) {
+        $_SESSION['idVoyageRetour'] = $idVoyageRetour;
 
-            $depart = trim(($voyage['villeDepart'] ?? '') . (!empty($voyage['quartierDepart']) ? ' - ' . $voyage['quartierDepart'] : ''));
-            $arrivee = trim(($voyage['villeArrivee'] ?? '') . (!empty($voyage['quartierArrivee']) ? ' - ' . $voyage['quartierArrivee'] : ''));
-            $dateVoyage = $voyage['jourDepart'] ?? '';
-            $nombrePlaces = (int)($voyage['nombrePlaces'] ?? 0);
-            $reservedSeats = getReservedSeats($bdd, (int)$idVoyage);
+        $voyageRetour = getVoyageById($bdd, (int)$idVoyageRetour);
+        if ($voyageRetour) {
+            $departRetour = trim(($voyageRetour['villeDepart'] ?? '') . (!empty($voyageRetour['quartierDepart']) ? ' - ' . $voyageRetour['quartierDepart'] : ''));
+            $arriveRetour = trim(($voyageRetour['villeArrivee'] ?? '') . (!empty($voyageRetour['quartierArrivee']) ? ' - ' . $voyageRetour['quartierArrivee'] : ''));
+            $dateRetour = $voyageRetour['jourDepart'] ?? '';
+            $timeRetour = substr($voyageRetour['heureDepart'] ?? '', 0, 5);
         }
     }
 
     $_SESSION['prix'] = $prixTotal;
-    $_SESSION['depart'] = $depart;
-    $_SESSION['arrivee'] = $arrivee;
-    $_SESSION['date'] = $dateVoyage;
+    $_SESSION['priceAller'] = $priceAller;
+    $_SESSION['priceRetour'] = $priceRetour;
     $_SESSION['flexOption'] = $flexOption;
+    $_SESSION['departAller'] = $departAller;
+    $_SESSION['arriveAller'] = $arriveAller;
+    $_SESSION['timeAller'] = $timeAller;
+    $_SESSION['dateAller'] = $dateAller;
+    $_SESSION['departRetour'] = $departRetour;
+    $_SESSION['arriveRetour'] = $arriveRetour;
+    $_SESSION['timeRetour'] = $timeRetour;
+    $_SESSION['dateRetour'] = $dateRetour;
 } catch (Exception $e) {
     $dbError = "Échec de connexion à la base de données : " . $e->getMessage();
 }
@@ -91,14 +120,38 @@ ob_start();
                 Informations du Passager
             </h2>
 
-            <form method="post" action="finalisation.php" id="passengerForm">
-                <?php if ($idVoyage): ?>
-                    <input type="hidden" name="idVoyage" value="<?= htmlspecialchars($idVoyage) ?>">
-                <?php endif; ?>
+            <div class="mb-6 space-y-4">
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h3 class="font-bold text-slate-800">Trajet Aller</h3>
+                    <p><?= htmlspecialchars($departAller) ?> → <?= htmlspecialchars($arriveAller) ?></p>
+                    <p class="text-sm text-gray-500"><?= htmlspecialchars($dateAller) ?> à <?= htmlspecialchars($timeAller) ?></p>
+                </div>
 
-                <input type="hidden" name="depart" value="<?= htmlspecialchars($depart) ?>">
-                <input type="hidden" name="arrivee" value="<?= htmlspecialchars($arrivee) ?>">
-                <input type="hidden" name="dateVoyage" value="<?= htmlspecialchars($dateVoyage) ?>">
+                <?php if (!empty($idVoyageRetour)): ?>
+                    <div class="border-l-4 border-blue-500 pl-4">
+                        <h3 class="font-bold text-slate-800">Trajet Retour</h3>
+                        <p><?= htmlspecialchars($departRetour) ?> → <?= htmlspecialchars($arriveRetour) ?></p>
+                        <p class="text-sm text-gray-500"><?= htmlspecialchars($dateRetour) ?> à <?= htmlspecialchars($timeRetour) ?></p>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <form method="post" action="finalisation.php" id="passengerForm">
+                <input type="hidden" name="idVoyageAller" value="<?= htmlspecialchars($idVoyageAller ?? '') ?>">
+                <input type="hidden" name="idVoyageRetour" value="<?= htmlspecialchars($idVoyageRetour ?? '') ?>">
+
+                <input type="hidden" name="departAller" value="<?= htmlspecialchars($departAller) ?>">
+                <input type="hidden" name="arriveAller" value="<?= htmlspecialchars($arriveAller) ?>">
+                <input type="hidden" name="dateAller" value="<?= htmlspecialchars($dateAller) ?>">
+                <input type="hidden" name="timeAller" value="<?= htmlspecialchars($timeAller) ?>">
+
+                <input type="hidden" name="departRetour" value="<?= htmlspecialchars($departRetour) ?>">
+                <input type="hidden" name="arriveRetour" value="<?= htmlspecialchars($arriveRetour) ?>">
+                <input type="hidden" name="dateRetour" value="<?= htmlspecialchars($dateRetour) ?>">
+                <input type="hidden" name="timeRetour" value="<?= htmlspecialchars($timeRetour) ?>">
+
+                <input type="hidden" name="priceAller" value="<?= htmlspecialchars($priceAller) ?>">
+                <input type="hidden" name="priceRetour" value="<?= htmlspecialchars($priceRetour) ?>">
                 <input type="hidden" name="reservationNumber" value="<?= htmlspecialchars($reservationNumber) ?>">
                 <input type="hidden" name="prixTotal" value="<?= htmlspecialchars($prixTotal) ?>">
                 <input type="hidden" name="flexOption" value="<?= htmlspecialchars($flexOption ?? '') ?>">

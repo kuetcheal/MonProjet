@@ -5,13 +5,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Mailjet\Resources;
 
-// Fonction pour générer un code de confirmation aléatoire
-function genererCodeVerification()
+function genererCodeVerification(): string
 {
-    return rand(100000, 999999);
+    return (string) rand(100000, 999999);
 }
 
-// Fonction d'envoi d'email via Mailjet
 function envoyerCodeVerificationMailjet(string $email, string $nom, string $code): bool
 {
     $mj = new \Mailjet\Client(
@@ -36,7 +34,14 @@ function envoyerCodeVerificationMailjet(string $email, string $nom, string $code
                 ],
                 'Subject' => 'Confirmation de votre compte',
                 'TextPart' => "Bonjour $nom, voici votre code de confirmation : $code",
-                'HTMLPart' => "<h3>Bonjour $nom,</h3><p>Votre compte est en cours de création. Veuillez saisir ce code de confirmation <strong>$code</strong> sur le site.</p>",
+                'HTMLPart' => "
+                    <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #222;'>
+                        <h3>Bonjour " . htmlspecialchars($nom) . ",</h3>
+                        <p>Votre compte est en cours de création.</p>
+                        <p>Veuillez saisir ce code de confirmation sur le site :</p>
+                        <p style='font-size: 24px; font-weight: bold; color: green;'>$code</p>
+                    </div>
+                ",
             ],
         ],
     ];
@@ -50,268 +55,262 @@ function envoyerCodeVerificationMailjet(string $email, string $nom, string $code
 }
 
 $message = '';
+$messageType = 'info';
 
-// Traitement du formulaire d'inscription
+try {
+    $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+    $bdd = new PDO($dsn, DB_USER, DB_PASS, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+} catch (PDOException $e) {
+    die('Erreur de connexion à la base de données.');
+}
+
+/**
+ * ÉTAPE 1 : formulaire d'inscription envoyé depuis inscription.php
+ */
 if (
     $_SERVER['REQUEST_METHOD'] === 'POST' &&
-    isset($_POST['nom'], $_POST['prenom'], $_POST['email'], $_POST['phone'], $_POST['password'])
+    isset($_POST['nom'], $_POST['prenom'], $_POST['email'], $_POST['phone'], $_POST['password']) &&
+    !isset($_POST['valider']) &&
+    !isset($_POST['renvoyer'])
 ) {
     $nom = trim($_POST['nom']);
     $prenom = trim($_POST['prenom']);
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $passwordBrut = $_POST['password'];
 
-    $veri = uniqid('', true);
-    $code = substr($veri, -4);
-
-    $_SESSION['nom'] = $nom;
-    $_SESSION['prenom'] = $prenom;
-    $_SESSION['phone'] = $phone;
-    $_SESSION['email'] = $email;
-    $_SESSION['password'] = $password;
-    $_SESSION['code'] = $code;
-
-    if (envoyerCodeVerificationMailjet($email, $nom, $code)) {
-        $message = "Un code de confirmation a été envoyé à votre adresse email.";
+    if ($nom === '' || $prenom === '' || $email === '' || $phone === '' || $passwordBrut === '') {
+        $message = "Tous les champs sont obligatoires.";
+        $messageType = 'error';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $message = "Adresse email invalide.";
+        $messageType = 'error';
     } else {
-        $message = "Erreur lors de l'envoi de l'email de confirmation.";
-    }
-}
+        $checkUser = $bdd->prepare("SELECT id FROM user WHERE user_mail = :email LIMIT 1");
+        $checkUser->execute([':email' => $email]);
 
-// Vérifier si l'utilisateur a cliqué sur le bouton "Renvoyer"
-if (isset($_POST['renvoyer'])) {
-    if (!isset($_SESSION['email'], $_SESSION['nom'])) {
-        $message = "Session expirée. Veuillez recommencer l'inscription.";
-    } else {
-        $nouveauCode = genererCodeVerification();
-        $_SESSION['code'] = $nouveauCode;
-
-        if (envoyerCodeVerificationMailjet($_SESSION['email'], $_SESSION['nom'], (string) $nouveauCode)) {
-            $message = "Un nouveau code de confirmation a été envoyé à votre adresse email.";
+        if ($checkUser->fetch()) {
+            $message = "Cet email est déjà utilisé.";
+            $messageType = 'error';
         } else {
-            $message = "Erreur lors de l'envoi du nouveau code.";
+            $passwordHash = password_hash($passwordBrut, PASSWORD_DEFAULT);
+            $code = genererCodeVerification();
+
+            $_SESSION['register_nom'] = $nom;
+            $_SESSION['register_prenom'] = $prenom;
+            $_SESSION['register_phone'] = $phone;
+            $_SESSION['register_email'] = $email;
+            $_SESSION['register_password'] = $passwordHash;
+            $_SESSION['register_code'] = $code;
+
+            if (envoyerCodeVerificationMailjet($email, $nom, $code)) {
+                $message = "Un code de confirmation a été envoyé à votre adresse email.";
+                $messageType = 'success';
+            } else {
+                $message = "Erreur lors de l'envoi de l'email de confirmation.";
+                $messageType = 'error';
+            }
         }
     }
 }
 
-// Vérifier si l'utilisateur a cliqué sur le bouton "Valider"
+/**
+ * ÉTAPE 2 : renvoi du code
+ */
+if (isset($_POST['renvoyer'])) {
+    if (!isset($_SESSION['register_email'], $_SESSION['register_nom'])) {
+        $message = "Session expirée. Veuillez recommencer l'inscription.";
+        $messageType = 'error';
+    } else {
+        $nouveauCode = genererCodeVerification();
+        $_SESSION['register_code'] = $nouveauCode;
+
+        if (envoyerCodeVerificationMailjet($_SESSION['register_email'], $_SESSION['register_nom'], $nouveauCode)) {
+            $message = "Un nouveau code de confirmation a été envoyé à votre adresse email.";
+            $messageType = 'success';
+        } else {
+            $message = "Erreur lors de l'envoi du nouveau code.";
+            $messageType = 'error';
+        }
+    }
+}
+
+/**
+ * ÉTAPE 3 : validation du code
+ */
 if (isset($_POST['valider'])) {
-    if (!isset($_SESSION['code'], $_POST['verification'])) {
-        $message = "Aucun code à vérifier.";
-    } elseif ((string) $_SESSION['code'] === trim($_POST['verification'])) {
-        try {
-            $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
-            $bdd = new PDO($dsn, DB_USER, DB_PASS);
-            $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $codeSaisi = trim($_POST['verification'] ?? '');
 
-            $nom = $_SESSION['nom'];
-            $prenom = $_SESSION['prenom'];
-            $email = $_SESSION['email'];
-            $motpasse = $_SESSION['password'];
-            $phone = $_SESSION['phone'];
+    if (
+        !isset(
+            $_SESSION['register_nom'],
+            $_SESSION['register_prenom'],
+            $_SESSION['register_phone'],
+            $_SESSION['register_email'],
+            $_SESSION['register_password'],
+            $_SESSION['register_code']
+        )
+    ) {
+        $message = "Session expirée. Veuillez recommencer l'inscription.";
+        $messageType = 'error';
+    } elseif ($codeSaisi === '') {
+        $message = "Veuillez saisir le code de vérification.";
+        $messageType = 'error';
+    } elseif ((string) $_SESSION['register_code'] !== $codeSaisi) {
+        $message = "Code incorrect. Veuillez saisir le bon code reçu.";
+        $messageType = 'error';
+    } else {
+        $nom = $_SESSION['register_nom'];
+        $prenom = $_SESSION['register_prenom'];
+        $email = $_SESSION['register_email'];
+        $phone = $_SESSION['register_phone'];
+        $motpasse = $_SESSION['register_password'];
 
-            $requette = $bdd->prepare('
+        $checkUser = $bdd->prepare("SELECT id FROM user WHERE user_mail = :email LIMIT 1");
+        $checkUser->execute([':email' => $email]);
+
+        if ($checkUser->fetch()) {
+            $message = "Cet email est déjà utilisé.";
+            $messageType = 'error';
+        } else {
+            $requete = $bdd->prepare("
                 INSERT INTO user (
                     user_name,
                     user_firstname,
                     user_password,
                     user_mail,
                     user_phone,
-                    verification
+                    verification,
+                    voyages_offerts_utilises,
+                    role,
+                    account_status
                 ) VALUES (
                     :nom,
                     :prenom,
                     :motpasse,
                     :email,
                     :phone,
-                    :veri
+                    :verification,
+                    :voyages_offerts_utilises,
+                    :role,
+                    :account_status
                 )
-            ');
+            ");
 
-            $requette->bindParam(':nom', $nom);
-            $requette->bindParam(':prenom', $prenom);
-            $requette->bindParam(':motpasse', $motpasse);
-            $requette->bindParam(':email', $email);
-            $requette->bindParam(':phone', $phone);
-            $requette->bindParam(':veri', $_SESSION['code']);
+            $success = $requete->execute([
+                ':nom' => $nom,
+                ':prenom' => $prenom,
+                ':motpasse' => $motpasse,
+                ':email' => $email,
+                ':phone' => $phone,
+                ':verification' => 1,
+                ':voyages_offerts_utilises' => 0,
+                ':role' => 'client',
+                ':account_status' => 'active'
+            ]);
 
-            if ($requette->execute()) {
-                $data = [
-                    'name' => $nom . ' ' . $prenom,
-                    'address' => '',
-                    'zip' => '',
-                    'town' => '',
-                    'email' => $email,
-                    'client' => 1
-                ];
+            if ($success) {
+                $userId = $bdd->lastInsertId();
 
-                $options = [
-                    'http' => [
-                        'header'  => "Content-type: application/json\r\n" .
-                                      "DOLAPIKEY: " . DOLIBARR_API_KEY . "\r\n",
-                        'method'  => 'POST',
-                        'content' => json_encode($data)
-                    ]
-                ];
+                // sessions compatibles avec ton header.php
+                $_SESSION['Id_compte'] = $userId;
+                $_SESSION['user_name'] = $nom;
+                $_SESSION['user_firstname'] = $prenom;
+                $_SESSION['user_mail'] = $email;
+                $_SESSION['user_phone'] = $phone;
+                $_SESSION['user_role'] = 'client';
 
-                $context = stream_context_create($options);
-                $result = file_get_contents(DOLIBARR_API_URL, false, $context);
+                unset(
+                    $_SESSION['register_nom'],
+                    $_SESSION['register_prenom'],
+                    $_SESSION['register_phone'],
+                    $_SESSION['register_email'],
+                    $_SESSION['register_password'],
+                    $_SESSION['register_code']
+                );
 
-                if ($result === false) {
-                    $message = "Erreur lors de la création du tiers dans Dolibarr.";
-                } else {
-                    header('Location: Accueil.php');
-                    exit;
-                }
+                header('Location: Accueil.php');
+                exit;
             } else {
-                $message = "Erreur lors de l'insertion dans la base de données.";
+                $message = "Erreur lors de la création du compte.";
+                $messageType = 'error';
             }
-        } catch (PDOException $e) {
-            $message = "Erreur de base de données.";
         }
-    } else {
-        $message = "Incompatibilité du code, veuillez insérer le bon code reçu.";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vérification</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <style>
-        body {
-            background-color: aliceblue;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        header {
-            width: 100%;
-            background-color: green;
-            height: 100px;
-        }
-
-        nav {
-            width: 100%;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-picture {
-            margin-left: 40px;
-        }
-
-        img {
-            height: 60px;
-            width: 100px;
-            margin-top: 20px;
-        }
-
-        .nav-bar {
-            margin-right: 30px;
-        }
-
-        .nav-bar ul {
-            display: flex;
-            list-style-type: none;
-        }
-
-        .items a {
-            text-decoration: none;
-            color: whitesmoke;
-            font-size: 20px;
-            margin-right: 40px;
-            padding: 0 15px;
-        }
-
-        .container {
-            border: 1px solid #ccc;
-            padding: 20px;
-            max-width: 500px;
-            margin: 75px auto 0;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            background: #fff;
-        }
-
-        h3 {
-            margin-top: 0;
-        }
-
-        input[type="text"] {
-            padding: 8px;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 50%;
-        }
-
-        button[type="submit"] {
-            padding: 10px 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 8px;
-        }
-
-        .message {
-            margin-top: 15px;
-            padding: 10px;
-            background: #f3f3f3;
-            border-left: 4px solid green;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-[aliceblue] min-h-screen">
 
-<body>
+    <?php include 'includes/header.php'; ?>
 
-<header>
-    <nav>
-        <div class="header-picture">
-            <img src="logo général.jpg" alt="logo site">
+    <main class="px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <div class="w-full max-w-xl mx-auto mt-6 sm:mt-10 mb-12 bg-white rounded-xl shadow-lg p-6 sm:p-8 border border-gray-100">
+            <h1 class="text-2xl sm:text-3xl font-bold text-center text-green-700 mb-3">
+                Vérification du compte
+            </h1>
+
+            <p class="text-gray-700 text-center leading-7 mb-6">
+                Un code de confirmation a été envoyé à votre adresse email.
+                Veuillez le saisir dans le champ ci-dessous.
+            </p>
+
+            <?php if (!empty($message)): ?>
+                <div class="mb-5 rounded-lg px-4 py-3 text-sm sm:text-base
+                    <?php echo $messageType === 'success'
+                        ? 'bg-green-100 text-green-700 border border-green-200'
+                        : 'bg-red-100 text-red-700 border border-red-200'; ?>">
+                    <?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?>
+                </div>
+            <?php endif; ?>
+
+            <form method="post" action="" class="space-y-4">
+                <div>
+                    <label for="verification" class="block text-gray-800 font-medium mb-2">
+                        Code de vérification
+                    </label>
+                    <input
+                        type="text"
+                        id="verification"
+                        name="verification"
+                        required
+                        maxlength="6"
+                        placeholder="Entrez votre code"
+                        class="w-full rounded-md px-4 py-3 border border-gray-300 text-gray-700 placeholder-gray-400 outline-none focus:ring-2 focus:ring-green-300"
+                    >
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button
+                        type="submit"
+                        name="valider"
+                        class="w-full sm:w-1/2 bg-green-600 hover:bg-green-700 text-white py-3 rounded-md font-medium transition"
+                    >
+                        Valider
+                    </button>
+
+                    <button
+                        type="submit"
+                        name="renvoyer"
+                        class="w-full sm:w-1/2 bg-gray-600 hover:bg-gray-700 text-white py-3 rounded-md font-medium transition"
+                    >
+                        Renvoyer le code
+                    </button>
+                </div>
+            </form>
         </div>
-        <div class="nav-bar">
-            <ul>
-                <li class="items">
-                    <select id="select" name="select" aria-placeholder="2 places">
-                        <option value="option1">Français</option>
-                        <option value="option2">Anglais</option>
-                    </select>
-                </li>
-                <li class="items">
-                    <a href="#"><i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i></a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-</header>
+    </main>
 
-<div class="container">
-    <h3>Un code de confirmation a été envoyé dans votre email, veuillez le saisir dans ce champ.</h3>
-
-    <form method="post" action="#">
-        <input type="text" name="verification" required><br><br>
-        <button type="submit" name="valider">Valider</button>
-        <button type="submit" name="renvoyer">Renvoyer le code</button>
-    </form>
-
-    <?php if (!empty($message)): ?>
-        <div class="message">
-            <?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?>
-        </div>
-    <?php endif; ?>
-</div>
+    <?php include 'includes/footer.php'; ?>
 
 </body>
 </html>

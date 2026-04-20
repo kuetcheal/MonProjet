@@ -3,6 +3,7 @@ session_start();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -46,6 +47,7 @@ session_start();
         $trancheHoraire = trim($_GET['trancheHoraire'] ?? '');
         $prixMax = trim($_GET['prixMax'] ?? '');
         $tri = trim($_GET['tri'] ?? 'heure_asc');
+        $transport = trim($_GET['transport'] ?? 'tout');
     } catch (Exception $e) {
         echo '<p class="text-red-600 text-center mt-8">Échec de connexion à la base de données.</p>';
         exit;
@@ -53,7 +55,7 @@ session_start();
 
     function buildFilterConditions(array &$params, string $prefix = '')
     {
-        global $typeBusFilter, $trancheHoraire, $prixMax;
+        global $typeBusFilter, $trancheHoraire, $prixMax, $transport;
 
         $conditions = [];
 
@@ -87,6 +89,14 @@ session_start();
                     $params[":heureEnd{$prefix}"] = '23:59:59';
                     break;
             }
+        }
+
+        if ($transport === 'bus') {
+            $conditions[] = "modeTransport = :modeTransport{$prefix}";
+            $params[":modeTransport{$prefix}"] = 'bus';
+        } elseif ($transport === 'covoiturage') {
+            $conditions[] = "modeTransport = :modeTransport{$prefix}";
+            $params[":modeTransport{$prefix}"] = 'covoiturage';
         }
 
         return $conditions;
@@ -129,7 +139,7 @@ session_start();
         $stmt = $bdd->prepare($sql);
         $stmt->execute($params);
 
-        return (int) $stmt->fetchColumn();
+        return (int)$stmt->fetchColumn();
     }
 
     function fetchVoyages(PDO $bdd, string $depart, string $arrivee, string $date, string $prefix = 'f')
@@ -157,9 +167,18 @@ session_start();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function getBusAmenities(string $bus): array
+    function getAmenities(string $bus, string $modeTransport = 'bus'): array
     {
         $bus = strtolower(trim($bus));
+        $modeTransport = strtolower(trim($modeTransport));
+
+        if ($modeTransport === 'covoiturage') {
+            return [
+                ['icon' => 'bi bi-person-badge', 'label' => 'Conducteur'],
+                ['icon' => 'bi bi-people', 'label' => 'Places'],
+                ['icon' => 'fa fa-snowflake-o', 'label' => 'Climatisation'],
+            ];
+        }
 
         if ($bus === 'vip') {
             return [
@@ -180,7 +199,7 @@ session_start();
     function formatLieuCompact(string $ville = '', string $quartier = '', string $align = 'left'): string
     {
         $ville = htmlspecialchars($ville);
-        $quartier = trim((string) $quartier);
+        $quartier = trim((string)$quartier);
 
         $alignClass = $align === 'center'
             ? 'text-center items-center'
@@ -203,9 +222,9 @@ session_start();
         ";
     }
 
-    function renderAmenitiesHtml(string $bus): string
+    function renderAmenitiesHtml(string $bus, string $modeTransport = 'bus'): string
     {
-        $amenities = getBusAmenities($bus);
+        $amenities = getAmenities($bus, $modeTransport);
         $html = "<div class='flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-gray-500'>";
 
         foreach ($amenities as $item) {
@@ -223,6 +242,27 @@ session_start();
         return $html;
     }
 
+    function renderTransportLabelHtml(string $modeTransport = 'bus'): string
+    {
+        $modeTransport = strtolower(trim($modeTransport));
+
+        if ($modeTransport === 'covoiturage') {
+            return "
+                <div class='flex items-center gap-2 text-slate-600 font-semibold text-[12px] sm:text-[13px] md:text-[15px]'>
+                    <span>Personnel</span>
+                    <i class='bi bi-car-front-fill text-[16px] sm:text-[18px] md:text-[20px]'></i>
+                </div>
+            ";
+        }
+
+        return "
+            <div class='flex items-center gap-2 text-slate-600 font-semibold text-[12px] sm:text-[13px] md:text-[15px]'>
+                <span>Bus</span>
+                <i class='fa fa-bus text-[15px] sm:text-[17px] md:text-[19px]'></i>
+            </div>
+        ";
+    }
+
     function renderVoyageCard(array $voyage, string $type = 'simple')
     {
         $id = htmlspecialchars($voyage['idVoyage']);
@@ -233,20 +273,30 @@ session_start();
         $villeArrivee = $voyage['villeArrivee'] ?? '';
         $quartierArrivee = $voyage['quartierArrivee'] ?? '';
         $prix = htmlspecialchars($voyage['prix']);
-        $bus = htmlspecialchars($voyage['typeBus']);
+        $bus = htmlspecialchars($voyage['typeBus'] ?? 'standard');
+        $modeTransport = strtolower(trim($voyage['modeTransport'] ?? 'bus'));
 
         $departHtml = formatLieuCompact($villeDepart, $quartierDepart, 'left');
         $arriveeHtml = formatLieuCompact($villeArrivee, $quartierArrivee, 'center');
-        $amenitiesHtml = renderAmenitiesHtml($bus);
-        $detailsId = "details-{$type}-{$id}";
+        $amenitiesHtml = renderAmenitiesHtml($bus, $modeTransport);
+        $transportLabelHtml = renderTransportLabelHtml($modeTransport);
         $busLower = strtolower(trim($bus));
 
-        $typeHtml = "
-            <div class='flex items-center justify-end gap-1.5 sm:gap-2 text-right'>
-                <i class='fa fa-bus text-[16px] sm:text-[18px] md:text-[22px]'></i>
-                <span class='text-[15px] sm:text-[16px] md:text-[20px] font-bold text-slate-700'>{$busLower}</span>
-            </div>
-        ";
+        if ($modeTransport === 'covoiturage') {
+            $typeHtml = "
+                <div class='flex items-center justify-end gap-1.5 sm:gap-2 text-right'>
+                    <i class='bi bi-car-front-fill text-[16px] sm:text-[18px] md:text-[22px]'></i>
+                    <span class='text-[15px] sm:text-[16px] md:text-[20px] font-bold text-slate-700'>covoiturage</span>
+                </div>
+            ";
+        } else {
+            $typeHtml = "
+                <div class='flex items-center justify-end gap-1.5 sm:gap-2 text-right'>
+                    <i class='fa fa-bus text-[16px] sm:text-[18px] md:text-[22px]'></i>
+                    <span class='text-[15px] sm:text-[16px] md:text-[20px] font-bold text-slate-700'>{$busLower}</span>
+                </div>
+            ";
+        }
 
         $cardBody = "
         <div class='bg-white shadow-md border border-gray-100 px-2 py-3 sm:px-4 sm:py-4 md:px-5 transition hover:shadow-md w-full'>
@@ -289,12 +339,7 @@ session_start();
 
             <div class='grid grid-cols-3 items-center gap-2 sm:gap-3 md:gap-4'>
                 <div class='text-left min-w-0'>
-                    <button
-                        type='button'
-                        class='text-blue-600 hover:underline font-medium text-[11px] sm:text-[13px] md:text-[15px]'
-                        onclick=\"toggleDetails('{$detailsId}')\">
-                        Détails du trajet
-                    </button>
+                    {$transportLabelHtml}
                 </div>
 
                 <div class='flex justify-center min-w-0'>
@@ -303,19 +348,6 @@ session_start();
 
                 <div class='flex justify-end min-w-0'>
                     %s
-                </div>
-            </div>
-
-            <div id='{$detailsId}' class='hidden mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200'>
-                <div class='grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-[12px] sm:text-sm text-slate-600'>
-                    <div>
-                        <p><strong>Départ :</strong> " . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "</p>
-                        <p><strong>Heure départ :</strong> {$heureDepart}</p>
-                    </div>
-                    <div>
-                        <p><strong>Arrivée :</strong> " . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "</p>
-                        <p><strong>Heure arrivée :</strong> {$heureArrivee}</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -355,6 +387,8 @@ session_start();
     <div class="max-w-7xl mx-auto px-3 sm:px-4 py-5 sm:py-8">
         <div class="flex flex-col lg:flex-row gap-5 sm:gap-8 items-start">
             <main class="flex-1 min-w-0 order-1">
+                <?php include 'includes/type_trajet.php'; ?>
+
                 <?php if ($allerSimpleSelected): ?>
                     <?php
                     $voyagesDisponiblesAller = 0;
@@ -454,14 +488,8 @@ session_start();
     <?php include 'includes/footer.php'; ?>
 
     <script>
-        function toggleDetails(id) {
-            const el = document.getElementById(id);
-            if (!el) return;
-            el.classList.toggle('hidden');
-        }
-
         document.querySelectorAll('.continuer-btn-simple').forEach(button => {
-            button.addEventListener('click', function () {
+            button.addEventListener('click', function() {
                 const params = new URLSearchParams({
                     idVoyageAller: this.dataset.id,
                     priceAller: this.dataset.price,
@@ -478,11 +506,14 @@ session_start();
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            let selectedTrips = { aller: null, retour: null };
+        document.addEventListener('DOMContentLoaded', function() {
+            let selectedTrips = {
+                aller: null,
+                retour: null
+            };
 
             document.querySelectorAll('.continuer-btn').forEach(button => {
-                button.addEventListener('click', function (e) {
+                button.addEventListener('click', function(e) {
                     e.preventDefault();
 
                     const type = this.dataset.type;
@@ -539,4 +570,5 @@ session_start();
         });
     </script>
 </body>
+
 </html>

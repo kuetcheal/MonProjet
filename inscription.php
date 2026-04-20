@@ -1,18 +1,16 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-
-<body style="background-color: aliceblue;">
+<body class="bg-[aliceblue] min-h-screen">
 
     <?php include 'includes/header.php'; ?>
 
@@ -23,6 +21,24 @@
             </h2>
 
             <hr class="border-white/30 mb-6">
+
+            <?php if (!empty($_SESSION['error'])): ?>
+                <div class="mb-4 rounded-md bg-red-100 text-red-700 px-4 py-3">
+                    <?php
+                    echo htmlspecialchars($_SESSION['error']);
+                    unset($_SESSION['error']);
+                    ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (!empty($_SESSION['success'])): ?>
+                <div class="mb-4 rounded-md bg-green-100 text-green-700 px-4 py-3">
+                    <?php
+                    echo htmlspecialchars($_SESSION['success']);
+                    unset($_SESSION['success']);
+                    ?>
+                </div>
+            <?php endif; ?>
 
             <form action="verification.php" method="POST" class="flex flex-col gap-4">
                 <div>
@@ -72,7 +88,7 @@
                         Téléphone :
                     </label>
                     <input
-                        type="number"
+                        type="text"
                         id="phone"
                         name="phone"
                         placeholder="655198412"
@@ -114,5 +130,4 @@
     <?php include 'includes/footer.php'; ?>
 
 </body>
-
 </html>
