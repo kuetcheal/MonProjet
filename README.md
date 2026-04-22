@@ -112,3 +112,20 @@ Relance service :
 - rappeler un départ proche
 - rappeler une agence ou disponibilité
 - demander un avis après voyage
+
+
+
+#### une fois chauffeur validé, il peut proposer un trajet covoiturage.
+
+
+
+
+
+### Le modèle financier le plus simple pour commencer
+Je te conseille au début :
+Commission fixe en pourcentage
+Exemple :
+prix chauffeur proposé : 5000 FCFA
+commission plateforme : 10 %
+commission = 500 FCFA
+chauffeur reçoit 4500 FCFA

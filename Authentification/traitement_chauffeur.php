@@ -6,6 +6,11 @@ if (empty($_SESSION['Id_compte'])) {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: /MonProjet/Authentification/devenir_chauffeur.php');
+    exit;
+}
+
 require_once __DIR__ . '/../config.php';
 
 try {
@@ -41,11 +46,16 @@ if (
     exit;
 }
 
-$check = $bdd->prepare("SELECT id, statut_validation FROM chauffeur_profile WHERE user_id = :user_id LIMIT 1");
+$check = $bdd->prepare("
+    SELECT id, statut_validation
+    FROM chauffeur_profile
+    WHERE user_id = :user_id
+    LIMIT 1
+");
 $check->execute([':user_id' => $userId]);
 $existingProfile = $check->fetch(PDO::FETCH_ASSOC);
 
-if ($existingProfile && $existingProfile['statut_validation'] === 'en_attente') {
+if ($existingProfile && ($existingProfile['statut_validation'] ?? '') === 'en_attente') {
     $_SESSION['error'] = 'Vous avez déjà une demande chauffeur en attente.';
     header('Location: /MonProjet/Authentification/devenir_chauffeur.php');
     exit;
@@ -58,10 +68,15 @@ if (!is_dir($uploadDir)) {
 
 function uploadFile(string $fileInputName, string $uploadDir): ?string
 {
-    if (
-        !isset($_FILES[$fileInputName]) ||
-        $_FILES[$fileInputName]['error'] !== UPLOAD_ERR_OK
-    ) {
+    if (!isset($_FILES[$fileInputName])) {
+        return null;
+    }
+
+    if ($_FILES[$fileInputName]['error'] === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+
+    if ($_FILES[$fileInputName]['error'] !== UPLOAD_ERR_OK) {
         return null;
     }
 
@@ -87,87 +102,126 @@ function uploadFile(string $fileInputName, string $uploadDir): ?string
 $photoPermis = uploadFile('photo_permis', $uploadDir);
 $photoCarteGrise = uploadFile('photo_carte_grise', $uploadDir);
 
-if ($existingProfile) {
-    $update = $bdd->prepare("
-        UPDATE chauffeur_profile
-        SET
-            numero_permis = :numero_permis,
-            numero_cni = :numero_cni,
-            marque_vehicule = :marque_vehicule,
-            modele_vehicule = :modele_vehicule,
-            immatriculation = :immatriculation,
-            couleur_vehicule = :couleur_vehicule,
-            nombre_places = :nombre_places,
-            photo_permis = COALESCE(:photo_permis, photo_permis),
-            photo_carte_grise = COALESCE(:photo_carte_grise, photo_carte_grise),
-            statut_validation = 'en_attente'
-        WHERE user_id = :user_id
-    ");
+try {
+    $bdd->beginTransaction();
 
-    $update->execute([
-        ':numero_permis' => $numero_permis,
-        ':numero_cni' => $numero_cni,
-        ':marque_vehicule' => $marque_vehicule,
-        ':modele_vehicule' => $modele_vehicule,
-        ':immatriculation' => $immatriculation,
-        ':couleur_vehicule' => $couleur_vehicule,
-        ':nombre_places' => $nombre_places,
-        ':photo_permis' => $photoPermis,
-        ':photo_carte_grise' => $photoCarteGrise,
-        ':user_id' => $userId
-    ]);
-} else {
-    $insert = $bdd->prepare("
-        INSERT INTO chauffeur_profile (
-            user_id,
-            numero_permis,
-            numero_cni,
-            marque_vehicule,
-            modele_vehicule,
-            immatriculation,
-            couleur_vehicule,
-            nombre_places,
-            photo_permis,
-            photo_carte_grise,
-            statut_validation
+    if ($existingProfile) {
+        $update = $bdd->prepare("
+            UPDATE chauffeur_profile
+            SET
+                numero_permis = :numero_permis,
+                numero_cni = :numero_cni,
+                marque_vehicule = :marque_vehicule,
+                modele_vehicule = :modele_vehicule,
+                immatriculation = :immatriculation,
+                couleur_vehicule = :couleur_vehicule,
+                nombre_places = :nombre_places,
+                photo_permis = COALESCE(:photo_permis, photo_permis),
+                photo_carte_grise = COALESCE(:photo_carte_grise, photo_carte_grise),
+                statut_validation = 'en_attente'
+            WHERE user_id = :user_id
+        ");
+
+        $update->execute([
+            ':numero_permis' => $numero_permis,
+            ':numero_cni' => $numero_cni,
+            ':marque_vehicule' => $marque_vehicule,
+            ':modele_vehicule' => $modele_vehicule,
+            ':immatriculation' => $immatriculation,
+            ':couleur_vehicule' => $couleur_vehicule,
+            ':nombre_places' => $nombre_places,
+            ':photo_permis' => $photoPermis,
+            ':photo_carte_grise' => $photoCarteGrise,
+            ':user_id' => $userId
+        ]);
+    } else {
+        $insert = $bdd->prepare("
+            INSERT INTO chauffeur_profile (
+                user_id,
+                numero_permis,
+                numero_cni,
+                marque_vehicule,
+                modele_vehicule,
+                immatriculation,
+                couleur_vehicule,
+                nombre_places,
+                photo_permis,
+                photo_carte_grise,
+                statut_validation
+            ) VALUES (
+                :user_id,
+                :numero_permis,
+                :numero_cni,
+                :marque_vehicule,
+                :modele_vehicule,
+                :immatriculation,
+                :couleur_vehicule,
+                :nombre_places,
+                :photo_permis,
+                :photo_carte_grise,
+                'en_attente'
+            )
+        ");
+
+        $insert->execute([
+            ':user_id' => $userId,
+            ':numero_permis' => $numero_permis,
+            ':numero_cni' => $numero_cni,
+            ':marque_vehicule' => $marque_vehicule,
+            ':modele_vehicule' => $modele_vehicule,
+            ':immatriculation' => $immatriculation,
+            ':couleur_vehicule' => $couleur_vehicule,
+            ':nombre_places' => $nombre_places,
+            ':photo_permis' => $photoPermis,
+            ':photo_carte_grise' => $photoCarteGrise
+        ]);
+    }
+
+    $updateUser = $bdd->prepare("
+        UPDATE user
+        SET role = 'client_chauffeur'
+        WHERE id = :id
+    ");
+    $updateUser->execute([':id' => $userId]);
+
+    $notifAdmin = $bdd->prepare("
+        INSERT INTO notifications (
+            cible_role,
+            type_notification,
+            titre,
+            message,
+            lien,
+            is_read
         ) VALUES (
-            :user_id,
-            :numero_permis,
-            :numero_cni,
-            :marque_vehicule,
-            :modele_vehicule,
-            :immatriculation,
-            :couleur_vehicule,
-            :nombre_places,
-            :photo_permis,
-            :photo_carte_grise,
-            'en_attente'
+            'admin',
+            :type_notification,
+            :titre,
+            :message,
+            :lien,
+            0
         )
     ");
 
-    $insert->execute([
-        ':user_id' => $userId,
-        ':numero_permis' => $numero_permis,
-        ':numero_cni' => $numero_cni,
-        ':marque_vehicule' => $marque_vehicule,
-        ':modele_vehicule' => $modele_vehicule,
-        ':immatriculation' => $immatriculation,
-        ':couleur_vehicule' => $couleur_vehicule,
-        ':nombre_places' => $nombre_places,
-        ':photo_permis' => $photoPermis,
-        ':photo_carte_grise' => $photoCarteGrise
+    $notifAdmin->execute([
+        ':type_notification' => 'nouvelle_demande_chauffeur',
+        ':titre' => 'Nouvelle demande chauffeur',
+        ':message' => 'Un utilisateur a soumis une nouvelle demande pour devenir chauffeur.',
+        ':lien' => '/MonProjet/Admins/chauffeurs.php'
     ]);
+
+    $bdd->commit();
+
+    $_SESSION['user_role'] = 'client_chauffeur';
+    $_SESSION['success'] = 'Votre demande chauffeur a bien été envoyée. Elle est en attente de validation.';
+
+    header('Location: /MonProjet/Authentification/mon_compte.php');
+    exit;
+} catch (PDOException $e) {
+    if ($bdd->inTransaction()) {
+        $bdd->rollBack();
+    }
+
+    $_SESSION['error'] = 'Une erreur est survenue lors de l’envoi de votre demande.';
+    header('Location: /MonProjet/Authentification/devenir_chauffeur.php');
+    exit;
 }
-
-$updateUser = $bdd->prepare("
-    UPDATE user
-    SET role = 'client_chauffeur'
-    WHERE id = :id
-");
-$updateUser->execute([':id' => $userId]);
-
-$_SESSION['user_role'] = 'client_chauffeur';
-$_SESSION['success'] = 'Votre demande chauffeur a bien été envoyée. Elle est en attente de validation.';
-
-header('Location: /MonProjet/Authentification/mon_compte.php');
-exit;
