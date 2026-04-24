@@ -3,15 +3,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!isset($bdd) || !($bdd instanceof PDO)) {
-    try {
-        $bdd = new PDO('mysql:host=localhost;dbname=bd_stock;charset=utf8', 'root', '', [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ]);
-    } catch (Exception $e) {
-        return;
-    }
-}
+require_once __DIR__ . '/../config.php';
+
+$bdd = $pdo;
 
 $Depart = trim($_POST['input1'] ?? $_SESSION['depart'] ?? '');
 $Arrivee = trim($_POST['input2'] ?? $_SESSION['arrivee'] ?? '');

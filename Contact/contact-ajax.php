@@ -1,26 +1,48 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
+
+require_once __DIR__ . '/../config.php';
+
 try {
-    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
+    if (
+        isset($_POST['name'], $_POST['gmail'], $_POST['message'], $_POST['telephone'], $_POST['choix'])
+    ) {
+        $a = trim($_POST['name']);
+        $d = trim($_POST['telephone']);
+        $b = trim($_POST['gmail']);
+        $c = trim($_POST['message']);
+        $e = trim($_POST['choix']);
 
-    if (isset($_POST['name']) && isset($_POST['gmail']) && isset($_POST['message']) && isset($_POST['telephone']) && isset($_POST['choix'])) {
-        $a = $_POST['name'];
-        $d = $_POST['telephone'];
-        $b = $_POST['gmail'];
-        $c = $_POST['messa'];
-        $e = $_POST['choix'];
+        $requete = $pdo->prepare("
+            INSERT INTO admins (nom, email, messa, telephone, Nom_ville)
+            VALUES (?, ?, ?, ?, ?)
+        ");
 
-        $requete = $bdd->prepare("INSERT INTO admins (nom, email, messa, telephone, Nom_ville) VALUES (?, ?, ?, ?, ?)");
-        
-        // Exécution de la requête
         if ($requete->execute([$a, $b, $c, $d, $e])) {
-            echo json_encode(['status' => 'success', 'redirect' => 'merci.php']);
-        } else {
-            $errorInfo = $requete->errorInfo();
-            echo json_encode(['status' => 'error', 'message' => 'Erreur d\'insertion : ' . $errorInfo[2]]);
+            echo json_encode([
+                'status' => 'success',
+                'redirect' => 'merci.php'
+            ]);
+            exit;
         }
+
+        echo json_encode([
+            'status' => 'error',
+            'message' => "Erreur lors de l'insertion."
+        ]);
+        exit;
     }
+
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Veuillez remplir tous les champs.'
+    ]);
+    exit;
+
 } catch (Exception $e) {
-    // En cas d'erreur de connexion ou d'exécution de la requête
-    echo json_encode(['status' => 'error', 'message' => 'Echec de connexion: ' . $e->getMessage()]);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Échec : ' . $e->getMessage()
+    ]);
+    exit;
 }
-?>

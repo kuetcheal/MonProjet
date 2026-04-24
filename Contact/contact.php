@@ -1,14 +1,13 @@
 <?php
 session_start();
 
+require_once __DIR__ . '/../config.php';
+
 $agences = [];
 
 try {
-    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock;charset=utf8', 'root', '');
-    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     $query = 'SELECT Nom_ville FROM destination ORDER BY Nom_ville ASC';
-    $stmt = $bdd->query($query);
+    $stmt = $pdo->query($query);
     $agences = $stmt->fetchAll(PDO::FETCH_COLUMN);
 } catch (PDOException $e) {
     $agences = [];
@@ -16,7 +15,6 @@ try {
 
 ob_start();
 ?>
-
 
 
 <section class="py-16 bg-[#f8fafc]">

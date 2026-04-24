@@ -1,48 +1,48 @@
 <?php
-    if (isset($_POST['id_voyage'])) {
-        $id_voyage = $_POST['id_voyage'];
+require_once __DIR__ . '/config.php';
 
-        // Connectez-vous à la base de données
+if (isset($_POST['id_voyage'])) {
+    $id_voyage = (int) $_POST['id_voyage'];
 
-        try {
-            $conn = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-        } catch (\Throwable $th) {
-            echo("Echec de connexion");
-            exit();
-        }
+    $requete_recuperation = "SELECT * FROM voyage WHERE idVoyage = :id_voyage LIMIT 1";
+    $statement = $pdo->prepare($requete_recuperation);
+    $statement->bindValue(':id_voyage', $id_voyage, PDO::PARAM_INT);
+    $statement->execute();
 
-        // Effectuez la requête de récupération du voyage
+    $voyage = $statement->fetch(PDO::FETCH_ASSOC);
 
-        $requete_recuperation = "SELECT * FROM voyage WHERE idVoyage = :id_voyage";
-        $statement = $conn->prepare($requete_recuperation);
-        $statement->bindValue(':id_voyage', $id_voyage);
-        $resultat = $statement->execute();
+    if ($voyage) {
+        echo "
+        <div class='travel-modif'>
+            <h2>Modification du trajet</h2>
+            <hr style='color: green;'><br>
 
-        // Vérifiez si la récupération a réussi
+            <form method='POST' action='modification.php'>
+                <input type='hidden' name='id_voyage' value='" . htmlspecialchars($voyage['idVoyage']) . "'>
 
-        if ($resultat) {
-            $voyage = $statement->fetch();
+                Ville départ:
+                <input type='text' name='ville_depart' value='" . htmlspecialchars($voyage['villeDepart']) . "'><br><br>
 
-            // Affichez le formulaire de modification avec les données pré-remplies
+                Ville arrivée:
+                <input type='text' name='ville_arrivee' value='" . htmlspecialchars($voyage['villeArrivee']) . "'><br><br>
 
-            echo("
-            <div class='travel-modif'>
-             <h2>Modification du trajet</h2>
-             <hr style=' color: green;'><br>
-                 <form method='POST' action='modification.php'>
-                    <input type='hidden' name='id_voyage' value='{$voyage['idVoyage']}'>
-                    Ville départ: <input type='text' name='ville_depart' value='{$voyage['villeDepart']}'><br><br>
-                    Ville arrivée: <input type='text' name='ville_arrivee' value='{$voyage['villeArrivee']}'><br><br>
-                    Heure départ: <input type='text' name='heure_depart' value='{$voyage['heureDepart']}'><br><br>
-                    Heure arrivée: <input type='text' name='heure_arrivee' value='{$voyage['heureArrivee']}'><br><br>
-                    Type de bus: <input type='text' name='type_bus' value='{$voyage['typeBus']}'><br><br>
-                    Prix: <input type='text' name='prix' value='{$voyage['prix']}'><br><br>
-                    <button type='submit' class='btn'>Enregistrer</button>
-                 </form>
-            </div>     
-            ");
-        }
+                Heure départ:
+                <input type='text' name='heure_depart' value='" . htmlspecialchars($voyage['heureDepart']) . "'><br><br>
+
+                Heure arrivée:
+                <input type='text' name='heure_arrivee' value='" . htmlspecialchars($voyage['heureArrivee']) . "'><br><br>
+
+                Type de bus:
+                <input type='text' name='type_bus' value='" . htmlspecialchars($voyage['typeBus']) . "'><br><br>
+
+                Prix:
+                <input type='text' name='prix' value='" . htmlspecialchars($voyage['prix']) . "'><br><br>
+
+                <button type='submit' class='btn'>Enregistrer</button>
+            </form>
+        </div>";
     }
+}
 ?>
 
 <!DOCTYPE html>

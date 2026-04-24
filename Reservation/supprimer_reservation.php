@@ -2,33 +2,35 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "bd_stock";
+header('Content-Type: application/json; charset=utf-8');
 
-$conn = mysqli_connect($host, $user, $password, $database);
-if (!$conn) {
-    die(json_encode(["status" => "error", "message" => "Erreur de connexion à la base de données."]));
-}
+require_once __DIR__ . '/../config.php';
 
-// Lire les données JSON envoyées
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (isset($data['id_reservation'])) {
-    $id_reservation = intval($data['id_reservation']);
-    
+    $id_reservation = (int) $data['id_reservation'];
+
     $query = "DELETE FROM reservation WHERE id_reservation = ?";
-    $stmt = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param($stmt, "i", $id_reservation);
-    
-    if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(["status" => "success", "message" => "Réservation supprimée avec succès."]);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Erreur lors de la suppression."]);
+    $stmt = $pdo->prepare($query);
+
+    if ($stmt->execute([$id_reservation])) {
+        echo json_encode([
+            "status" => "success",
+            "message" => "Réservation supprimée avec succès."
+        ]);
+        exit;
     }
-} else {
-    echo json_encode(["status" => "error", "message" => "ID de réservation manquant."]);
+
+    echo json_encode([
+        "status" => "error",
+        "message" => "Erreur lors de la suppression."
+    ]);
+    exit;
 }
 
-mysqli_close($conn);
+echo json_encode([
+    "status" => "error",
+    "message" => "ID de réservation manquant."
+]);
+exit;

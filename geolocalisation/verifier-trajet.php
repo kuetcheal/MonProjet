@@ -1,22 +1,11 @@
 <?php
 session_start();
 
+require_once __DIR__ . '/../config.php';
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ../Accueil.php');
     exit;
-}
-
-try {
-    $bdd = new PDO(
-        'mysql:host=localhost;dbname=bd_stock;charset=utf8mb4',
-        'root',
-        '',
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ]
-    );
-} catch (Exception $e) {
-    die('Erreur de connexion : ' . $e->getMessage());
 }
 
 $numeroReservation = trim($_POST['Numero_reservation'] ?? '');
@@ -46,7 +35,7 @@ $sql = "
     LIMIT 1
 ";
 
-$stmt = $bdd->prepare($sql);
+$stmt = $pdo->prepare($sql);
 $stmt->execute([
     'numeroReservation' => $numeroReservation,
     'email' => $email,

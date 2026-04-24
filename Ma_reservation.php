@@ -1,31 +1,34 @@
 <?php
 session_start();
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "bd_stock";
 
-$conn = mysqli_connect($host, $user, $password, $database);
-if (!$conn) {
-    die("Échec de la connexion à la base de données.");
-}
+require_once __DIR__ . '/config.php';
 
 if (isset($_GET['id_reservation'])) {
-    $id_reservation = $_GET['id_reservation'];
+    $id_reservation = (int) $_GET['id_reservation'];
 
-    // Récupérer les détails de la réservation
-    $query = "SELECT reservation.Numero_reservation, reservation.nom, reservation.prenom, reservation.telephone, 
-                 voyage.villeDepart, voyage.villeArrivee, voyage.heureDepart, voyage.heureArrivee, voyage.jourDepart, reservation.prix_reservation
-          FROM reservation
-          JOIN voyage ON reservation.idVoyage = voyage.idVoyage
-          WHERE reservation.id_reservation = ?";
+    $query = "
+        SELECT 
+            reservation.Numero_reservation,
+            reservation.nom,
+            reservation.prenom,
+            reservation.telephone,
+            voyage.villeDepart,
+            voyage.villeArrivee,
+            voyage.heureDepart,
+            voyage.heureArrivee,
+            voyage.jourDepart,
+            reservation.prix_reservation
+        FROM reservation
+        JOIN voyage ON reservation.idVoyage = voyage.idVoyage
+        WHERE reservation.id_reservation = ?
+        LIMIT 1
+    ";
 
-    $stmt = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param($stmt, "i", $id_reservation);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$id_reservation]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row = mysqli_fetch_assoc($result)) {
+    if ($row) {
         $numero_reservation = $row['Numero_reservation'];
         $nom_passager = $row['nom'] . " " . $row['prenom'];
         $telephone = $row['telephone'];
@@ -36,7 +39,6 @@ if (isset($_GET['id_reservation'])) {
         $villeDepart = $row['villeDepart'];
         $villeArrivee = $row['villeArrivee'];
 
-        // Calcul du remboursement
         $perte = $prix * 0.3;
         $remboursement = $prix - $perte;
     } else {
@@ -45,8 +47,6 @@ if (isset($_GET['id_reservation'])) {
     }
 } else {
     echo "ID de réservation non spécifié.";
-
-
     exit;
 }
 ?>

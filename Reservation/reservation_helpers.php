@@ -17,10 +17,6 @@ function generateQrToken($reservationNumber, $telephone, $idVoyage, $seat)
 
 function buildTicketQrUrl($qrToken)
 {
-    // Mets ici l’URL publique de ton site
-    // Exemple en local :
-    // return 'http://localhost/ton_projet/verify_ticket.php?token=' . urlencode($qrToken);
-
     return 'http://localhost/poo-en-php/verify_ticket.php?token=' . urlencode($qrToken);
 }
 

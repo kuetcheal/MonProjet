@@ -22,17 +22,17 @@ session_start();
 
     <?php include 'includes/filtre_secondaire.php'; ?>
 
-    <?php
-    try {
-        $bdd = new PDO('mysql:host=localhost;dbname=bd_stock;charset=utf8', 'root', '', [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ]);
+<?php
+try {
+    require_once __DIR__ . '/config.php';
 
-        $Depart = trim($_POST['input1'] ?? $_SESSION['depart'] ?? '');
-        $Arrivee = trim($_POST['input2'] ?? $_SESSION['arrivee'] ?? '');
-        $date = trim($_POST['input3'] ?? $_SESSION['date'] ?? '');
-        $dateRetour = trim($_POST['input4'] ?? $_SESSION['dateretour'] ?? '');
-        $tripType = $_POST['inlineRadioOptions'] ?? $_SESSION['tripType'] ?? 'option1';
+    $bdd = $pdo;
+
+    $Depart = trim($_POST['input1'] ?? $_SESSION['depart'] ?? '');
+    $Arrivee = trim($_POST['input2'] ?? $_SESSION['arrivee'] ?? '');
+    $date = trim($_POST['input3'] ?? $_SESSION['date'] ?? '');
+    $dateRetour = trim($_POST['input4'] ?? $_SESSION['dateretour'] ?? '');
+    $tripType = $_POST['inlineRadioOptions'] ?? $_SESSION['tripType'] ?? 'option1';
 
         $_SESSION['depart'] = $Depart;
         $_SESSION['arrivee'] = $Arrivee;
