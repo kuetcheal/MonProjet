@@ -10,6 +10,9 @@ define('DB_NAME', $_ENV['DB_NAME'] ?? 'bd_stock');
 define('DB_USER', $_ENV['DB_USER'] ?? 'root');
 define('DB_PASS', $_ENV['DB_PASS'] ?? '');
 
+define('ADMIN_USERNAME', $_ENV['ADMIN_USERNAME'] ?? '');
+define('ADMIN_PASSWORD', $_ENV['ADMIN_PASSWORD'] ?? '');
+
 
 define('CLOUDINARY_URL', $_ENV['CLOUDINARY_URL'] ?? '');
 

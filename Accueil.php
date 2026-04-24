@@ -1,11 +1,22 @@
 <?php
 session_start();
 
+require_once __DIR__ . '/config.php';
+
 if (isset($_POST['deconnect_account'])) {
     session_unset();
     session_destroy();
     header('Location: connexion.php');
     exit;
+}
+
+$destinations = [];
+
+try {
+    $stmt = $pdo->query("SELECT Nom_ville FROM destination ORDER BY Nom_ville ASC");
+    $destinations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Erreur lors du chargement des destinations : " . $e->getMessage());
 }
 ?>
 <!DOCTYPE html>
@@ -14,6 +25,7 @@ if (isset($_POST['deconnect_account'])) {
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -28,7 +40,9 @@ if (isset($_POST['deconnect_account'])) {
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 
     <!-- Litepicker -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" />
@@ -147,7 +161,6 @@ if (isset($_POST['deconnect_account'])) {
             background: green !important;
             color: #fff !important;
             font-weight: 700 !important;
-
         }
 
         .litepicker .day-item.is-in-range {
@@ -193,7 +206,6 @@ if (isset($_POST['deconnect_account'])) {
             color: #6b7280 !important;
         }
 
-        /* Cache les dropdowns moches si jamais Litepicker les affiche */
         .litepicker select {
             appearance: none !important;
             border: 1px solid #e5e7eb !important;
@@ -207,7 +219,6 @@ if (isset($_POST['deconnect_account'])) {
             outline: none !important;
         }
 
-        /* Mobile */
         @media (max-width: 768px) {
             .litepicker {
                 min-width: auto !important;
@@ -277,15 +288,11 @@ if (isset($_POST['deconnect_account'])) {
                                 <i class="bi bi-geo-alt"></i> DE :
                             </label>
                             <select id="desktop_input1" name="input1" class="select2">
-                                <?php
-                                $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-                                $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
-                                $response = $bdd->query($query);
-                                while ($donnee = $response->fetch()) {
-                                    $destination = $donnee['Nom_ville'];
-                                    echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
-                                }
-                                ?>
+                                <?php foreach ($destinations as $donnee): ?>
+                                    <option value="<?= htmlspecialchars($donnee['Nom_ville']) ?>">
+                                        <?= htmlspecialchars($donnee['Nom_ville']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
@@ -294,15 +301,11 @@ if (isset($_POST['deconnect_account'])) {
                                 <i class="bi bi-geo-alt"></i> A :
                             </label>
                             <select id="desktop_input2" name="input2" class="select2">
-                                <?php
-                                $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-                                $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
-                                $response = $bdd->query($query);
-                                while ($donnee = $response->fetch()) {
-                                    $destination = $donnee['Nom_ville'];
-                                    echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
-                                }
-                                ?>
+                                <?php foreach ($destinations as $donnee): ?>
+                                    <option value="<?= htmlspecialchars($donnee['Nom_ville']) ?>">
+                                        <?= htmlspecialchars($donnee['Nom_ville']) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
@@ -383,15 +386,11 @@ if (isset($_POST['deconnect_account'])) {
                                     id="mobile_input1"
                                     name="input1"
                                     class="select2 w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none">
-                                    <?php
-                                    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-                                    $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
-                                    $response = $bdd->query($query);
-                                    while ($donnee = $response->fetch()) {
-                                        $destination = $donnee['Nom_ville'];
-                                        echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
-                                    }
-                                    ?>
+                                    <?php foreach ($destinations as $donnee): ?>
+                                        <option value="<?= htmlspecialchars($donnee['Nom_ville']) ?>">
+                                            <?= htmlspecialchars($donnee['Nom_ville']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
 
@@ -403,15 +402,11 @@ if (isset($_POST['deconnect_account'])) {
                                     id="mobile_input2"
                                     name="input2"
                                     class="select2 w-full h-[50px] rounded-[12px] border border-[#d3d7dc] px-3 text-[15px] font-bold text-[#156f3e] bg-white outline-none">
-                                    <?php
-                                    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-                                    $query = 'SELECT * FROM destination ORDER BY Nom_ville ASC';
-                                    $response = $bdd->query($query);
-                                    while ($donnee = $response->fetch()) {
-                                        $destination = $donnee['Nom_ville'];
-                                        echo '<option value="' . htmlspecialchars($destination) . '">' . htmlspecialchars($destination) . '</option>';
-                                    }
-                                    ?>
+                                    <?php foreach ($destinations as $donnee): ?>
+                                        <option value="<?= htmlspecialchars($donnee['Nom_ville']) ?>">
+                                            <?= htmlspecialchars($donnee['Nom_ville']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
 
@@ -492,9 +487,7 @@ if (isset($_POST['deconnect_account'])) {
         </section>
 
         <section>
-
             <?php include 'map.php'; ?>
-
         </section>
 
         <section class="bg-white py-[60px]">
@@ -548,7 +541,7 @@ if (isset($_POST['deconnect_account'])) {
 
     <div id="modalMessage"></div>
 
-    <?php include 'includes/scrollToUp.php' ?>
+    <?php include 'includes/scrollToUp.php'; ?>
     <?php include 'includes/footer.php'; ?>
 
     <script>
@@ -641,6 +634,26 @@ if (isset($_POST['deconnect_account'])) {
 
                 form.addEventListener('submit', function(e) {
                     const isRoundTrip = getTripMode() === 'option2';
+                    const depart = form.querySelector('select[name="input1"]');
+                    const arrivee = form.querySelector('select[name="input2"]');
+
+                    if (!depart.value) {
+                        e.preventDefault();
+                        alert('Veuillez sélectionner une ville de départ.');
+                        return;
+                    }
+
+                    if (!arrivee.value) {
+                        e.preventDefault();
+                        alert('Veuillez sélectionner une ville d’arrivée.');
+                        return;
+                    }
+
+                    if (depart.value === arrivee.value) {
+                        e.preventDefault();
+                        alert('La ville de départ et la ville d’arrivée doivent être différentes.');
+                        return;
+                    }
 
                     if (!startHidden.value) {
                         e.preventDefault();

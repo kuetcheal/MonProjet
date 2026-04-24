@@ -1,44 +1,45 @@
 <?php
 session_start();
-$host = 'localhost';
-$user = 'root';
-$password = '';
-$database = 'bd_stock';
 
-// Connexion à la base de données
-$conn = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
+require_once __DIR__ . '/../config.php';
 
-// Vérifier si le formulaire de suppression a été soumis
+// Suppression
 if (isset($_POST['delete_voyage'])) {
-    $id = $_POST['id_voyage'];
+    $id = (int) $_POST['id_voyage'];
+
     $query = "DELETE FROM voyage WHERE idVoyage = :id";
-    $stmt = $conn->prepare($query);
+    $stmt = $pdo->prepare($query);
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
-        echo "<meta http-equiv='refresh' content='2;url=listevoyadmin.php'>";
-        echo "<div class='fixed top-0 left-0 w-full bg-green-500 text-white text-center p-4'>Voyage supprimé avec succès.</div>";
-    } else {
-        echo "<div class='fixed top-0 left-0 w-full bg-red-500 text-white text-center p-4'>Erreur lors de la suppression.</div>";
+        header("Location: listevoyadmin.php?success=delete");
+        exit;
     }
+
+    header("Location: listevoyadmin.php?error=delete");
+    exit;
 }
 
-// PAGINATION
-$limit = 10; // Nombre de voyages par page
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
+// Pagination
+$limit = 10;
+$page = isset($_GET['page']) && (int) $_GET['page'] > 0 ? (int) $_GET['page'] : 1;
 $start = ($page - 1) * $limit;
 
-// Récupération des voyages avec pagination
-$query = "SELECT * FROM voyage ORDER BY jourDepart DESC LIMIT $start, $limit";
-$voyages = $conn->query($query)->fetchAll();
+// Récupération des voyages
+$query = "SELECT * FROM voyage ORDER BY jourDepart DESC LIMIT :start, :limit";
+$stmt = $pdo->prepare($query);
+$stmt->bindValue(':start', $start, PDO::PARAM_INT);
+$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+$stmt->execute();
 
-// Compter le nombre total de voyages
+$voyages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Total
 $total_query = "SELECT COUNT(*) FROM voyage";
-$total_result = $conn->query($total_query);
-$total_voyages = $total_result->fetchColumn();
-$total_pages = ceil($total_voyages / $limit);
+$total_result = $pdo->query($total_query);
+$total_voyages = (int) $total_result->fetchColumn();
+$total_pages = max(1, (int) ceil($total_voyages / $limit));
 ?>
-
 
 
 

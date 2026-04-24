@@ -1,6 +1,7 @@
 <?php
 session_start();
-require __DIR__ . '/vendor/autoload.php';
+
+require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/includes/seat_helpers.php';
 require_once __DIR__ . '/Reservation/reservation_helpers.php';
 
@@ -34,9 +35,6 @@ $messageLines = [];
 $redirectUrl = 'Accueil.php';
 
 try {
-    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock;charset=utf8', 'root', '');
-    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     if (
         !isset($_POST['nom'], $_POST['prenom'], $_POST['telephone'], $_POST['selectedSeat'], $_POST['reservationNumber'], $_POST['submit'])
     ) {
@@ -76,34 +74,38 @@ try {
         throw new Exception('Erreur : voyage aller manquant.');
     }
 
-    $voyageAller = getVoyageById($bdd, $idVoyageAller);
+    $voyageAller = getVoyageById($pdo, $idVoyageAller);
+
     if (!$voyageAller) {
         throw new Exception('Voyage aller introuvable.');
     }
 
     $nombrePlacesAller = (int) ($voyageAller['nombrePlaces'] ?? 0);
+
     if ($numeroSiege > $nombrePlacesAller) {
         throw new Exception('Le siège sélectionné dépasse la capacité du bus pour le trajet aller.');
     }
 
-    if (!isSeatAvailable($bdd, $idVoyageAller, $numeroSiege)) {
+    if (!isSeatAvailable($pdo, $idVoyageAller, $numeroSiege)) {
         throw new Exception('Cette place est déjà réservée pour le trajet aller.');
     }
 
     $isRoundTrip = $idVoyageRetour > 0;
 
     if ($isRoundTrip) {
-        $voyageRetour = getVoyageById($bdd, $idVoyageRetour);
+        $voyageRetour = getVoyageById($pdo, $idVoyageRetour);
+
         if (!$voyageRetour) {
             throw new Exception('Voyage retour introuvable.');
         }
 
         $nombrePlacesRetour = (int) ($voyageRetour['nombrePlaces'] ?? 0);
+
         if ($numeroSiege > $nombrePlacesRetour) {
             throw new Exception('Le siège sélectionné dépasse la capacité du bus pour le trajet retour.');
         }
 
-        if (!isSeatAvailable($bdd, $idVoyageRetour, $numeroSiege)) {
+        if (!isSeatAvailable($pdo, $idVoyageRetour, $numeroSiege)) {
             throw new Exception('Cette place est déjà réservée pour le trajet retour.');
         }
     }
@@ -111,7 +113,7 @@ try {
     $_SESSION['prix'] = $prix;
 
     $etat = 0;
-    $bdd->beginTransaction();
+    $pdo->beginTransaction();
 
     $insertSql = '
         INSERT INTO reservation (
@@ -130,7 +132,7 @@ try {
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ';
 
-    $stmt = $bdd->prepare($insertSql);
+    $stmt = $pdo->prepare($insertSql);
 
     $qrTokenAller = generateQrToken($reservationNumber . '-A', $telephone, $idVoyageAller, $numeroSiege);
     $qrUrlAller = buildTicketQrUrl($qrTokenAller);
@@ -172,12 +174,8 @@ try {
         ]);
     }
 
-    $bdd->commit();
+    $pdo->commit();
 
-    /**
-     * Ici on suppose que tu vas adapter generateInvoicePdf()
-     * pour accepter aussi les infos du retour.
-     */
     $pdfOutput = generateInvoicePdf(
         $nom,
         $prenom,
@@ -206,10 +204,11 @@ try {
     );
 
     $emailMessage = 'Envoi email non demandé.';
+
     if ($deliveryMethod === 'email' && !empty($email)) {
         $mj = new Client(
-            'f163a8d176afbcb29aae519bf6c5e181',
-            'bf285777b4d59f84a43855ae1b40f96d',
+            MAILJET_PUBLIC_KEY,
+            MAILJET_PRIVATE_KEY,
             true,
             ['version' => 'v3.1']
         );
@@ -231,8 +230,8 @@ try {
             'Messages' => [
                 [
                     'From' => [
-                        'Email' => 'akuetche55@gmail.com',
-                        'Name' => 'Easy Travel',
+                        'Email' => MAIL_FROM_EMAIL,
+                        'Name' => MAIL_FROM_NAME,
                     ],
                     'To' => [
                         [
@@ -261,22 +260,21 @@ try {
             : 'Échec de l’envoi de l’email.';
     }
 
-    $apiKey = '809d8187e33a2186b77a7b780ee5fe8219554e79';
     $dolibarrMessage = '';
 
-    $dolibarr_url_tiers = 'http://localhost:100/dolibarr/api/index.php/thirdparties';
-    $result_tiers = postToDolibarr($dolibarr_url_tiers, $apiKey, [
+    $dolibarrUrlTiers = rtrim(DOLIBARR_API_URL, '/') . '/thirdparties';
+    $resultTiers = postToDolibarr($dolibarrUrlTiers, DOLIBARR_API_KEY, [
         'name' => $nom . ' ' . $prenom,
         'email' => $email,
         'phone' => $telephone,
         'client' => 1
     ]);
 
-    if ($result_tiers !== false && isset($result_tiers['id'])) {
-        $socid = $result_tiers['id'];
+    if ($resultTiers !== false && isset($resultTiers['id'])) {
+        $socid = $resultTiers['id'];
 
-        $dolibarr_url_invoice = 'http://localhost:100/dolibarr/api/index.php/invoices';
-        $result_invoice = postToDolibarr($dolibarr_url_invoice, $apiKey, [
+        $dolibarrUrlInvoice = rtrim(DOLIBARR_API_URL, '/') . '/invoices';
+        $resultInvoice = postToDolibarr($dolibarrUrlInvoice, DOLIBARR_API_KEY, [
             'socid' => $socid,
             'lines' => [
                 [
@@ -298,7 +296,7 @@ try {
             'note_private' => 'Facture générée automatiquement après réservation',
         ]);
 
-        $dolibarrMessage = $result_invoice !== false
+        $dolibarrMessage = $resultInvoice !== false
             ? 'Intégration Dolibarr effectuée.'
             : 'Réservation enregistrée, mais facture Dolibarr non créée.';
     } else {
@@ -314,14 +312,16 @@ try {
     $messageLines[] = 'Redirection en cours vers l’accueil...';
 
 } catch (Exception $e) {
-    if (isset($bdd) && $bdd instanceof PDO && $bdd->inTransaction()) {
-        $bdd->rollBack();
+    if (isset($pdo) && $pdo instanceof PDO && $pdo->inTransaction()) {
+        $pdo->rollBack();
     }
 
     $messageTitle = 'Échec de traitement';
     $messageLines[] = $e->getMessage();
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>

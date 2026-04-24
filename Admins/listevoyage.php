@@ -1,17 +1,7 @@
 <?php
 session_start();
 
-$host = 'localhost';
-$user = 'root';
-$password = '';
-$database = 'bd_stock';
-
-try {
-    $conn = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
-}
+require_once __DIR__ . '/../config.php';
 
 /* =========================
    SUPPRESSION
@@ -19,23 +9,23 @@ try {
 if (isset($_POST['delete_voyage']) && !empty($_POST['id_voyage'])) {
     $id = (int) $_POST['id_voyage'];
 
-    $stmt = $conn->prepare("DELETE FROM voyage WHERE idVoyage = :id");
+    $stmt = $pdo->prepare("DELETE FROM voyage WHERE idVoyage = :id");
     $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
         header('Location: listevoyage.php?success=delete');
         exit;
-    } else {
-        header('Location: listevoyage.php?error=delete');
-        exit;
     }
+
+    header('Location: listevoyage.php?error=delete');
+    exit;
 }
 
 /* =========================
    FILTRES
 ========================= */
-$villeDepartList = $conn->query("SELECT DISTINCT villeDepart FROM voyage ORDER BY villeDepart ASC")->fetchAll(PDO::FETCH_COLUMN);
-$villeArriveeList = $conn->query("SELECT DISTINCT villeArrivee FROM voyage ORDER BY villeArrivee ASC")->fetchAll(PDO::FETCH_COLUMN);
+$villeDepartList = $pdo->query("SELECT DISTINCT villeDepart FROM voyage ORDER BY villeDepart ASC")->fetchAll(PDO::FETCH_COLUMN);
+$villeArriveeList = $pdo->query("SELECT DISTINCT villeArrivee FROM voyage ORDER BY villeArrivee ASC")->fetchAll(PDO::FETCH_COLUMN);
 
 $conditions = [];
 $params = [];
@@ -68,15 +58,21 @@ $start = ($page - 1) * $limit;
    TOTAL
 ========================= */
 $countQuery = "SELECT COUNT(*) FROM voyage v" . $whereClause;
-$countStmt = $conn->prepare($countQuery);
+$countStmt = $pdo->prepare($countQuery);
 
 foreach ($params as $key => $value) {
     $countStmt->bindValue($key, $value);
 }
+
 $countStmt->execute();
 
-$total_voyages = $countStmt->fetchColumn();
-$total_pages = ceil($total_voyages / $limit);
+$total_voyages = (int) $countStmt->fetchColumn();
+$total_pages = max(1, (int) ceil($total_voyages / $limit));
+
+if ($page > $total_pages) {
+    $page = $total_pages;
+    $start = ($page - 1) * $limit;
+}
 
 /* =========================
    LISTE DES VOYAGES
@@ -93,7 +89,7 @@ $query = "
     LIMIT :start, :limit
 ";
 
-$resultat = $conn->prepare($query);
+$resultat = $pdo->prepare($query);
 
 foreach ($params as $key => $value) {
     $resultat->bindValue($key, $value);

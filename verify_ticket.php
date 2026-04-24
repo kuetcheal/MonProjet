@@ -1,25 +1,25 @@
 <?php
 session_start();
 
+require_once __DIR__ . '/config.php';
+
 $message = '';
 $status = 'error';
 
 try {
-    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock;charset=utf8', 'root', '');
-    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     $token = trim($_GET['token'] ?? '');
 
     if ($token === '') {
         throw new Exception('Ticket invalide : token manquant.');
     }
 
-    $stmt = $bdd->prepare("
-        SELECT id, nom, prenom, telephone, idVoyage, Numero_reservation, Numero_siege, ticket_status, scanned_at
+    $stmt = $pdo->prepare("
+        SELECT id_reservation, nom, prenom, telephone, idVoyage, Numero_reservation, Numero_siege, ticket_status, scanned_at
         FROM reservation
         WHERE qr_token = ?
         LIMIT 1
     ");
+
     $stmt->execute([$token]);
     $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -34,12 +34,13 @@ try {
         $status = 'cancelled';
         $message = 'Ce billet a été annulé.';
     } else {
-        $update = $bdd->prepare("
+        $update = $pdo->prepare("
             UPDATE reservation
             SET ticket_status = 'used', scanned_at = NOW()
-            WHERE id = ?
+            WHERE id_reservation = ?
         ");
-        $update->execute([$reservation['id']]);
+
+        $update->execute([$reservation['id_reservation']]);
 
         $status = 'success';
         $message = 'Billet valide. Accès autorisé.';
@@ -53,6 +54,8 @@ if ($status === 'success') $bgClass = 'bg-green-600';
 if ($status === 'used') $bgClass = 'bg-yellow-500';
 if ($status === 'cancelled') $bgClass = 'bg-gray-700';
 ?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>

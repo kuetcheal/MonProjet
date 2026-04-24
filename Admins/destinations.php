@@ -1,13 +1,7 @@
 <?php
 session_start();
 
-try {
-    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock;charset=utf8', 'root', '', [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
-} catch (Exception $e) {
-    die('Échec de connexion : ' . $e->getMessage());
-}
+require_once __DIR__ . '/../config.php';
 
 /* =========================
    SUPPRESSION D'UNE DESTINATION
@@ -15,7 +9,7 @@ try {
 if (isset($_GET['confirm_delete_id']) && !empty($_GET['confirm_delete_id'])) {
     $delete_id = (int) $_GET['confirm_delete_id'];
 
-    $stmt = $bdd->prepare("DELETE FROM destination WHERE id_destination = ?");
+    $stmt = $pdo->prepare("DELETE FROM destination WHERE id_destination = ?");
     $stmt->execute([$delete_id]);
 
     header("Location: destinations.php?success=delete_destination");
@@ -28,7 +22,7 @@ if (isset($_GET['confirm_delete_id']) && !empty($_GET['confirm_delete_id'])) {
 if (isset($_GET['confirm_delete_quartier_id']) && !empty($_GET['confirm_delete_quartier_id'])) {
     $delete_quartier_id = (int) $_GET['confirm_delete_quartier_id'];
 
-    $stmt = $bdd->prepare("DELETE FROM quartier WHERE id_quartier = ?");
+    $stmt = $pdo->prepare("DELETE FROM quartier WHERE id_quartier = ?");
     $stmt->execute([$delete_quartier_id]);
 
     header("Location: destinations.php?success=delete_quartier");
@@ -42,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['
     $nom_ville = trim($_POST['nom_ville']);
 
     if (!empty($nom_ville)) {
-        $stmt = $bdd->prepare("INSERT INTO destination (Nom_ville) VALUES (?)");
+        $stmt = $pdo->prepare("INSERT INTO destination (Nom_ville) VALUES (?)");
         $stmt->execute([$nom_ville]);
 
         header("Location: destinations.php?success=add_destination");
@@ -61,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['
     $id_destination = isset($_POST['id_destination']) ? (int) $_POST['id_destination'] : 0;
 
     if (!empty($nom_quartier) && $id_destination > 0) {
-        $stmt = $bdd->prepare("INSERT INTO quartier (nom_quartier, id_destination) VALUES (?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO quartier (nom_quartier, id_destination) VALUES (?, ?)");
         $stmt->execute([$nom_quartier, $id_destination]);
 
         header("Location: destinations.php?success=add_quartier");
@@ -75,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action']) && $_POST['
 /* =========================
    RECUPERATION DES DESTINATIONS
 ========================= */
-$stmt = $bdd->query("SELECT * FROM destination ORDER BY Nom_ville ASC");
+$stmt = $pdo->query("SELECT * FROM destination ORDER BY Nom_ville ASC");
 $destinations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 /* =========================
@@ -89,7 +83,7 @@ $offset = ($page - 1) * $parPage;
 /* =========================
    TOTAL GENERAL DES QUARTIERS
 ========================= */
-$stmt = $bdd->query("SELECT COUNT(*) FROM quartier");
+$stmt = $pdo->query("SELECT COUNT(*) FROM quartier");
 $totalQuartiersGeneral = (int) $stmt->fetchColumn();
 
 /* =========================
@@ -98,7 +92,7 @@ $totalQuartiersGeneral = (int) $stmt->fetchColumn();
 $nomVilleFiltre = '';
 
 if (!empty($filtreVille)) {
-    $stmt = $bdd->prepare("
+    $stmt = $pdo->prepare("
         SELECT COUNT(*)
         FROM quartier q
         INNER JOIN destination d ON q.id_destination = d.id_destination
@@ -107,7 +101,7 @@ if (!empty($filtreVille)) {
     $stmt->execute([$filtreVille]);
     $totalQuartiersFiltres = (int) $stmt->fetchColumn();
 
-    $stmtVille = $bdd->prepare("SELECT Nom_ville FROM destination WHERE id_destination = ?");
+    $stmtVille = $pdo->prepare("SELECT Nom_ville FROM destination WHERE id_destination = ?");
     $stmtVille->execute([$filtreVille]);
     $nomVilleFiltre = $stmtVille->fetchColumn();
 } else {
@@ -128,7 +122,7 @@ if ($page > $totalPages) {
    RECUPERATION DES QUARTIERS PAGINES
 ========================= */
 if (!empty($filtreVille)) {
-    $stmt = $bdd->prepare("
+    $stmt = $pdo->prepare("
         SELECT q.id_quartier, q.nom_quartier, d.Nom_ville, d.id_destination
         FROM quartier q
         INNER JOIN destination d ON q.id_destination = d.id_destination
@@ -139,7 +133,7 @@ if (!empty($filtreVille)) {
     $stmt->execute([$filtreVille]);
     $quartiers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    $stmt = $bdd->query("
+    $stmt = $pdo->query("
         SELECT q.id_quartier, q.nom_quartier, d.Nom_ville, d.id_destination
         FROM quartier q
         INNER JOIN destination d ON q.id_destination = d.id_destination

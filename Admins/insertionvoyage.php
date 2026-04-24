@@ -1,18 +1,12 @@
 <?php
 session_start();
 
-try {
-    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock;charset=utf8', 'root', '', [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
-} catch (Exception $e) {
-    die('Échec de connexion : ' . $e->getMessage());
-}
+require_once __DIR__ . '/../config.php';
 
-$stmtDestinations = $bdd->query("SELECT * FROM destination ORDER BY Nom_ville ASC");
+$stmtDestinations = $pdo->query("SELECT * FROM destination ORDER BY Nom_ville ASC");
 $destinations = $stmtDestinations->fetchAll(PDO::FETCH_ASSOC);
 
-$stmtQuartiers = $bdd->query("
+$stmtQuartiers = $pdo->query("
     SELECT q.id_quartier, q.nom_quartier, q.id_destination, d.Nom_ville
     FROM quartier q
     INNER JOIN destination d ON q.id_destination = d.id_destination
@@ -65,7 +59,7 @@ if (
             $messageError = 'Le départ et l’arrivée ne peuvent pas être identiques.';
         } else {
             try {
-                $requete = $bdd->prepare("
+                $requete = $pdo->prepare("
                     INSERT INTO voyage (
                         villeDepart,
                         quartierDepart,
@@ -119,6 +113,7 @@ if (
 $quartiersParVille = [];
 foreach ($quartiers as $quartier) {
     $villeId = $quartier['id_destination'];
+
     if (!isset($quartiersParVille[$villeId])) {
         $quartiersParVille[$villeId] = [];
     }

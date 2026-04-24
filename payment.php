@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/includes/seat_helpers.php';
 
 $prixTotal = isset($_GET['totalPrice']) ? (float) $_GET['totalPrice'] : 0;
@@ -28,27 +30,26 @@ $nombrePlaces = 0;
 $reservedSeats = [];
 
 try {
-    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock;charset=utf8', 'root', '');
-    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     if ($idVoyageAller) {
         $_SESSION['idVoyageAller'] = $idVoyageAller;
 
-        $voyageAller = getVoyageById($bdd, (int)$idVoyageAller);
+        $voyageAller = getVoyageById($pdo, (int)$idVoyageAller);
+
         if ($voyageAller) {
             $departAller = trim(($voyageAller['villeDepart'] ?? '') . (!empty($voyageAller['quartierDepart']) ? ' - ' . $voyageAller['quartierDepart'] : ''));
             $arriveAller = trim(($voyageAller['villeArrivee'] ?? '') . (!empty($voyageAller['quartierArrivee']) ? ' - ' . $voyageAller['quartierArrivee'] : ''));
             $dateAller = $voyageAller['jourDepart'] ?? '';
             $timeAller = substr($voyageAller['heureDepart'] ?? '', 0, 5);
             $nombrePlaces = (int)($voyageAller['nombrePlaces'] ?? 0);
-            $reservedSeats = getReservedSeats($bdd, (int)$idVoyageAller);
+            $reservedSeats = getReservedSeats($pdo, (int)$idVoyageAller);
         }
     }
 
     if ($idVoyageRetour) {
         $_SESSION['idVoyageRetour'] = $idVoyageRetour;
 
-        $voyageRetour = getVoyageById($bdd, (int)$idVoyageRetour);
+        $voyageRetour = getVoyageById($pdo, (int)$idVoyageRetour);
+
         if ($voyageRetour) {
             $departRetour = trim(($voyageRetour['villeDepart'] ?? '') . (!empty($voyageRetour['quartierDepart']) ? ' - ' . $voyageRetour['quartierDepart'] : ''));
             $arriveRetour = trim(($voyageRetour['villeArrivee'] ?? '') . (!empty($voyageRetour['quartierArrivee']) ? ' - ' . $voyageRetour['quartierArrivee'] : ''));

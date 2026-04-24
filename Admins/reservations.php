@@ -1,20 +1,15 @@
 <?php
 session_start();
 
-$host = 'localhost';
-$user = 'root';
-$password = '';
-$database = 'bd_stock';
+require_once __DIR__ . '/../config.php';
 
 try {
-    $bdd = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
-    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     // Suppression d'une réservation
     if (isset($_POST['delete_reservation'])) {
-        $id = $_POST['reservation_id'];
+        $id = (int) $_POST['reservation_id'];
+
         $query = "DELETE FROM reservation WHERE id_reservation = :id";
-        $stmt = $bdd->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
@@ -28,7 +23,7 @@ try {
     }
 
     // Récupération des destinations
-    $queryDest = $bdd->query("SELECT Nom_ville FROM destination ORDER BY Nom_ville ASC");
+    $queryDest = $pdo->query("SELECT Nom_ville FROM destination ORDER BY Nom_ville ASC");
     $destinations = $queryDest->fetchAll(PDO::FETCH_COLUMN);
 
     // Filtres
@@ -75,7 +70,7 @@ try {
             ORDER BY r.id_reservation DESC
             LIMIT :start, :limit";
 
-    $stmt = $bdd->prepare($sql);
+    $stmt = $pdo->prepare($sql);
 
     foreach ($filters as $key => $value) {
         $stmt->bindValue(":$key", $value);
@@ -93,17 +88,21 @@ try {
                  JOIN voyage v ON r.idVoyage = v.idVoyage
                  $whereClause";
 
-    $countStmt = $bdd->prepare($countSql);
+    $countStmt = $pdo->prepare($countSql);
 
     foreach ($filters as $key => $value) {
         $countStmt->bindValue(":$key", $value);
     }
 
     $countStmt->execute();
-    $total_reservations = $countStmt->fetchColumn();
-    $total_pages = ceil($total_reservations / $limit);
+    $total_reservations = (int) $countStmt->fetchColumn();
+    $total_pages = max(1, (int) ceil($total_reservations / $limit));
+
+    if ($page > $total_pages) {
+        $page = $total_pages;
+    }
 } catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
+    die("Erreur base de données : " . $e->getMessage());
 }
 
 ob_start();

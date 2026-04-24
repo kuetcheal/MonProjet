@@ -1,17 +1,7 @@
 <?php
 session_start();
 
-$host = 'localhost';
-$user = 'root';
-$password = '';
-$database = 'bd_stock';
-
-try {
-    $bdd = new PDO("mysql:host=$host;dbname=$database;charset=utf8", $user, $password);
-    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
-}
+require_once __DIR__ . '/../config.php';
 
 $status = 'error';
 $message = 'Ticket invalide.';
@@ -33,7 +23,7 @@ if ($token !== '') {
         LIMIT 1
     ";
 
-    $stmt = $bdd->prepare($sql);
+    $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':token', $token);
     $stmt->execute();
 
@@ -47,7 +37,7 @@ if ($token !== '') {
             $status = 'used';
             $message = 'Ce billet a déjà été scanné.';
         } else {
-            $update = $bdd->prepare("
+            $update = $pdo->prepare("
                 UPDATE reservation
                 SET ticket_status = 'used', scanned_at = NOW()
                 WHERE id_reservation = :id

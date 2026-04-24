@@ -3,6 +3,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+require_once __DIR__ . '/../config.php';
+
 $departValue = $_POST['input1'] ?? $_SESSION['depart'] ?? '';
 $arriveeValue = $_POST['input2'] ?? $_SESSION['arrivee'] ?? '';
 $dateValue = $_POST['input3'] ?? $_SESSION['date'] ?? '';
@@ -11,13 +13,12 @@ $tripType = $_POST['inlineRadioOptions'] ?? ($_SESSION['tripType'] ?? 'option1')
 
 $_SESSION['tripType'] = $tripType;
 
-try {
-    $bdd = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$destinations = [];
 
-    $query = $bdd->query('SELECT * FROM destination ORDER BY Nom_ville ASC');
+try {
+    $query = $pdo->query('SELECT Nom_ville FROM destination ORDER BY Nom_ville ASC');
     $destinations = $query->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
+} catch (PDOException $e) {
     $destinations = [];
 }
 
@@ -247,7 +248,7 @@ function formatDateDisplay($date)
                         id="secondaryInlineRadio1"
                         name="inlineRadioOptions"
                         value="option1"
-                        <?php echo ($tripType === 'option1') ? 'checked' : ''; ?>>
+                        <?= ($tripType === 'option1') ? 'checked' : ''; ?>>
                     <span>Aller simple</span>
                 </label>
 
@@ -257,7 +258,7 @@ function formatDateDisplay($date)
                         id="secondaryInlineRadio2"
                         name="inlineRadioOptions"
                         value="option2"
-                        <?php echo ($tripType === 'option2') ? 'checked' : ''; ?>>
+                        <?= ($tripType === 'option2') ? 'checked' : ''; ?>>
                     <span>Aller-Retour</span>
                 </label>
             </div>
@@ -271,9 +272,9 @@ function formatDateDisplay($date)
                         <?php foreach ($destinations as $destinationItem): ?>
                             <?php $destination = $destinationItem['Nom_ville']; ?>
                             <option
-                                value="<?php echo htmlspecialchars($destination); ?>"
-                                <?php echo ($departValue === $destination) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($destination); ?>
+                                value="<?= htmlspecialchars($destination); ?>"
+                                <?= ($departValue === $destination) ? 'selected' : ''; ?>>
+                                <?= htmlspecialchars($destination); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -287,9 +288,9 @@ function formatDateDisplay($date)
                         <?php foreach ($destinations as $destinationItem): ?>
                             <?php $destination = $destinationItem['Nom_ville']; ?>
                             <option
-                                value="<?php echo htmlspecialchars($destination); ?>"
-                                <?php echo ($arriveeValue === $destination) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($destination); ?>
+                                value="<?= htmlspecialchars($destination); ?>"
+                                <?= ($arriveeValue === $destination) ? 'selected' : ''; ?>>
+                                <?= htmlspecialchars($destination); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -301,14 +302,14 @@ function formatDateDisplay($date)
                         type="text"
                         id="secondary_depart_display"
                         placeholder="jj/mm/aaaa"
-                        value="<?php echo htmlspecialchars(formatDateDisplay($dateValue)); ?>"
+                        value="<?= htmlspecialchars(formatDateDisplay($dateValue)); ?>"
                         readonly
                         class="w-full cursor-pointer">
                     <input
                         type="hidden"
                         id="secondary_depart_date"
                         name="input3"
-                        value="<?php echo htmlspecialchars($dateValue); ?>">
+                        value="<?= htmlspecialchars($dateValue); ?>">
                 </div>
 
                 <div class="secondary-field-group">
@@ -317,15 +318,15 @@ function formatDateDisplay($date)
                         type="text"
                         id="secondary_return_display"
                         placeholder="jj/mm/aaaa"
-                        value="<?php echo htmlspecialchars(formatDateDisplay($dateRetourValue)); ?>"
+                        value="<?= htmlspecialchars(formatDateDisplay($dateRetourValue)); ?>"
                         readonly
-                        <?php echo ($tripType === 'option1') ? 'disabled' : ''; ?>
+                        <?= ($tripType === 'option1') ? 'disabled' : ''; ?>
                         class="w-full cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-100">
                     <input
                         type="hidden"
                         id="secondary_return_date"
                         name="input4"
-                        value="<?php echo htmlspecialchars($dateRetourValue); ?>">
+                        value="<?= htmlspecialchars($dateRetourValue); ?>">
                 </div>
 
                 <div class="secondary-field-group secondary-submit-group">

@@ -1,33 +1,44 @@
 <?php
-    if (isset($_POST['id_voyage']) && isset($_POST['confirmPassword']) && isset($_POST['newPassword'])) {
-        $password = $_POST['password'];
-        $newPassword = $_POST['newPassword'];
-        $confirmPassword = $_POST['confirmPassword'];
+session_start();
 
-        // Connectez-vous à la base de données
+require_once __DIR__ . '/config.php';
 
-        try {
-            $conn = new PDO('mysql:host=localhost;dbname=bd_stock', 'root', '');
-        } catch (\Throwable $th) {
-            echo("Echec de connexion");
-            exit();
-        }
+if (isset($_POST['password'], $_POST['newPassword'], $_POST['confirmPassword'])) {
+    $password = trim($_POST['password']);
+    $newPassword = trim($_POST['newPassword']);
+    $confirmPassword = trim($_POST['confirmPassword']);
 
-        // Effectuez la requête de récupération du voyage
-
-        $requete_recuperation = "SELECT * FROM user WHERE user_password = :password";
-        $statement = $conn->prepare($requete_recuperation);
-        $statement->bindValue(':password', $password);
-        $resultat = $statement->execute();
-
-        if ($resultat && password_verify($newPassword, $resultat['user_password'])) {
-            // Le nouveau mot de passe correspond au mot de passe stocké
-            echo("Connexion réussie");
-        } else {
-            // Le nouveau mot de passe ne correspond pas ou l'utilisateur n'existe pas
-            header("Location: errorconnexion.php");
-            exit();
-        }
-       
+    if ($newPassword !== $confirmPassword) {
+        header("Location: errorconnexion.php");
+        exit();
     }
+
+    $stmt = $pdo->prepare("SELECT * FROM user WHERE user_password = :password LIMIT 1");
+    $stmt->execute([
+        ':password' => $password
+    ]);
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        $update = $pdo->prepare("
+            UPDATE user
+            SET user_password = :newPassword
+            WHERE id = :id
+        ");
+
+        $update->execute([
+            ':newPassword' => $hashedPassword,
+            ':id' => $user['id']
+        ]);
+
+        echo "Mot de passe modifié avec succès.";
+        exit();
+    }
+
+    header("Location: errorconnexion.php");
+    exit();
+}
 ?>
