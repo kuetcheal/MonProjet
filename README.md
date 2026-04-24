@@ -129,3 +129,13 @@ prix chauffeur proposé : 5000 FCFA
 commission plateforme : 10 %
 commission = 500 FCFA
 chauffeur reçoit 4500 FCFA
+
+
+
+### Un agrégateur de paiement (cinePay, Pawpaypal, Paystack, Dojah)
+c'est une plateforme qui te permet d’accepter plusieurs moyens de paiement avec une seule intégration :
+- Orange Money
+- MTN MoMo
+- carte bancaire (Visa, Mastercard)
+- parfois PayPal, etc.
+👉 Tu n’intègres qu’une seule API, et eux gèrent tout derrière

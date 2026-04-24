@@ -24,10 +24,17 @@ define('WHATSAPP_API_VERSION', $_ENV['WHATSAPP_API_VERSION']);
 
 define('GOOGLE_MAPS_API_KEY', $_ENV['GOOGLE_MAPS_API_KEY'] ?? '');
 
+
+define('PAYMENT_API_TOKEN', $_ENV['PAYMENT_API_TOKEN'] ?? '');
+define('PAWAPAY_BASE_URL', $_ENV['PAWAPAY_BASE_URL'] ?? 'https://api.sandbox.pawapay.io');
+define('PAWAPAY_RETURN_URL', $_ENV['PAWAPAY_RETURN_URL'] ?? 'http://localhost/MonProjet/paiement/pawapay-return.php');
+
+
 define('MAILJET_PUBLIC_KEY', $_ENV['MAILJET_PUBLIC_KEY'] ?? '');
 define('MAILJET_PRIVATE_KEY', $_ENV['MAILJET_PRIVATE_KEY'] ?? '');
 define('MAIL_FROM_EMAIL', $_ENV['MAIL_FROM_EMAIL'] ?? '');
 define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME'] ?? '');
+
 
 define('DOLIBARR_API_URL', $_ENV['DOLIBARR_API_URL'] ?? '');
 define('DOLIBARR_API_KEY', $_ENV['DOLIBARR_API_KEY'] ?? '');

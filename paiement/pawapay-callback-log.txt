@@ -1,0 +1,48 @@
+2026-04-24 06:33:53
+{
+  "amount" : "1000.0000",
+  "country" : "CMR",
+  "created" : "2026-04-24T06:33:53Z",
+  "currency" : "XAF",
+  "customerMessage" : "Deposit",
+  "depositId" : "22e1b0b2-3add-4192-9bc7-65d0a1e00073",
+  "metadata" : {
+    "reservation_id" : "1"
+  },
+  "payer" : {
+    "accountDetails" : {
+      "phoneNumber" : "237655196254",
+      "provider" : "ORANGE_CMR"
+    },
+    "type" : "MMO"
+  },
+  "providerTransactionId" : "4f4e9fdf-6f39-41e7-a50c-10865f44974b",
+  "status" : "COMPLETED"
+}
+
+2026-04-24 07:06:23
+{
+  "amount" : "9775.0000",
+  "country" : "CMR",
+  "created" : "2026-04-24T07:06:23Z",
+  "currency" : "XAF",
+  "customerMessage" : "Deposit",
+  "depositId" : "f00839e9-98f1-4cbb-9049-f566d1197e39",
+  "metadata" : {
+    "reservation_id" : "52",
+    "delivery_method" : "email",
+    "id_voyage_aller" : "24",
+    "id_voyage_retour" : "29",
+    "reservation_number" : "FM2HLH9J"
+  },
+  "payer" : {
+    "accountDetails" : {
+      "phoneNumber" : "237655196254",
+      "provider" : "ORANGE_CMR"
+    },
+    "type" : "MMO"
+  },
+  "providerTransactionId" : "01f074ac-8afc-47e7-b7d0-d3ac46d1b407",
+  "status" : "COMPLETED"
+}
+

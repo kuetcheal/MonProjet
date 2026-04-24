@@ -136,7 +136,7 @@ ob_start();
                 <?php endif; ?>
             </div>
 
-            <form method="post" action="finalisation.php" id="passengerForm">
+            <form method="post" action="paiement/pawapay-init.php" id="passengerForm">
                 <input type="hidden" name="idVoyageAller" value="<?= htmlspecialchars($idVoyageAller ?? '') ?>">
                 <input type="hidden" name="idVoyageRetour" value="<?= htmlspecialchars($idVoyageRetour ?? '') ?>">
 
@@ -243,13 +243,7 @@ ob_start();
 
                 <div class="mt-6">
                     <button type="submit" name="submit" class="w-full bg-green-500 text-white py-3 rounded-lg text-lg font-bold hover:bg-green-700 transition">
-                        Payer à l'agence
-                    </button>
-                </div>
-
-                <div class="mt-4">
-                    <button type="button" id="checkout-button" class="w-full bg-purple-500 text-white py-3 rounded-lg text-lg font-bold hover:bg-purple-700 transition">
-                        Payer avec Stripe
+                        Payer maintenant
                     </button>
                 </div>
             </form>
@@ -259,11 +253,8 @@ ob_start();
 
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"></script>
-<script src="https://js.stripe.com/v3/"></script>
 
 <script>
-    const stripe = Stripe('pk_test_51Phsz9DwEke97it4yD8lj7SGiuTeL7yqscNb3S8ZMj8CvzGmOZ6V64Bqgk6uW6vpO7mF24SdHdf9lN6n07V9JV7v00p8mrRvpS');
-    const checkoutButton = document.getElementById('checkout-button');
     const form = document.getElementById('passengerForm');
 
     const phoneInput = document.getElementById('telephoneVisible');
@@ -312,7 +303,7 @@ ob_start();
         }
 
         if (iti.isValidNumber()) {
-            phoneHiddenInput.value = iti.getNumber();
+            phoneHiddenInput.value = iti.getNumber().replace('+', '');
             phoneError.classList.add('hidden');
             phoneInput.classList.remove('border-red-500');
             return true;
@@ -342,14 +333,8 @@ ob_start();
             return false;
         }
 
-        if (deliveryMethod === 'whatsapp' && !phoneOk) {
-            if (showAlert) alert('Veuillez saisir un numéro valide pour WhatsApp.');
-            phoneInput.focus();
-            return false;
-        }
-
-        if (deliveryMethod === 'email' && phoneInput.value.trim() && !phoneOk) {
-            if (showAlert) alert('Le numéro de téléphone saisi n’est pas valide.');
+        if (!phoneOk) {
+            if (showAlert) alert('Veuillez saisir un numéro de téléphone valide.');
             phoneInput.focus();
             return false;
         }
@@ -390,24 +375,6 @@ ob_start();
             if (!validateFormBeforeSubmit(true)) {
                 e.preventDefault();
             }
-        });
-    }
-
-    if (checkoutButton) {
-        checkoutButton.addEventListener('click', function () {
-            if (!validateFormBeforeSubmit(true)) {
-                return;
-            }
-
-            const formData = new FormData(form);
-
-            fetch('create-checkout-session.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(session => stripe.redirectToCheckout({ sessionId: session.id }))
-            .catch(error => console.error('Error:', error));
         });
     }
 
