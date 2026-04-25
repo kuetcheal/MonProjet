@@ -2,49 +2,50 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+if (file_exists(__DIR__ . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->safeLoad();
+}
 
-define('DB_HOST', $_ENV['DB_HOST'] ?? 'localhost');
-define('DB_NAME', $_ENV['DB_NAME'] ?? 'bd_stock');
-define('DB_USER', $_ENV['DB_USER'] ?? 'root');
-define('DB_PASS', $_ENV['DB_PASS'] ?? '');
+function env_value($key, $default = '') {
+    return $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key) ?: $default;
+}
+
+define('DB_HOST', env_value('DB_HOST', 'easytravel-server-public.mysql.database.azure.com'));
+define('DB_NAME', env_value('DB_NAME', 'bd_stock'));
+define('DB_USER', env_value('DB_USER', 'easyadmin'));
+define('DB_PASS', env_value('DB_PASS', ''));
+define('DB_PORT', env_value('DB_PORT', '3306'));
 
 define('ADMIN_USERNAME', $_ENV['ADMIN_USERNAME'] ?? '');
 define('ADMIN_PASSWORD', $_ENV['ADMIN_PASSWORD'] ?? '');
 
-
 define('CLOUDINARY_URL', $_ENV['CLOUDINARY_URL'] ?? '');
 
-
-define('WHATSAPP_TOKEN', $_ENV['WHATSAPP_TOKEN']);
-define('WHATSAPP_PHONE_NUMBER_ID', $_ENV['WHATSAPP_PHONE_NUMBER_ID']);
-define('WHATSAPP_WABA_ID', $_ENV['WHATSAPP_WABA_ID']);
-define('WHATSAPP_TEST_FROM', $_ENV['WHATSAPP_TEST_FROM']);
-define('WHATSAPP_TEST_TO', $_ENV['WHATSAPP_TEST_TO']);
-define('WHATSAPP_API_VERSION', $_ENV['WHATSAPP_API_VERSION']);
-
+define('WHATSAPP_TOKEN', $_ENV['WHATSAPP_TOKEN'] ?? '');
+define('WHATSAPP_PHONE_NUMBER_ID', $_ENV['WHATSAPP_PHONE_NUMBER_ID'] ?? '');
+define('WHATSAPP_WABA_ID', $_ENV['WHATSAPP_WABA_ID'] ?? '');
+define('WHATSAPP_TEST_FROM', $_ENV['WHATSAPP_TEST_FROM'] ?? '');
+define('WHATSAPP_TEST_TO', $_ENV['WHATSAPP_TEST_TO'] ?? '');
+define('WHATSAPP_API_VERSION', $_ENV['WHATSAPP_API_VERSION'] ?? 'v25.0');
 
 define('GOOGLE_MAPS_API_KEY', $_ENV['GOOGLE_MAPS_API_KEY'] ?? '');
-
 
 define('PAYMENT_API_TOKEN', $_ENV['PAYMENT_API_TOKEN'] ?? '');
 define('PAWAPAY_BASE_URL', $_ENV['PAWAPAY_BASE_URL'] ?? 'https://api.sandbox.pawapay.io');
 define('PAWAPAY_RETURN_URL', $_ENV['PAWAPAY_RETURN_URL'] ?? 'http://localhost/MonProjet/paiement/pawapay-return.php');
-
 
 define('MAILJET_PUBLIC_KEY', $_ENV['MAILJET_PUBLIC_KEY'] ?? '');
 define('MAILJET_PRIVATE_KEY', $_ENV['MAILJET_PRIVATE_KEY'] ?? '');
 define('MAIL_FROM_EMAIL', $_ENV['MAIL_FROM_EMAIL'] ?? '');
 define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME'] ?? '');
 
-
 define('DOLIBARR_API_URL', $_ENV['DOLIBARR_API_URL'] ?? '');
 define('DOLIBARR_API_KEY', $_ENV['DOLIBARR_API_KEY'] ?? '');
 
 try {
     $pdo = new PDO(
-        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+        "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4",
         DB_USER,
         DB_PASS,
         [

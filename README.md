@@ -139,3 +139,21 @@ c'est une plateforme qui te permet d’accepter plusieurs moyens de paiement ave
 - carte bancaire (Visa, Mastercard)
 - parfois PayPal, etc.
 👉 Tu n’intègres qu’une seule API, et eux gèrent tout derrière
+
+
+
+#### hébergement du site
+on a utilisé Microsoft Azure App Service pour héberger ton application web, ce qui permet d’exécuter notre site PHP sans gérer directement un serveur physique. Tu as configuré ton environnement de production en y intégrant les variables nécessaires (connexion base de données, API, etc.).
+Tu as également mis en place une base de données Azure Database for MySQL, puis importé tes données depuis ton environnement local afin de rendre l’application fonctionnelle en ligne.
+Le déploiement de ton projet s’est fait via un transfert FTP (ou FTPS), en envoyant l’ensemble des fichiers dans le répertoire /site/wwwroot d’Azure.
+
+###  nom de domaine
+Ensuite, grâce au GitHub Student Developer Pack, on a obtenu gratuitement un nom de domaine via Name.com (easy-travel.app).
+on a configuré les enregistrements DNS (CNAME et TXT) sur Name.com afin de faire pointer ton domaine vers notre application hébergée sur Azure.
+Après validation du domaine dans Azure, on a ajouté une liaison SSL avec un certificat managé App Service, ce qui a permis d’activer le protocole HTTPS.
+Enfin, notre site est désormais accessible publiquement via une URL personnalisée sécurisée, offrant une meilleure crédibilité et une expérience utilisateur professionnelle
+
+
+
+mot de passe : EasyTravel@2026Mysql!  Alex1995@
+nom de connexion de l'admin : easyadmin

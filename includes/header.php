@@ -3,10 +3,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+$baseUrl = (strpos($_SERVER['SCRIPT_NAME'], '/MonProjet/') !== false) ? '/MonProjet/' : '/';
+
 if (isset($_POST['deconnect_account'])) {
     session_unset();
     session_destroy();
-    header('Location: /MonProjet/connexion.php');
+    header('Location: ' . $baseUrl . 'connexion.php');
     exit;
 }
 
@@ -27,27 +29,28 @@ $userEmail = $isLoggedIn ? ($_SESSION['user_mail'] ?? '') : '';
 $userRole = $isLoggedIn ? ($_SESSION['user_role'] ?? 'client') : 'guest';
 
 $offerLabel = $isLoggedIn ? 'Mes offres' : 'Inscription';
-$offerLink = $isLoggedIn ? '/MonProjet/offres/offres.php' : '/MonProjet/inscription.php';
+$offerLink = $isLoggedIn ? $baseUrl . 'offres/offres.php' : $baseUrl . 'inscription.php';
 
 $easyLabel = 'EasyTravel';
-$easyLink = $isLoggedIn ? '/MonProjet/Accueil.php' : '/MonProjet/connexion.php';
+$easyLink = $isLoggedIn ? $baseUrl . 'Accueil.php' : $baseUrl . 'connexion.php';
 
-$profileImage = '/MonProjet/pictures/OIP.jpg';
+$profileImage = $baseUrl . 'pictures/OIP.jpg';
+$logoImage = $baseUrl . 'pictures/logo-general.jpg';
 ?>
 
-<link rel="stylesheet" href="/MonProjet/includes/header.css">
+<link rel="stylesheet" href="<?= $baseUrl ?>includes/header.css">
 
 <header class="gv-header notranslate">
     <div class="gv-header__inner">
-        <a href="/MonProjet/Accueil.php" class="gv-header__brand">
-            <img src="/MonProjet/pictures/logo-general.jpg" alt="Logo Général Voyage" class="gv-header__logo">
+        <a href="<?= $baseUrl ?>Accueil.php" class="gv-header__brand">
+            <img src="<?= htmlspecialchars($logoImage) ?>" alt="Logo Général Voyage" class="gv-header__logo">
         </a>
 
         <nav class="gv-header__desktop-nav">
-            <a href="/MonProjet/Accueil.php" class="gv-header__link gv-header__link--active">Accueil</a>
-            <a href="/MonProjet/reservations.php" class="gv-header__link">Réservations</a>
-            <a href="/MonProjet/services.php" class="gv-header__link">Services</a>
-            <a href="/MonProjet/Contact/contact.php" class="gv-header__link">Nous contacter</a>
+            <a href="<?= $baseUrl ?>Accueil.php" class="gv-header__link gv-header__link--active">Accueil</a>
+            <a href="<?= $baseUrl ?>reservations.php" class="gv-header__link">Réservations</a>
+            <a href="<?= $baseUrl ?>services.php" class="gv-header__link">Services</a>
+            <a href="<?= $baseUrl ?>Contact/contact.php" class="gv-header__link">Nous contacter</a>
             <a href="<?= htmlspecialchars($offerLink) ?>" class="gv-header__link">
                 <?= htmlspecialchars($offerLabel) ?>
             </a>
@@ -77,7 +80,7 @@ $profileImage = '/MonProjet/pictures/OIP.jpg';
 
 <aside id="gvMobileDrawer" class="gv-mobile-drawer" aria-hidden="true">
     <div class="gv-mobile-drawer__header">
-        <img src="/MonProjet/pictures/logo-general.jpg" alt="Logo Général Voyage" class="gv-mobile-drawer__logo">
+        <img src="<?= htmlspecialchars($logoImage) ?>" alt="Logo Général Voyage" class="gv-mobile-drawer__logo">
 
         <button id="gvCloseDrawer" type="button" class="gv-mobile-drawer__close" aria-label="Fermer le menu">
             <i class="fa fa-times"></i>
@@ -85,10 +88,10 @@ $profileImage = '/MonProjet/pictures/OIP.jpg';
     </div>
 
     <nav class="gv-mobile-drawer__nav">
-        <a href="/MonProjet/Accueil.php" class="gv-mobile-drawer__link gv-mobile-drawer__link--active">Accueil</a>
-        <a href="/MonProjet/reservations.php" class="gv-mobile-drawer__link">Réservations</a>
-        <a href="/MonProjet/services.php" class="gv-mobile-drawer__link">Services</a>
-        <a href="/MonProjet/Contact/contact.php" class="gv-mobile-drawer__link">Nous contacter</a>
+        <a href="<?= $baseUrl ?>Accueil.php" class="gv-mobile-drawer__link gv-mobile-drawer__link--active">Accueil</a>
+        <a href="<?= $baseUrl ?>reservations.php" class="gv-mobile-drawer__link">Réservations</a>
+        <a href="<?= $baseUrl ?>services.php" class="gv-mobile-drawer__link">Services</a>
+        <a href="<?= $baseUrl ?>Contact/contact.php" class="gv-mobile-drawer__link">Nous contacter</a>
         <a href="<?= htmlspecialchars($offerLink) ?>" class="gv-mobile-drawer__link">
             <?= htmlspecialchars($offerLabel) ?>
         </a>
@@ -126,16 +129,16 @@ $profileImage = '/MonProjet/pictures/OIP.jpg';
             <hr class="gv-account-modal__divider">
 
             <div class="gv-account-modal__actions" style="display:flex; flex-direction:column; gap:12px;">
-                <a href="/MonProjet/Authentification/mon_compte.php" class="gv-account-modal__action gv-account-modal__action--primary" style="text-align:center; text-decoration:none;">
+                <a href="<?= $baseUrl ?>Authentification/mon_compte.php" class="gv-account-modal__action gv-account-modal__action--primary" style="text-align:center; text-decoration:none;">
                     Mon compte
                 </a>
 
                 <?php if ($userRole === 'client'): ?>
-                    <a href="/MonProjet/Authentification/devenir_chauffeur.php" class="gv-account-modal__action gv-account-modal__action--primary" style="text-align:center; text-decoration:none;">
+                    <a href="<?= $baseUrl ?>Authentification/devenir_chauffeur.php" class="gv-account-modal__action gv-account-modal__action--primary" style="text-align:center; text-decoration:none;">
                         Devenir chauffeur
                     </a>
                 <?php elseif ($userRole === 'client_chauffeur' || $userRole === 'chauffeur'): ?>
-                    <a href="/MonProjet/offres/offres.php" class="gv-account-modal__action gv-account-modal__action--primary" style="text-align:center; text-decoration:none;">
+                    <a href="<?= $baseUrl ?>offres/offres.php" class="gv-account-modal__action gv-account-modal__action--primary" style="text-align:center; text-decoration:none;">
                         Mes trajets proposés
                     </a>
                 <?php endif; ?>
@@ -226,7 +229,7 @@ $profileImage = '/MonProjet/pictures/OIP.jpg';
 
 <div id="google_translate_element" style="display: none;"></div>
 
-<script src="/MonProjet/Javascript/google-translate.js"></script>
+<script src="<?= $baseUrl ?>Javascript/google-translate.js"></script>
 
 <script>
     function gvOpenModal(id) {
