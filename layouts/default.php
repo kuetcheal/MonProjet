@@ -15,7 +15,7 @@ $content = $content ?? '';
 />
 </head>
 <body class="min-h-screen bg-[#f4f4f4] flex flex-col">
-
+    <?php include __DIR__ . '/../includes/topbar.php'; ?>
     <?php include __DIR__ . '/../includes/header.php'; ?>
 
     <main class="flex-1">

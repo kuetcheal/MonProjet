@@ -60,8 +60,10 @@ $logoImage = $baseUrl . 'pictures/logo-general.jpg';
         </nav>
 
         <div class="gv-header__actions">
-            <button type="button" id="gvLangFr" class="gv-header__lang is-active">FR</button>
-            <button type="button" id="gvLangEn" class="gv-header__lang">EN</button>
+            <div class="gv-header__lang-desktop">
+    <button type="button" id="gvLangFr" class="gv-header__lang is-active">FR</button>
+    <button type="button" id="gvLangEn" class="gv-header__lang">EN</button>
+</div>
 
             <?php if ($isLoggedIn): ?>
                 <button type="button" class="gv-header__profile-btn" onclick="gvOpenModal('gvAccountModal')">

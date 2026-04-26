@@ -247,8 +247,10 @@ try {
 </head>
 
 <body>
+     <?php include 'includes/topbar.php'; ?>
     <?php include 'includes/header.php'; ?>
-    <?php include_once 'Cookies/cookies.php'; ?>
+    
+
 
     <section class="hero-section">
         <div class="hero-overlay"></div>

@@ -21,43 +21,52 @@
     return match ? decodeURIComponent(match[2]) : null;
   }
 
-function updateLangButtons(lang) {
+ function updateLangButtons(lang) {
   const frBtns = document.querySelectorAll('#gvLangFr, #gvMobileLangFr');
   const enBtns = document.querySelectorAll('#gvLangEn, #gvMobileLangEn');
 
   frBtns.forEach(btn => {
+    btn.classList.toggle('is-active', lang === 'fr');
+
     if (lang === 'fr') {
-      btn.classList.add('is-active');
+      btn.classList.add('font-bold', 'underline');
+      btn.classList.remove('font-medium');
     } else {
-      btn.classList.remove('is-active');
+      btn.classList.remove('font-bold', 'underline');
+      btn.classList.add('font-medium');
     }
   });
 
   enBtns.forEach(btn => {
+    btn.classList.toggle('is-active', lang === 'en');
+
     if (lang === 'en') {
-      btn.classList.add('is-active');
+      btn.classList.add('font-bold', 'underline');
+      btn.classList.remove('font-medium');
     } else {
-      btn.classList.remove('is-active');
+      btn.classList.remove('font-bold', 'underline');
+      btn.classList.add('font-medium');
     }
   });
 }
 
-function getCurrentLangFromCookie() {
-  const match = document.cookie.match(/googtrans=([^;]+)/);
-  if (!match) return 'fr';
+  function getCurrentLangFromCookie() {
+    const googtrans = getCookie('googtrans');
 
-  if (match[1].includes('/fr/en')) return 'en';
-  return 'fr';
-}
+    if (!googtrans) return 'fr';
+    if (googtrans.includes('/fr/en')) return 'en';
 
+    return 'fr';
+  }
 
-function setGoogleLang(lang) {
+  function setGoogleLang(lang) {
     const select = document.querySelector('select.goog-te-combo');
     if (!select) return false;
 
     select.value = lang;
     select.dispatchEvent(new Event('change'));
     updateLangButtons(lang);
+
     return true;
   }
 
@@ -89,8 +98,9 @@ function setGoogleLang(lang) {
       'google_translate_element'
     );
 
-    const googtrans = getCookie('googtrans');
-    if (googtrans && googtrans.includes('/fr/en')) {
+    const currentLang = getCurrentLangFromCookie();
+
+    if (currentLang === 'en') {
       setTimeout(function () {
         setGoogleLang('en');
         updateLangButtons('en');
@@ -103,8 +113,10 @@ function setGoogleLang(lang) {
   document.addEventListener('DOMContentLoaded', function () {
     const frBtn = document.getElementById('gvLangFr');
     const enBtn = document.getElementById('gvLangEn');
+
     const mobileFrBtn = document.getElementById('gvMobileLangFr');
     const mobileEnBtn = document.getElementById('gvMobileLangEn');
+
     const currentLang = getCurrentLangFromCookie();
     updateLangButtons(currentLang);
 
@@ -125,10 +137,12 @@ function setGoogleLang(lang) {
 
     if (frBtn) frBtn.addEventListener('click', handleFr);
     if (enBtn) enBtn.addEventListener('click', handleEn);
+
     if (mobileFrBtn) mobileFrBtn.addEventListener('click', handleFr);
     if (mobileEnBtn) mobileEnBtn.addEventListener('click', handleEn);
 
     const existingScript = document.getElementById('google-translate-script');
+
     if (existingScript) {
       window.__googleTranslateInit();
       return;
