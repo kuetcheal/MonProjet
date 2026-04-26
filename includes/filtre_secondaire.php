@@ -50,6 +50,7 @@ function formatDateDisplay($date)
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
         border-radius: 10px !important;
         padding: 18px 18px 14px !important;
+        box-sizing: border-box !important;
     }
 
     .litepicker .container__months {
@@ -102,7 +103,7 @@ function formatDateDisplay($date)
         margin-bottom: 8px !important;
     }
 
-    .litepicker .month-item-weekdays-row>div {
+    .litepicker .month-item-weekdays-row > div {
         color: #6b7280 !important;
         font-size: 13px !important;
         font-weight: 700 !important;
@@ -210,30 +211,113 @@ function formatDateDisplay($date)
 
     @media (max-width: 768px) {
         .litepicker {
-            min-width: auto !important;
-            width: calc(100vw - 24px) !important;
+            width: calc(100vw - 32px) !important;
+            max-width: calc(100vw - 32px) !important;
+            min-width: 0 !important;
+            left: 16px !important;
+            right: 16px !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
         }
 
         .litepicker .container__main {
-            width: calc(100vw - 24px) !important;
-            padding: 14px !important;
-            border-radius: 20px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 12px !important;
+            border-radius: 18px !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
         }
 
         .litepicker .container__months {
-            display: block !important;
+            display: flex !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            gap: 0 !important;
         }
 
-        .litepicker .month-item+.month-item {
-            margin-top: 16px !important;
+        .litepicker .month-item {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        .litepicker .month-item + .month-item {
+            display: none !important;
+        }
+
+        .litepicker .month-item-header {
+            min-height: 42px !important;
+            margin-bottom: 8px !important;
+            font-size: 14px !important;
+        }
+
+        .litepicker .month-item-name,
+        .litepicker .month-item-year {
+            font-size: 14px !important;
+        }
+
+        .litepicker .month-item-weekdays-row {
+            display: grid !important;
+            grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+            width: 100% !important;
+            margin-bottom: 6px !important;
+        }
+
+        .litepicker .month-item-weekdays-row > div {
+            width: auto !important;
+            font-size: 12px !important;
+            height: 30px !important;
+        }
+
+        .litepicker .month-item-calendar {
+            display: grid !important;
+            grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+            width: 100% !important;
+            gap: 3px !important;
         }
 
         .litepicker .day-item {
-            width: 38px !important;
-            height: 38px !important;
-            max-width: 38px !important;
-            line-height: 38px !important;
-            font-size: 14px !important;
+            width: 34px !important;
+            height: 34px !important;
+            max-width: 34px !important;
+            line-height: 34px !important;
+            font-size: 13px !important;
+            justify-self: center !important;
+        }
+
+        .litepicker .button-previous-month,
+        .litepicker .button-next-month {
+            width: 32px !important;
+            height: 32px !important;
+        }
+    }
+
+    @media (max-width: 390px) {
+        .litepicker {
+            width: calc(100vw - 20px) !important;
+            max-width: calc(100vw - 20px) !important;
+            left: 10px !important;
+            right: 10px !important;
+        }
+
+        .litepicker .container__main {
+            padding: 10px !important;
+        }
+
+        .litepicker .day-item {
+            width: 30px !important;
+            height: 30px !important;
+            max-width: 30px !important;
+            line-height: 30px !important;
+            font-size: 12px !important;
+        }
+
+        .litepicker .month-item-weekdays-row > div {
+            font-size: 11px !important;
         }
     }
 </style>
@@ -369,22 +453,28 @@ function formatDateDisplay($date)
                     picker.destroy();
                 }
 
+                const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
                 picker = new Litepicker({
                     element: startDisplay,
                     elementEnd: singleMode ? null : endDisplay,
                     singleMode: singleMode,
-                    numberOfMonths: 2,
-                    numberOfColumns: 2,
+
+                    numberOfMonths: isMobile ? 1 : 2,
+                    numberOfColumns: isMobile ? 1 : 2,
+
                     autoApply: true,
                     minDate: new Date(),
                     lang: 'fr-FR',
                     format: 'DD/MM/YYYY',
+
                     dropdowns: {
                         minYear: new Date().getFullYear(),
                         maxYear: new Date().getFullYear() + 2,
                         months: true,
                         years: true
                     },
+
                     setup: (pickerInstance) => {
                         pickerInstance.on('selected', (date1, date2) => {
                             if (date1) {
@@ -428,6 +518,10 @@ function formatDateDisplay($date)
                 radio.addEventListener('change', function() {
                     updateMode(false);
                 });
+            });
+
+            window.addEventListener('resize', function() {
+                updateMode(true);
             });
 
             form.addEventListener('submit', function(e) {
