@@ -14,6 +14,7 @@ session_start();
 
 <body style="background-color: aliceblue;">
 
+    <?php include '../includes/topbar.php'; ?>
     <?php include '../includes/header.php'; ?>
 
     <!-- HERO -->

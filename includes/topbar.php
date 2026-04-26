@@ -4,7 +4,7 @@ $baseUrl = $baseUrl ?? ((strpos($_SERVER['SCRIPT_NAME'], '/MonProjet/') !== fals
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<div class="notranslate fixed top-0 left-0 right-0 z-[1600] w-full h-[48px] bg-[#06182c] text-white hidden max-[992px]:flex items-center">
+<div class="notranslate fixed top-0 left-0 right-0 z-[600] w-full h-[48px] bg-[#06182c] text-white hidden max-[992px]:flex items-center">
     <div class="w-full px-5 flex items-center justify-end gap-3">
         <button 
             type="button"  
