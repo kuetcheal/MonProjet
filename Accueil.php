@@ -43,12 +43,10 @@ try {
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-
     <!-- Litepicker -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" />
     <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/bundle.js"></script>
 
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="CSS/Accueil.css">
 
     <title>Accueil</title>
@@ -56,11 +54,21 @@ try {
     <style>
         .litepicker {
             font-family: 'Inter', Arial, sans-serif;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            min-width: auto !important;
+            z-index: 9999 !important;
+        }
+
+        .litepicker .container__main {
             background: #ffffff !important;
             border: 1px solid #e5e7eb !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+            border-radius: 10px !important;
             padding: 18px 18px 14px !important;
-            min-width: 720px;
-            z-index: 9999 !important;
+            box-sizing: border-box !important;
         }
 
         .litepicker .container__months {
@@ -105,7 +113,7 @@ try {
 
         .litepicker .button-previous-month:hover,
         .litepicker .button-next-month:hover {
-            background: #ede9fe !important;
+            background: #f3f4f6 !important;
             color: green !important;
         }
 
@@ -113,7 +121,7 @@ try {
             margin-bottom: 8px !important;
         }
 
-        .litepicker .month-item-weekdays-row>div {
+        .litepicker .month-item-weekdays-row > div {
             color: #6b7280 !important;
             font-size: 13px !important;
             font-weight: 700 !important;
@@ -164,7 +172,7 @@ try {
         }
 
         .litepicker .day-item.is-in-range {
-            background: #ede9fe !important;
+            background: #f3f4f6 !important;
             color: green !important;
             border-radius: 0 !important;
         }
@@ -219,38 +227,130 @@ try {
             outline: none !important;
         }
 
+        /*
+            Correction mobile :
+            - calendrier contenu dans l’écran
+            - un seul mois affiché
+            - jours alignés en grille
+            - suppression du débordement horizontal
+        */
         @media (max-width: 768px) {
             .litepicker {
-                min-width: auto !important;
-                width: calc(100vw - 24px) !important;
-                padding: 14px !important;
-                border-radius: 20px !important;
+                width: calc(100vw - 32px) !important;
+                max-width: calc(100vw - 32px) !important;
+                min-width: 0 !important;
+                left: 16px !important;
+                right: 16px !important;
+                box-sizing: border-box !important;
+                overflow: hidden !important;
+            }
+
+            .litepicker .container__main {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 12px !important;
+                border-radius: 18px !important;
+                overflow: hidden !important;
+                box-sizing: border-box !important;
             }
 
             .litepicker .container__months {
-                display: block !important;
+                display: flex !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow: hidden !important;
+                gap: 0 !important;
             }
 
-            .litepicker .month-item+.month-item {
-                margin-top: 16px !important;
+            .litepicker .month-item {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 100% !important;
+                padding: 0 !important;
+                box-sizing: border-box !important;
+            }
+
+            .litepicker .month-item + .month-item {
+                display: none !important;
+            }
+
+            .litepicker .month-item-header {
+                min-height: 42px !important;
+                margin-bottom: 8px !important;
+                font-size: 14px !important;
+            }
+
+            .litepicker .month-item-name,
+            .litepicker .month-item-year {
+                font-size: 14px !important;
+            }
+
+            .litepicker .month-item-weekdays-row {
+                display: grid !important;
+                grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+                width: 100% !important;
+                margin-bottom: 6px !important;
+            }
+
+            .litepicker .month-item-weekdays-row > div {
+                width: auto !important;
+                font-size: 12px !important;
+                height: 30px !important;
+            }
+
+            .litepicker .month-item-calendar {
+                display: grid !important;
+                grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+                width: 100% !important;
+                gap: 3px !important;
             }
 
             .litepicker .day-item {
-                width: 38px !important;
-                height: 38px !important;
-                max-width: 38px !important;
-                line-height: 38px !important;
-                font-size: 14px !important;
+                width: 34px !important;
+                height: 34px !important;
+                max-width: 34px !important;
+                line-height: 34px !important;
+                font-size: 13px !important;
+                justify-self: center !important;
+            }
+
+            .litepicker .button-previous-month,
+            .litepicker .button-next-month {
+                width: 32px !important;
+                height: 32px !important;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .litepicker {
+                width: calc(100vw - 20px) !important;
+                max-width: calc(100vw - 20px) !important;
+                left: 10px !important;
+                right: 10px !important;
+            }
+
+            .litepicker .container__main {
+                padding: 10px !important;
+            }
+
+            .litepicker .day-item {
+                width: 30px !important;
+                height: 30px !important;
+                max-width: 30px !important;
+                line-height: 30px !important;
+                font-size: 12px !important;
+            }
+
+            .litepicker .month-item-weekdays-row > div {
+                font-size: 11px !important;
             }
         }
     </style>
 </head>
 
 <body>
-     <?php include 'includes/topbar.php'; ?>
+    <?php include 'includes/topbar.php'; ?>
     <?php include 'includes/header.php'; ?>
-    
-
 
     <section class="hero-section">
         <div class="hero-overlay"></div>
@@ -269,6 +369,7 @@ try {
 
         <div class="search-card-wrapper hidden md:block shadow-md">
             <h3 class="hero-search-title">Reserver votre voyage</h3>
+
             <div class="search-card">
                 <form action="listevoyageretour.php" method="post" class="search-form">
 
@@ -482,6 +583,7 @@ try {
         </section>
 
         <div id="modalContainer"></div>
+
         <?php include 'geolocalisation/formulaire-localisation.php'; ?>
 
         <section>
@@ -557,6 +659,8 @@ try {
                 const startHidden = document.getElementById(startHiddenId);
                 const endHidden = document.getElementById(endHiddenId);
 
+                if (!startDisplay || !endDisplay || !startHidden || !endHidden) return;
+
                 const radios = form.querySelectorAll('input[name="inlineRadioOptions"]');
                 let picker = null;
 
@@ -577,22 +681,28 @@ try {
                         picker.destroy();
                     }
 
+                    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
                     picker = new Litepicker({
                         element: startDisplay,
                         elementEnd: singleMode ? null : endDisplay,
                         singleMode: singleMode,
-                        numberOfMonths: 2,
-                        numberOfColumns: 2,
+
+                        numberOfMonths: isMobile ? 1 : 2,
+                        numberOfColumns: isMobile ? 1 : 2,
+
                         autoApply: true,
                         minDate: new Date(),
                         lang: 'fr-FR',
                         format: 'DD/MM/YYYY',
+
                         dropdowns: {
                             minYear: new Date().getFullYear(),
                             maxYear: new Date().getFullYear() + 2,
                             months: true,
                             years: true
                         },
+
                         setup: (pickerInstance) => {
                             pickerInstance.on('selected', (date1, date2) => {
                                 if (date1) {
@@ -614,10 +724,12 @@ try {
                     });
                 }
 
-                function updateMode() {
+                function updateMode(initialLoad = false) {
                     const isRoundTrip = getTripMode() === 'option2';
 
-                    clearDates();
+                    if (!initialLoad) {
+                        clearDates();
+                    }
 
                     if (isRoundTrip) {
                         endDisplay.disabled = false;
@@ -631,7 +743,13 @@ try {
                 }
 
                 radios.forEach((radio) => {
-                    radio.addEventListener('change', updateMode);
+                    radio.addEventListener('change', function() {
+                        updateMode(false);
+                    });
+                });
+
+                window.addEventListener('resize', function() {
+                    updateMode(true);
                 });
 
                 form.addEventListener('submit', function(e) {
@@ -639,13 +757,13 @@ try {
                     const depart = form.querySelector('select[name="input1"]');
                     const arrivee = form.querySelector('select[name="input2"]');
 
-                    if (!depart.value) {
+                    if (!depart || !depart.value) {
                         e.preventDefault();
                         alert('Veuillez sélectionner une ville de départ.');
                         return;
                     }
 
-                    if (!arrivee.value) {
+                    if (!arrivee || !arrivee.value) {
                         e.preventDefault();
                         alert('Veuillez sélectionner une ville d’arrivée.');
                         return;
@@ -669,7 +787,7 @@ try {
                     }
                 });
 
-                updateMode();
+                updateMode(true);
             }
 
             setupBookingForm(

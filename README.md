@@ -157,3 +157,9 @@ Enfin, notre site est désormais accessible publiquement via une URL personnalis
 
 mot de passe : EasyTravel@2026Mysql!  Alex1995@
 nom de connexion de l'admin : easyadmin
+
+
+
+### conexion au serveur via filezilla
+Hôte : waws-prod-dxb-003.ftp.azurewebsites.windows.net
+Nom d’utilisateur : EasyTravel\$EasyTravel
