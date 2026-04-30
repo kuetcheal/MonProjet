@@ -15,6 +15,17 @@ try {
 } catch (Exception $e) {
     $actualites = [];
 }
+
+function limiterTexte($texte, $limite = 56)
+{
+    $texte = trim($texte);
+
+    if (mb_strlen($texte, 'UTF-8') <= $limite) {
+        return $texte;
+    }
+
+    return mb_substr($texte, 0, $limite, 'UTF-8') . '...';
+}
 ?>
 
 <section class="bg-[#f8f7f7] py-[55px] pb-[95px]">
@@ -41,8 +52,14 @@ try {
                                     <?= htmlspecialchars($actu['titre']) ?>
                                 </div>
 
-                                <p class="text-sm mb-3">
-                                    <?= htmlspecialchars($actu['resume']) ?>
+                                <p class="text-sm mb-3 h-[40px] overflow-hidden">
+                                    <span class="block md:hidden">
+                                        <?= htmlspecialchars(limiterTexte($actu['resume'], 50)) ?>
+                                    </span>
+
+                                    <span class="hidden md:block">
+                                        <?= htmlspecialchars($actu['resume']) ?>
+                                    </span>
                                 </p>
 
                                 <a href="<?= htmlspecialchars($actu['lien']) ?>" class="text-[#2e8b57] font-medium underline">

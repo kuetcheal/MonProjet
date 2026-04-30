@@ -188,3 +188,9 @@ L’autre utilisateur reçoit le message dans l’interface
 
 mot de passe : EasyTravel@2026Mysql!  Alex1995@
 nom de connexion de l'admin : easyadmin
+
+
+
+### conexion au serveur via filezilla
+Hôte : waws-prod-dxb-003.ftp.azurewebsites.windows.net
+Nom d’utilisateur : EasyTravel\$EasyTravel

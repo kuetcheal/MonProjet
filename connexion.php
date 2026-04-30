@@ -62,62 +62,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Connexion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen bg-gray-100 flex items-center justify-center">
+<body class="bg-[aliceblue] min-h-screen flex flex-col">
 
-    <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
-        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">
-            Connexion
-        </h1>
+    <?php include 'includes/header.php'; ?>
 
-        <?php if (!empty($messageError)): ?>
-            <div class="mb-4 bg-red-500 text-white text-center p-3 rounded">
-                <?= htmlspecialchars($messageError) ?>
-            </div>
-        <?php endif; ?>
+    <main class="flex-1 flex items-center justify-center px-4 py-10 sm:py-14 md:py-16">
+        <div class="w-full max-w-md bg-white shadow-xl rounded-2xl p-6 sm:p-8 md:p-9">
+            <h1 class="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-6">
+                Connexion
+            </h1>
 
-        <form method="POST" action="" class="space-y-5">
-            <div>
-                <label class="block text-gray-700 font-semibold mb-2">
-                    Nom d'utilisateur ou email
-                </label>
-                <input
-                    type="text"
-                    name="username"
-                    value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
-                    required
-                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Votre identifiant">
-            </div>
+            <?php if (!empty($messageError)): ?>
+                <div class="mb-5 bg-red-500 text-white text-center px-4 py-3 rounded-lg text-sm sm:text-base">
+                    <?= htmlspecialchars($messageError) ?>
+                </div>
+            <?php endif; ?>
 
-            <div>
-                <label class="block text-gray-700 font-semibold mb-2">
-                    Mot de passe
-                </label>
-                <input
-                    type="password"
-                    name="password"
-                    required
-                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Votre mot de passe">
-            </div>
+            <form method="POST" action="" class="space-y-5">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">
+                        Nom d'utilisateur ou email
+                    </label>
+                    <input
+                        type="text"
+                        name="username"
+                        value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
+                        required
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="Votre identifiant">
+                </div>
 
-            <button
-                type="submit"
-                class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition">
-                Se connecter
-            </button>
-        </form>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">
+                        Mot de passe
+                    </label>
+                    <input
+                        type="password"
+                        name="password"
+                        required
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="Votre mot de passe">
+                </div>
 
-        <p class="text-center text-sm text-gray-500 mt-5">
-            Pas encore de compte ?
-            <a href="inscription.php" class="text-green-600 font-semibold hover:underline">
-                Créer un compte
-            </a>
-        </p>
-    </div>
+                <button
+                    type="submit"
+                    class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition duration-200">
+                    Se connecter
+                </button>
+            </form>
+
+            <p class="text-center text-sm text-gray-500 mt-6">
+                Pas encore de compte ?
+                <a href="inscription.php" class="text-green-600 font-semibold hover:underline">
+                    Créer un compte
+                </a>
+            </p>
+        </div>
+    </main>
+
+    <?php include 'includes/footer.php'; ?>
 
 </body>
 </html>
