@@ -203,8 +203,8 @@ try {
 
     $_SESSION['success_message'] = "Votre demande de covoiturage a été envoyée au chauffeur. Vous serez notifié dès qu’il accepte ou refuse.";
 
-    header('Location: ../Ma_reservation.php');
-    exit;
+header('Location: demande-envoyee.php?id_reservation=' . $reservationId);
+exit;
 
 } catch (Exception $e) {
     if ($pdo->inTransaction()) {

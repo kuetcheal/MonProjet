@@ -1,10 +1,13 @@
 <?php
 session_start();
+
 require_once __DIR__ . '/../../config.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
+$chauffeurId = (int)($_SESSION['user_id'] ?? $_SESSION['Id_compte'] ?? 0);
+
+if ($chauffeurId <= 0) {
     echo json_encode([
         'success' => false,
         'message' => 'Utilisateur non connecté.'
@@ -12,7 +15,6 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$chauffeurId = (int) $_SESSION['user_id'];
 $reservationId = isset($_POST['reservation_id']) ? (int) $_POST['reservation_id'] : 0;
 
 if ($reservationId <= 0) {
@@ -27,7 +29,8 @@ try {
     $stmt = $pdo->prepare("
         UPDATE reservation r
         INNER JOIN voyage v ON v.idVoyage = r.idVoyage
-        SET r.statut_demande = 'refusee'
+        SET r.statut_demande = 'refusee',
+            r.Etat = 2
         WHERE r.id_reservation = :reservation_id
         AND v.chauffeur_id = :chauffeur_id
         AND r.statut_demande = 'en_attente'
@@ -41,14 +44,14 @@ try {
     if ($stmt->rowCount() === 0) {
         echo json_encode([
             'success' => false,
-            'message' => 'Impossible de refuser cette réservation.'
+            'message' => 'Impossible de refuser cette demande. Elle a peut-être déjà été traitée.'
         ]);
         exit;
     }
 
     echo json_encode([
         'success' => true,
-        'message' => 'Réservation refusée.'
+        'message' => 'Demande refusée.'
     ]);
     exit;
 
@@ -59,3 +62,6 @@ try {
     ]);
     exit;
 }
+
+
+

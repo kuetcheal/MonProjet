@@ -1,10 +1,13 @@
 <?php
 session_start();
+
 require_once __DIR__ . '/../../config.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
+$userId = (int)($_SESSION['user_id'] ?? $_SESSION['Id_compte'] ?? 0);
+
+if ($userId <= 0) {
     echo json_encode([
         'success' => false,
         'message' => 'Utilisateur non connecté.'
@@ -12,9 +15,16 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$userId = (int) $_SESSION['user_id'];
-
 $input = json_decode(file_get_contents('php://input'), true);
+
+if (!is_array($input)) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Données JSON invalides.'
+    ]);
+    exit;
+}
+
 $conversationId = isset($input['conversation_id']) ? (int) $input['conversation_id'] : 0;
 
 if ($conversationId <= 0) {
@@ -30,6 +40,7 @@ try {
         SELECT id
         FROM conversations
         WHERE id = :conversation_id
+        AND statut = 'active'
         AND (
             client_id = :user_id_client
             OR chauffeur_id = :user_id_chauffeur
@@ -43,7 +54,7 @@ try {
         ':user_id_chauffeur' => $userId
     ]);
 
-    if (!$check->fetch()) {
+    if (!$check->fetch(PDO::FETCH_ASSOC)) {
         echo json_encode([
             'success' => false,
             'message' => 'Accès refusé.'

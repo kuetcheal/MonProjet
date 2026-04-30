@@ -1,10 +1,13 @@
 <?php
 session_start();
+
 require_once __DIR__ . '/../../config.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
+$userId = (int)($_SESSION['user_id'] ?? $_SESSION['Id_compte'] ?? 0);
+
+if ($userId <= 0) {
     echo json_encode([
         'success' => false,
         'message' => 'Utilisateur non connecté.'
@@ -12,7 +15,6 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$userId = (int) $_SESSION['user_id'];
 $conversationId = isset($_GET['conversation_id']) ? (int) $_GET['conversation_id'] : 0;
 
 if ($conversationId <= 0) {
@@ -42,7 +44,7 @@ try {
         ':user_id_chauffeur' => $userId
     ]);
 
-    if (!$check->fetch()) {
+    if (!$check->fetch(PDO::FETCH_ASSOC)) {
         echo json_encode([
             'success' => false,
             'message' => 'Accès non autorisé.'
@@ -71,7 +73,13 @@ try {
 
     foreach ($messages as &$message) {
         $message['is_me'] = ((int) $message['sender_id'] === $userId);
+        $message['id'] = (int) $message['id'];
+        $message['sender_id'] = (int) $message['sender_id'];
+        $message['receiver_id'] = (int) $message['receiver_id'];
+        $message['is_read'] = (int) $message['is_read'];
     }
+
+    unset($message);
 
     echo json_encode([
         'success' => true,

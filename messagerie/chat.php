@@ -1,13 +1,16 @@
 <?php
 session_start();
+
 require_once __DIR__ . '/../config.php';
 
-if (!isset($_SESSION['user_id'])) {
+$userId = (int)($_SESSION['user_id'] ?? $_SESSION['Id_compte'] ?? 0);
+
+if ($userId <= 0) {
+    $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header('Location: ../connexion.php');
     exit;
 }
 
-$userId = (int) $_SESSION['user_id'];
 $conversationId = isset($_GET['conversation_id']) ? (int) $_GET['conversation_id'] : 0;
 
 if ($conversationId <= 0) {
@@ -64,6 +67,11 @@ try {
 
 <body class="bg-gray-100 min-h-screen">
 
+<?php
+// Tu peux garder ou retirer selon ton design
+// include __DIR__ . '/../includes/header.php';
+?>
+
 <div class="max-w-4xl mx-auto px-4 py-6">
 
     <div class="mb-4">
@@ -80,16 +88,19 @@ try {
                 →
                 <?= htmlspecialchars($conversation['villeArrivee'] ?? 'Arrivée') ?>
             </h1>
+
             <p class="text-sm text-green-100 mt-1">
                 Départ :
                 <?= htmlspecialchars($conversation['jourDepart'] ?? '') ?>
                 à
-                <?= htmlspecialchars($conversation['heureDepart'] ?? '') ?>
+                <?= htmlspecialchars(substr($conversation['heureDepart'] ?? '', 0, 5)) ?>
             </p>
         </div>
 
         <div id="messagesBox" class="h-[500px] overflow-y-auto p-5 bg-gray-50 space-y-3">
-            <div class="text-center text-gray-400 text-sm">Chargement des messages...</div>
+            <div class="text-center text-gray-400 text-sm">
+                Chargement des messages...
+            </div>
         </div>
 
         <form id="messageForm" class="p-4 border-t border-gray-200 bg-white flex gap-3">
@@ -127,7 +138,7 @@ let lastMessagesHtml = '';
 
 function escapeHtml(text) {
     const div = document.createElement('div');
-    div.textContent = text;
+    div.textContent = text ?? '';
     return div.innerHTML;
 }
 
@@ -222,6 +233,7 @@ messageForm.addEventListener('submit', async function(e) {
 
     } catch (error) {
         alert('Erreur lors de l’envoi du message.');
+        console.error(error);
     }
 
     messageInput.disabled = false;
@@ -231,6 +243,10 @@ messageForm.addEventListener('submit', async function(e) {
 loadMessages();
 setInterval(loadMessages, 3000);
 </script>
+
+<?php
+// include __DIR__ . '/../includes/footer.php';
+?>
 
 </body>
 </html>
