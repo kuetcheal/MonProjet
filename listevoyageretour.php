@@ -288,10 +288,25 @@ session_start();
         $villeArrivee = $voyage['villeArrivee'] ?? '';
         $quartierArrivee = $voyage['quartierArrivee'] ?? '';
 
-        $prix = htmlspecialchars($voyage['prix']);
-        $bus = htmlspecialchars($voyage['typeBus'] ?? 'standard');
-
         $modeTransport = strtolower(trim($voyage['modeTransport'] ?? 'bus'));
+        $modeTransportSafe = htmlspecialchars($modeTransport);
+
+        /*
+            Pour le covoiturage, si prix_par_place existe, on l’utilise.
+            Sinon on garde prix comme pour les bus.
+        */
+        if (
+            $modeTransport === 'covoiturage'
+            && isset($voyage['prix_par_place'])
+            && $voyage['prix_par_place'] !== null
+            && $voyage['prix_par_place'] !== ''
+        ) {
+            $prix = htmlspecialchars($voyage['prix_par_place']);
+        } else {
+            $prix = htmlspecialchars($voyage['prix']);
+        }
+
+        $bus = htmlspecialchars($voyage['typeBus'] ?? 'standard');
 
         $departHtml = formatLieuCompact($villeDepart, $quartierDepart, 'left');
         $arriveeHtml = formatLieuCompact($villeArrivee, $quartierArrivee, 'center');
@@ -377,6 +392,7 @@ session_start();
                 <button
                     class='continuer-btn-simple bg-green-600 hover:bg-green-700 text-white font-bold text-[9px] sm:text-[13px] md:text-[15px] px-2 sm:px-4 md:px-5 py-1.5 sm:py-2.5 transition min-w-[70px] sm:min-w-[120px] md:min-w-[130px]'
                     data-id='{$id}'
+                    data-mode='{$modeTransportSafe}'
                     data-price='{$prix}'
                     data-depart='" . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "'
                     data-arrive='" . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "'
@@ -392,6 +408,7 @@ session_start();
                     class='continuer-btn bg-green-600 hover:bg-green-700 text-white font-bold text-[9px] sm:text-[13px] md:text-[15px] px-2 sm:px-4 md:px-5 py-1.5 sm:py-2.5 transition min-w-[70px] sm:min-w-[120px] md:min-w-[130px]'
                     data-id='{$id}'
                     data-type='{$type}'
+                    data-mode='{$modeTransportSafe}'
                     data-price='{$prix}'
                     data-depart='" . htmlspecialchars($villeDepart) . (!empty($quartierDepart) ? " - " . htmlspecialchars($quartierDepart) : "") . "'
                     data-arrive='" . htmlspecialchars($villeArrivee) . (!empty($quartierArrivee) ? " - " . htmlspecialchars($quartierArrivee) : "") . "'
@@ -512,8 +529,24 @@ session_start();
     <?php include 'includes/footer.php'; ?>
 
     <script>
+        /*
+            Aller simple :
+            - Bus => recap.php
+            - Covoiturage => covoiturage/recap-covoiturage.php
+        */
         document.querySelectorAll('.continuer-btn-simple').forEach(button => {
             button.addEventListener('click', function() {
+                const modeTransport = this.dataset.mode || 'bus';
+
+                if (modeTransport === 'covoiturage') {
+                    const params = new URLSearchParams({
+                        idVoyage: this.dataset.id
+                    });
+
+                    window.location.href = 'covoiturage/recap-covoiturage.php?' + params.toString();
+                    return;
+                }
+
                 const params = new URLSearchParams({
                     idVoyageAller: this.dataset.id,
                     priceAller: this.dataset.price,
@@ -530,6 +563,11 @@ session_start();
             });
         });
 
+        /*
+            Aller-retour :
+            - Bus => sélection aller + retour puis recap.php
+            - Covoiturage => on redirige vers le processus covoiturage simple
+        */
         document.addEventListener('DOMContentLoaded', function() {
             let selectedTrips = {
                 aller: null,
@@ -541,6 +579,19 @@ session_start();
                     e.preventDefault();
 
                     const type = this.dataset.type;
+                    const modeTransport = this.dataset.mode || 'bus';
+
+                    if (modeTransport === 'covoiturage') {
+                        alert("Pour le covoiturage, veuillez réserver un trajet à la fois.");
+
+                        const params = new URLSearchParams({
+                            idVoyage: this.dataset.id
+                        });
+
+                        window.location.href = 'covoiturage/recap-covoiturage.php?' + params.toString();
+                        return;
+                    }
+
                     const parentCard = this.closest('[id^="conteneur-"]');
 
                     if (!parentCard) return;
