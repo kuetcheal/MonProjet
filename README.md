@@ -1,8 +1,15 @@
 # MonProjet
 
+### notre fichier variable environnement .env
+il contient tous les secrets de notre application ( connection à la bd, les clés publics et secrets des différents API intégrés dans notre application)
+et tout ces valeurs sont passés dans notre fichier de configuration config.php à la racine.
+
+#### l'envoi des emails
+alors pour gérer l'envoi des emails ici, nous avons opté pour le service d'envoi des mail MailJet
 
 
-### tu veux envoyer le billet sans que le client ait écrit juste avant.
+
+### tu veux envoyer le billet par whatsapp sans que le client ait écrit juste avant.
 Là, il faut généralement passer par un template message approuvé par WhatsApp/Meta. Les templates servent précisément aux notifications métier comme rappels, mises à jour et confirmations.
 Donc la réponse simple est : oui, si tu veux un envoi automatique, il te faut une intégration WhatsApp Business API/Cloud API. Sans ça, tu peux seulement faire une solution manuelle du type bouton “Envoyer sur WhatsApp” qui ouvre l’app, mais pas un vrai envoi serveur automatisé
 Pour ton cas concret
@@ -42,6 +49,7 @@ C’est plus facile à déboguer, plus léger, et ça garde une solution de seco
 
 ### on utilise Flatpickr  comme librairie pour la gestion des calendriers
 ### on utilise intl-tel-input (LA référence) comme librairie pour gérer l'indice international des numéros
+### on utilise 
 
 
 
@@ -139,19 +147,42 @@ c'est une plateforme qui te permet d’accepter plusieurs moyens de paiement ave
 - carte bancaire (Visa, Mastercard)
 - parfois PayPal, etc.
 👉 Tu n’intègres qu’une seule API, et eux gèrent tout derrière
+* pour notre application nous avons utiliser PawaPay qui prend en charge Orange Money et MTN Mobile Money Cameroun
 
 
 
 #### hébergement du site
-on a utilisé Microsoft Azure App Service pour héberger ton application web, ce qui permet d’exécuter notre site PHP sans gérer directement un serveur physique. Tu as configuré ton environnement de production en y intégrant les variables nécessaires (connexion base de données, API, etc.).
-Tu as également mis en place une base de données Azure Database for MySQL, puis importé tes données depuis ton environnement local afin de rendre l’application fonctionnelle en ligne.
-Le déploiement de ton projet s’est fait via un transfert FTP (ou FTPS), en envoyant l’ensemble des fichiers dans le répertoire /site/wwwroot d’Azure.
+on a utilisé Microsoft Azure App Service pour héberger notre application web, ce qui permet d’exécuter notre site PHP sans gérer directement un serveur physique. on a configuré notre environnement de production en y intégrant les variables nécessaires (connexion base de données, API, etc.).
+on a également mis en place une base de données Azure Database for MySQL, puis importé nos données depuis notre environnement local afin de rendre l’application fonctionnelle en ligne.
+Le déploiement de notre projet s’est fait via un transfert FTP (ou FTPS), en envoyant l’ensemble des fichiers dans le répertoire /site/wwwroot d’Azure.
 
 ###  nom de domaine
 Ensuite, grâce au GitHub Student Developer Pack, on a obtenu gratuitement un nom de domaine via Name.com (easy-travel.app).
 on a configuré les enregistrements DNS (CNAME et TXT) sur Name.com afin de faire pointer ton domaine vers notre application hébergée sur Azure.
 Après validation du domaine dans Azure, on a ajouté une liaison SSL avec un certificat managé App Service, ce qui a permis d’activer le protocole HTTPS.
 Enfin, notre site est désormais accessible publiquement via une URL personnalisée sécurisée, offrant une meilleure crédibilité et une expérience utilisateur professionnelle
+
+
+
+
+### système de messagerie (client --> chauffeur) après une reservation
+- Version simple et fiable : messagerie avec AJAX + MySQL, rafraîchie toutes les 3 à 5 secondes.
+- Version avancée : messagerie temps réel avec WebSocket, Socket.IO, Pusher ou Ratchet.
+* schéma global de fonctionnement : 
+Client choisit un trajet
+        ↓
+Demande de réservation envoyée
+        ↓
+Chauffeur accepte ou reçoit la demande
+        ↓
+Une conversation est créée automatiquement
+        ↓
+Client et chauffeur peuvent discuter
+        ↓
+Les messages sont stockés dans MySQL
+        ↓
+L’autre utilisateur reçoit le message dans l’interface
+
 
 
 
