@@ -1,0 +1,25 @@
+:root {
+    --color-primary: #16a34a;
+    --color-primary-dark: 18 90 55;
+
+    --color-secondary: 245 158 11;
+    --color-secondary-dark: 217 119 6;
+
+    --color-accent: 34 197 94;
+
+    --color-danger: 220 38 38;
+    --color-success: 22 163 74;
+    --color-warning: 234 179 8;
+    --color-info: 14 165 233;
+
+    --color-background: 248 250 252;
+    --color-surface: 255 255 255;
+    --color-border: 226 232 240;
+
+    --color-text: 15 23 42;
+    --color-muted: 100 116 139;
+
+    --color-on-primary: 255 255 255;
+    --color-on-secondary: 255 255 255;
+}
+

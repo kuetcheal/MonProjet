@@ -30,7 +30,7 @@ function limiterTexte($texte, $limite = 56)
 
 <section class="bg-[#f8f7f7] py-[55px] pb-[95px]">
     <div class="max-w-[1370px] mx-auto px-3">
-        <h2 class="text-xl md:text-3xl text-[#177043] font-bold pb-5 text-left md:px-5 px-3">
+        <h2 class="text-xl md:text-3xl font-bold pb-5 text-left md:px-5 px-3">
             Profitez de toutes les dernières actualités de général voyage
         </h2>
 
@@ -62,7 +62,7 @@ function limiterTexte($texte, $limite = 56)
                                     </span>
                                 </p>
 
-                                <a href="<?= htmlspecialchars($actu['lien']) ?>" class="text-[#2e8b57] font-medium underline">
+                                <a href="<?= htmlspecialchars($actu['lien']) ?>" class="text-[#018b01] font-medium underline">
                                     Lire l'article
                                 </a>
                             </div>

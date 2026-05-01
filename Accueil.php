@@ -563,19 +563,19 @@ try {
 
                 <button
                     id="openModalButton"
-                    class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]">
+                    class="h-[60px] md:h-[72px] bg-[#018b01] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]">
                     Gérer ma réservation
                 </button>
 
                 <button
                     id="openTrackingModalButton"
                     type="button"
-                    class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]">
+                    class="h-[60px] md:h-[72px] bg-[#018b01] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]">
                     Localiser mon trajet
                 </button>
 
                 <button
-                    class="h-[60px] md:h-[72px] bg-[#4caf50] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]">
+                    class="h-[60px] md:h-[72px] bg-[#018b01] hover:bg-[#3fa644] text-white text-[1rem] md:text-[1.15rem] lg:text-[1.25rem] font-bold transition duration-200 hover:-translate-y-[2px]">
                     Besoin d'aide
                 </button>
 
@@ -599,13 +599,13 @@ try {
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-[38px] items-start">
                     <div class="w-full">
                         <img
-                            src="https://www.autorite-transports.fr/wp-content/uploads/2016/03/autocar-Flixbus.jpg"
+                            src="https://img.freepik.com/photos-premium/bus-touristique-blanc-moderne-roule-long-autoroute-coucher-soleil-brillant_111726-2495.jpg"
                             alt="Bus EasyTravel"
                             class="w-full h-[260px] sm:h-[360px] md:h-[420px] lg:h-[520px] object-cover">
                     </div>
 
                     <div>
-                        <h2 class="m-0 mb-[18px] text-[#177043] text-[1.35rem] md:text-[1.55rem] lg:text-[1.7rem] font-bold leading-snug">
+                        <h2 class="m-0 mb-[18px] font-bold text-[1.35rem] md:text-[1.55rem] lg:text-[1.7rem] font-bold leading-snug">
                             EasyTravel est le plus grand réseau camerounais de transport personnel inter-urbain !
                         </h2>
 
@@ -619,7 +619,7 @@ try {
                             ou réservez dès maintenant pour <strong class="text-black font-bold">Yaoundé, Kribi, Bamenda, Edea, Banga</strong> et bien d’autres.
                         </p>
 
-                        <h3 class="mt-[22px] mb-3 text-[#2e8b57] text-[1.15rem] md:text-[1.28rem] lg:text-[1.4rem] font-bold">
+                        <h3 class="mt-[22px] mb-3 font-bold text-[1.15rem] md:text-[1.28rem] lg:text-[1.4rem] font-bold">
                             C’est simple et confortable
                         </h3>
 

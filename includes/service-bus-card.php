@@ -12,7 +12,7 @@
             </div>
 
             <div class="p-6 sm:p-8 lg:p-10">
-                <span class="text-[#008000] font-semibold uppercase tracking-wide text-sm">
+                <span class="text-[#018b01] font-semibold uppercase tracking-wide text-sm">
                     Général Voyage Services
                 </span>
 
@@ -45,7 +45,7 @@
                 </div>
 
                 <a href="SERVICES/service.php"
-                   class="inline-flex items-center justify-center bg-[#4CAF50] hover:bg-[#3e8e41] text-white font-semibold px-6 py-3 rounded-md transition">
+                   class="inline-flex items-center justify-center bg-[#018b01] hover:bg-[#3e8e41] text-white font-semibold px-6 py-3 rounded-md transition">
                     Découvrir le service
                 </a>
             </div>

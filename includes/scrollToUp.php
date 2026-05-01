@@ -1,5 +1,5 @@
 <button id="scrollTopBtn"
-class="fixed bottom-6 right-6 w-10 h-10 bg-green-600 text-white rounded-full shadow-lg hidden flex items-center justify-center z-[100]">
+class="fixed bottom-6 right-6 w-10 h-10 bg-[#018b01] text-white rounded-full shadow-lg hidden flex items-center justify-center z-[100]">
 <i class="fa fa-arrow-up"></i>
 
 </button>

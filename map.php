@@ -3,7 +3,7 @@
 <section class="w-full bg-[#f7f7f7]">
     <div class="max-w-[1350px] mx-auto px-3 md:px-5 py-10 md:py-14">
         <div class="text-left mb-5 md:mb-7">
-            <h2 class="m-0 mb-3 text-[#177043] text-[1.55rem] md:text-[1.5rem] xl:text-[1.9rem] font-bold leading-[1.15]">
+            <h2 class="m-0 mb-3 font-bold text-[1.55rem] md:text-[1.5rem] xl:text-[1.9rem] font-bold leading-[1.15]">
                 Nos destinations de voyage au Cameroun
             </h2>
             <p class="m-0 max-w-[1100px] text-[#111] text-[0.95rem] md:text-[1rem] xl:text-[1.15rem] leading-[1.5] md:leading-[1.6] text-left">
@@ -22,7 +22,7 @@
                         data-address="Bonanjo, Douala"
                     >
                         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
-                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                            <strong class="block text-[#018b01] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
                                 Douala
                             </strong>
                             <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
@@ -39,7 +39,7 @@
                         data-address="Mvan, Yaoundé"
                     >
                         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
-                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                            <strong class="block text-[#018b01] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
                                 Yaoundé-Mvan
                             </strong>
                             <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
@@ -56,7 +56,7 @@
                         data-address="Centre-ville, Édéa"
                     >
                         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
-                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                            <strong class="block text-[#018b01] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
                                 Édéa
                             </strong>
                             <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
@@ -73,7 +73,7 @@
                         data-address="Centre-ville, Bafoussam"
                     >
                         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
-                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                            <strong class="block text-[#018b01] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
                                 Bafoussam
                             </strong>
                             <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
@@ -90,7 +90,7 @@
                         data-address="Centre-ville, Kribi"
                     >
                         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
-                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                            <strong class="block text-[#018b01] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
                                 Kribi
                             </strong>
                             <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
@@ -107,7 +107,7 @@
                         data-address="Centre-ville, Mbouda"
                     >
                         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
-                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                            <strong class="block text-[#018b01] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
                                 Mbouda
                             </strong>
                             <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
@@ -124,7 +124,7 @@
                         data-address="Centre-ville, Garoua"
                     >
                         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
-                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                            <strong class="block text-[#018b01] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
                                 Garoua
                             </strong>
                             <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
@@ -141,7 +141,7 @@
                         data-address="Centre-ville, Limbe"
                     >
                         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
-                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                            <strong class="block text-[#018b01] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
                                 Limbe
                             </strong>
                             <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
@@ -158,7 +158,7 @@
                         data-address="Centre-ville, Maroua"
                     >
                         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
-                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                            <strong class="block text-[#018b01] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
                                 Maroua
                             </strong>
                             <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">
@@ -175,7 +175,7 @@
                         data-address="Centre-ville, Bamenda"
                     >
                         <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2 xl:gap-4">
-                            <strong class="block text-[#177043] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
+                            <strong class="block text-[#018b01] text-[0.98rem] md:text-[1.05rem] font-extrabold m-0 whitespace-nowrap shrink-0">
                                 Bamenda
                             </strong>
                             <span class="block text-[#444] text-[0.9rem] md:text-[0.95rem] leading-[1.4] m-0 text-left xl:text-right whitespace-normal xl:whitespace-nowrap xl:overflow-hidden xl:text-ellipsis flex-1">

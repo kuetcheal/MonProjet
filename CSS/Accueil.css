@@ -145,13 +145,13 @@ body {
 
 .field-group label {
     margin-bottom: 8px;
-    color: #156f3e;
+    /* color: #156f3e; */
     font-size: 1.05rem;
     font-weight: 800;
 }
 
 .field-group i {
-    color: #18884c;
+    /* color: #18884c; */
     margin-right: 6px;
 }
 
@@ -160,11 +160,11 @@ body {
     width: 100%;
     height: 58px;
     border: 1px solid #d3d7dc;
-    border-radius: 12px;
+    border-radius: 4px;
     padding: 0 14px;
     font-size: 1rem;
     font-weight: 700;
-    color: #156f3e;
+    
     background: #fff;
 }
 
@@ -180,8 +180,8 @@ body {
     width: 100%;
     height: 58px;
     border: none;
-    border-radius: 12px;
-    background-color: #156f3e !important;
+   
+    background-color: #018b01 !important;
     color: #fff !important;
     font-size: 1.1rem;
     font-weight: 800;
