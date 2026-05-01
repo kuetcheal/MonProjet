@@ -4,6 +4,9 @@
 il contient tous les secrets de notre application ( connection à la bd, les clés publics et secrets des différents API intégrés dans notre application)
 et tout ces valeurs sont passés dans notre fichier de configuration config.php à la racine.
 
+### quelques commandes git importantes
+git rm -r --cached vendor : retirer un fichier du repos distant
+
 
 #### l'envoi des emails
 alors pour gérer l'envoi des emails ici, nous avons opté pour le service d'envoi des mail MailJet
