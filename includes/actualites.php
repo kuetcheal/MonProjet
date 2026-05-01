@@ -48,7 +48,7 @@ function limiterTexte($texte, $limite = 56)
                                 class="w-full h-[150px] md:h-[220px] object-cover block" />
 
                             <div class="p-[10px]">
-                                <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px]">
+                                <div class="text-[#222] text-[1.1rem] font-extrabold mb-[10px] h-[52px]">
                                     <?= htmlspecialchars($actu['titre']) ?>
                                 </div>
 
@@ -62,9 +62,12 @@ function limiterTexte($texte, $limite = 56)
                                     </span>
                                 </p>
 
-                                <a href="<?= htmlspecialchars($actu['lien']) ?>" class="text-[#018b01] font-medium underline">
-                                    Lire l'article
-                                </a>
+                                <a 
+    href="<?= htmlspecialchars((isset($baseUrl) ? rtrim($baseUrl, '/') . '/' : '') . 'article.php?id=' . (int) $actu['id']) ?>" 
+    class="text-[#018b01] font-medium underline"
+>
+    Lire l'article
+</a>
                             </div>
                         </div>
                     </div>

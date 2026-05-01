@@ -75,13 +75,13 @@ body {
 }
 
 .hero-link {
-    color: #46e37b;
+    color: #018b01;
     text-decoration: underline;
 }
 
 .hero-search-title {
     font-size: 35px;
-    color: #46e37b;
+    color: #018b01;
     text-align: center;
     font-weight: bold;
     padding-bottom: 5px;
@@ -127,7 +127,7 @@ body {
 .trip-option input[type="radio"] {
     width: 22px;
     height: 22px;
-    accent-color: #18884c;
+    accent-color: #018b01;
 }
 
 .search-fields {
@@ -338,7 +338,7 @@ body {
 }
 
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: #156f3e !important;
+    color: #018b01 !important;
     line-height: 58px !important;
     font-weight: 700;
 }

@@ -449,7 +449,7 @@ try {
 
         <section class="block md:hidden px-4 py-5 bg-white">
             <div class="w-full max-w-md mx-auto relative z-[5]">
-                <h3 class="text-center text-[20px] font-bold text-[#46e37b] pb-3 leading-tight">
+                <h3 class="text-center text-[20px] font-bold text-[#018b01] pb-3 leading-tight">
                     Reserver votre voyage
                 </h3>
 
@@ -464,7 +464,7 @@ try {
                                     name="inlineRadioOptions"
                                     value="option1"
                                     checked
-                                    class="w-[18px] h-[18px] accent-[#18884c]">
+                                    class="w-[18px] h-[18px] accent-[#018b01]">
                                 <span>Aller simple</span>
                             </label>
 
@@ -474,7 +474,7 @@ try {
                                     id="mobile_trip_roundtrip"
                                     name="inlineRadioOptions"
                                     value="option2"
-                                    class="w-[18px] h-[18px] accent-[#18884c]">
+                                    class="w-[18px] h-[18px] accent-[#018b01]">
                                 <span>Aller-Retour</span>
                             </label>
                         </div>
