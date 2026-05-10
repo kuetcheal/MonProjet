@@ -250,7 +250,7 @@ if (isset($_POST['valider'])) {
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[aliceblue] min-h-screen">
-
+    <?php include 'includes/topbar.php'; ?>
     <?php include 'includes/header.php'; ?>
 
     <main class="px-4 sm:px-6 lg:px-8 py-10 sm:py-14">

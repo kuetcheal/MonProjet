@@ -203,7 +203,7 @@ function getDriverStatusClasses(?string $statutValidation): string
                                 Proposer un trajet
                             </a>
 
-                            <a href="/MonProjet/offres/offres.php" class="bg-slate-800 hover:bg-slate-900 text-white text-center px-5 py-3 rounded-lg font-medium transition">
+                            <a href="/MonProjet/Authentification/demandes_covoiturage.php" class="bg-slate-800 hover:bg-slate-900 text-white text-center px-5 py-3 rounded-lg font-medium transition">
                                 Mes trajets proposés
                             </a>
 

@@ -2,8 +2,80 @@
 session_start();
 
 require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use Mailjet\Resources;
 
 header('Content-Type: application/json');
+
+/**
+ * Envoie un email au client lorsque sa demande de covoiturage est acceptée.
+ */
+function envoyerMailReservationAccepteeMailjet(
+    string $email,
+    string $nomClient,
+    string $villeDepart,
+    string $villeArrivee,
+    string $jourDepart,
+    string $heureDepart
+): bool {
+    $mj = new \Mailjet\Client(
+        MAILJET_PUBLIC_KEY,
+        MAILJET_PRIVATE_KEY,
+        true,
+        ['version' => 'v3.1']
+    );
+
+    $nomClientSafe = htmlspecialchars($nomClient, ENT_QUOTES, 'UTF-8');
+    $villeDepartSafe = htmlspecialchars($villeDepart, ENT_QUOTES, 'UTF-8');
+    $villeArriveeSafe = htmlspecialchars($villeArrivee, ENT_QUOTES, 'UTF-8');
+    $jourDepartSafe = htmlspecialchars($jourDepart, ENT_QUOTES, 'UTF-8');
+    $heureDepartSafe = htmlspecialchars(substr($heureDepart, 0, 5), ENT_QUOTES, 'UTF-8');
+
+    $body = [
+        'Messages' => [
+            [
+                'From' => [
+                    'Email' => MAIL_FROM_EMAIL,
+                    'Name' => MAIL_FROM_NAME,
+                ],
+                'To' => [
+                    [
+                        'Email' => $email,
+                        'Name' => $nomClient,
+                    ],
+                ],
+                'Subject' => 'Votre demande de covoiturage a été acceptée',
+                'TextPart' => "Bonjour $nomClient, votre demande de covoiturage $villeDepart → $villeArrivee du $jourDepart à " . substr($heureDepart, 0, 5) . " a été acceptée.",
+                'HTMLPart' => "
+                    <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #222;'>
+                        <h2 style='color: #15803d;'>Demande de covoiturage acceptée</h2>
+
+                        <p>Bonjour <strong>$nomClientSafe</strong>,</p>
+
+                        <p>Bonne nouvelle ! Votre demande de covoiturage a été acceptée par le chauffeur.</p>
+
+                        <div style='background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin: 20px 0;'>
+                            <p style='margin: 0 0 8px 0;'><strong>Trajet :</strong> $villeDepartSafe → $villeArriveeSafe</p>
+                            <p style='margin: 0;'><strong>Date :</strong> $jourDepartSafe à $heureDepartSafe</p>
+                        </div>
+
+                        <p>Vous pouvez maintenant échanger avec le chauffeur depuis votre messagerie EasyTravel.</p>
+
+                        <p style='margin-top: 25px;'>Merci d'utiliser EasyTravel.</p>
+                    </div>
+                ",
+            ],
+        ],
+    ];
+
+    try {
+        $response = $mj->post(Resources::$Email, ['body' => $body]);
+        return $response->success();
+    } catch (Exception $e) {
+        return false;
+    }
+}
 
 $chauffeurId = (int)($_SESSION['user_id'] ?? $_SESSION['Id_compte'] ?? 0);
 
@@ -35,9 +107,17 @@ try {
             r.idVoyage AS voyage_id,
             r.statut_demande,
             r.Etat,
+            r.nom,
+            r.prenom,
+            r.email,
+
             v.chauffeur_id,
             v.nombrePlaces,
-            v.nombre_places_disponibles
+            v.nombre_places_disponibles,
+            v.villeDepart,
+            v.villeArrivee,
+            v.jourDepart,
+            v.heureDepart
         FROM reservation r
         INNER JOIN voyage v ON v.idVoyage = r.idVoyage
         WHERE r.id_reservation = :reservation_id
@@ -99,7 +179,6 @@ try {
 
     /*
         1. On accepte la demande.
-        Etat = 1 peut signifier acceptée dans ton ancien système.
     */
     $updateReservation = $pdo->prepare("
         UPDATE reservation
@@ -182,10 +261,33 @@ try {
 
     $pdo->commit();
 
+    /*
+        5. Après validation en base, on envoie l'email au client.
+        Même si l'email échoue, la réservation reste acceptée.
+    */
+    $nomClient = trim(($reservation['prenom'] ?? '') . ' ' . ($reservation['nom'] ?? ''));
+    $emailClient = trim($reservation['email'] ?? '');
+
+    $mailEnvoye = false;
+
+    if ($emailClient !== '' && filter_var($emailClient, FILTER_VALIDATE_EMAIL)) {
+        $mailEnvoye = envoyerMailReservationAccepteeMailjet(
+            $emailClient,
+            $nomClient !== '' ? $nomClient : 'Client',
+            $reservation['villeDepart'] ?? '',
+            $reservation['villeArrivee'] ?? '',
+            $reservation['jourDepart'] ?? '',
+            $reservation['heureDepart'] ?? ''
+        );
+    }
+
     echo json_encode([
         'success' => true,
-        'message' => 'Demande acceptée. La conversation a été créée.',
-        'conversation_id' => $conversationId
+        'message' => $mailEnvoye
+            ? 'Demande acceptée. La conversation a été créée et un email a été envoyé au client.'
+            : 'Demande acceptée. La conversation a été créée, mais l’email n’a pas pu être envoyé.',
+        'conversation_id' => $conversationId,
+        'mail_sent' => $mailEnvoye
     ]);
     exit;
 

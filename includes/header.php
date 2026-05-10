@@ -140,8 +140,8 @@ $logoImage = $baseUrl . 'pictures/logo-general.jpg';
                         Devenir chauffeur
                     </a>
                 <?php elseif ($userRole === 'client_chauffeur' || $userRole === 'chauffeur'): ?>
-                    <a href="<?= $baseUrl ?>offres/offres.php" class="gv-account-modal__action gv-account-modal__action--primary" style="text-align:center; text-decoration:none;">
-                        Mes trajets proposés
+                    <a href="<?= $baseUrl ?>Authentification/demandes_covoiturage.php" class="gv-account-modal__action gv-account-modal__action--primary" style="text-align:center; text-decoration:none;">
+                        covoiturages proposés
                     </a>
                 <?php endif; ?>
 
