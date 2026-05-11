@@ -3,7 +3,7 @@ session_start();
 
 require_once __DIR__ . '/../config.php';
 
-$userId = (int)($_SESSION['user_id'] ?? $_SESSION['Id_compte'] ?? 0);
+$userId = (int)($_SESSION['Id_compte'] ?? $_SESSION['user_id'] ?? 0);
 
 if ($userId <= 0) {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
@@ -11,7 +11,7 @@ if ($userId <= 0) {
     exit;
 }
 
-$idVoyage = isset($_GET['idVoyage']) ? (int) $_GET['idVoyage'] : 0;
+$idVoyage = isset($_GET['idVoyage']) ? (int)$_GET['idVoyage'] : 0;
 
 if ($idVoyage <= 0) {
     die('Trajet invalide.');
@@ -46,12 +46,42 @@ try {
     }
 
     $prix = !empty($voyage['prix_par_place'])
-        ? (float) $voyage['prix_par_place']
-        : (float) $voyage['prix'];
+        ? (float)$voyage['prix_par_place']
+        : (float)($voyage['prix'] ?? 0);
+
+    if ($prix <= 0) {
+        die('Prix du trajet invalide.');
+    }
 
     $placesDisponibles = isset($voyage['nombre_places_disponibles']) && $voyage['nombre_places_disponibles'] !== null
-        ? (int) $voyage['nombre_places_disponibles']
-        : (int) $voyage['nombrePlaces'];
+        ? (int)$voyage['nombre_places_disponibles']
+        : (int)($voyage['nombrePlaces'] ?? 0);
+
+    /*
+        On récupère les informations du compte connecté
+        pour préremplir le formulaire.
+    */
+    $userStmt = $pdo->prepare("
+        SELECT 
+            user_name,
+            user_firstname,
+            user_phone,
+            user_mail
+        FROM user
+        WHERE id = :id
+        LIMIT 1
+    ");
+
+    $userStmt->execute([
+        ':id' => $userId
+    ]);
+
+    $user = $userStmt->fetch(PDO::FETCH_ASSOC);
+
+    $prenomClient = $user['user_firstname'] ?? ($_SESSION['user_firstname'] ?? '');
+    $nomClient = $user['user_name'] ?? ($_SESSION['user_name'] ?? '');
+    $telephoneClient = $user['user_phone'] ?? ($_SESSION['user_phone'] ?? '');
+    $emailClient = $user['user_mail'] ?? ($_SESSION['user_mail'] ?? '');
 
 } catch (Exception $e) {
     die('Erreur : ' . $e->getMessage());
@@ -76,13 +106,14 @@ ob_start();
             </h1>
 
             <p class="text-gray-500 mt-2">
-                Votre demande sera envoyée au chauffeur. La messagerie sera activée seulement si le chauffeur accepte votre demande.
+                Votre demande sera envoyée au chauffeur. Vous paierez seulement si le chauffeur accepte votre demande.
             </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
             <div class="border rounded-2xl p-5 bg-gray-50">
                 <h2 class="font-bold text-slate-800 mb-3">Départ</h2>
+
                 <p class="text-lg font-semibold">
                     <?= htmlspecialchars($voyage['villeDepart'] ?? '') ?>
                 </p>
@@ -96,6 +127,7 @@ ob_start();
 
             <div class="border rounded-2xl p-5 bg-gray-50">
                 <h2 class="font-bold text-slate-800 mb-3">Arrivée</h2>
+
                 <p class="text-lg font-semibold">
                     <?= htmlspecialchars($voyage['villeArrivee'] ?? '') ?>
                 </p>
@@ -111,6 +143,7 @@ ob_start();
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
             <div class="border rounded-2xl p-5">
                 <p class="text-gray-500 text-sm">Date</p>
+
                 <p class="font-bold text-slate-800">
                     <?= htmlspecialchars($voyage['jourDepart'] ?? '') ?>
                 </p>
@@ -118,6 +151,7 @@ ob_start();
 
             <div class="border rounded-2xl p-5">
                 <p class="text-gray-500 text-sm">Heure</p>
+
                 <p class="font-bold text-slate-800">
                     <?= htmlspecialchars(substr($voyage['heureDepart'] ?? '', 0, 5)) ?>
                 </p>
@@ -125,6 +159,7 @@ ob_start();
 
             <div class="border rounded-2xl p-5">
                 <p class="text-gray-500 text-sm">Prix par place</p>
+
                 <p class="font-bold text-green-600">
                     <?= number_format($prix, 0, ',', ' ') ?> FCFA
                 </p>
@@ -134,13 +169,15 @@ ob_start();
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
             <div class="border rounded-2xl p-5">
                 <p class="text-gray-500 text-sm">Places disponibles</p>
+
                 <p class="font-bold text-slate-800">
-                    <?= (int) $placesDisponibles ?> place(s)
+                    <?= (int)$placesDisponibles ?> place(s)
                 </p>
             </div>
 
             <div class="border rounded-2xl p-5">
                 <p class="text-gray-500 text-sm">Montant estimé</p>
+
                 <p class="font-extrabold text-green-600 text-xl">
                     <?= number_format($prix, 0, ',', ' ') ?> FCFA
                 </p>
@@ -149,7 +186,10 @@ ob_start();
 
         <?php if (!empty($voyage['commentaire_chauffeur'])): ?>
             <div class="border-l-4 border-green-500 bg-green-50 p-4 rounded-xl mb-8">
-                <h3 class="font-bold text-slate-800 mb-1">Message du chauffeur</h3>
+                <h3 class="font-bold text-slate-800 mb-1">
+                    Message du chauffeur
+                </h3>
+
                 <p class="text-gray-700">
                     <?= nl2br(htmlspecialchars($voyage['commentaire_chauffeur'])) ?>
                 </p>
@@ -171,9 +211,10 @@ ob_start();
 
         <?php else: ?>
 
-            <form method="post" action="demande-reservation.php" class="space-y-5">
-                <input type="hidden" name="idVoyage" value="<?= (int) $voyage['idVoyage'] ?>">
-                <input type="hidden" name="prix" value="<?= htmlspecialchars($prix) ?>">
+            <form method="post" action="../offres/traiter_reservation.php" class="space-y-5">
+                <input type="hidden" name="idVoyage" value="<?= (int)$voyage['idVoyage'] ?>">
+                <input type="hidden" name="numeroPlace" value="1">
+                <input type="hidden" name="prix_reservation" value="<?= htmlspecialchars((string)$prix) ?>">
 
                 <div class="bg-gray-50 p-5 rounded-2xl">
                     <h3 class="font-bold text-slate-800 mb-4">
@@ -185,11 +226,14 @@ ob_start();
                             <label class="block font-bold text-gray-700 mb-2">
                                 Prénom <span class="text-red-500">*</span>
                             </label>
+
                             <input
                                 type="text"
                                 name="prenom"
+                                value="<?= htmlspecialchars($prenomClient) ?>"
                                 required
-                                class="w-full border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                readonly
+                                class="w-full border rounded-xl p-3 bg-gray-100 text-gray-700 focus:outline-none"
                                 placeholder="Votre prénom">
                         </div>
 
@@ -197,11 +241,14 @@ ob_start();
                             <label class="block font-bold text-gray-700 mb-2">
                                 Nom <span class="text-red-500">*</span>
                             </label>
+
                             <input
                                 type="text"
                                 name="nom"
+                                value="<?= htmlspecialchars($nomClient) ?>"
                                 required
-                                class="w-full border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                readonly
+                                class="w-full border rounded-xl p-3 bg-gray-100 text-gray-700 focus:outline-none"
                                 placeholder="Votre nom">
                         </div>
                     </div>
@@ -211,11 +258,14 @@ ob_start();
                             <label class="block font-bold text-gray-700 mb-2">
                                 Téléphone <span class="text-red-500">*</span>
                             </label>
+
                             <input
                                 type="text"
                                 name="telephone"
+                                value="<?= htmlspecialchars($telephoneClient) ?>"
                                 required
-                                class="w-full border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                readonly
+                                class="w-full border rounded-xl p-3 bg-gray-100 text-gray-700 focus:outline-none"
                                 placeholder="Ex : 655196254">
                         </div>
 
@@ -223,11 +273,14 @@ ob_start();
                             <label class="block font-bold text-gray-700 mb-2">
                                 Email <span class="text-red-500">*</span>
                             </label>
+
                             <input
                                 type="email"
                                 name="email"
+                                value="<?= htmlspecialchars($emailClient) ?>"
                                 required
-                                class="w-full border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                readonly
+                                class="w-full border rounded-xl p-3 bg-gray-100 text-gray-700 focus:outline-none"
                                 placeholder="exemple@gmail.com">
                         </div>
                     </div>
@@ -235,7 +288,7 @@ ob_start();
 
                 <div class="bg-blue-50 border border-blue-100 text-blue-800 p-4 rounded-xl text-sm">
                     Après l’envoi, le chauffeur pourra accepter ou refuser votre demande.
-                    Si elle est acceptée, une conversation sera créée automatiquement.
+                    Si elle est acceptée, vous recevrez un email pour payer et confirmer votre place.
                 </div>
 
                 <button

@@ -112,6 +112,18 @@ sa distance,
 éventuellement son temps estimé d’arrivée.
 La géolocalisation navigateur fonctionne avec getCurrentPosition() ou watchPosition(), mais elle exige un contexte sécurisé HTTPS et l’autorisation explicite de l’utilisateur
 
+### flux réel de localisation du chauffeur
+1. Le chauffeur ouvre une page “Partager ma position”
+   ↓
+2. Son téléphone demande l’autorisation GPS
+   ↓
+3. Sa position est envoyée régulièrement dans la base de données
+   ↓
+4. Le client entre son numéro de réservation / demande
+   ↓
+5. localiser-trajet.php récupère la dernière position du chauffeur
+   ↓
+6. La carte affiche le chauffeur en temps réel
 
 
 clé API MAPS Geocoding : AIzaSyBDGz1y0BX_Ca_YJitOavFu-8_K188MBYQ
@@ -203,6 +215,31 @@ Client et chauffeur peuvent discuter
 Les messages sont stockés dans MySQL
         ↓
 L’autre utilisateur reçoit le message dans l’interface
+
+### flux de paiement du covoiturage
+Client demande une place
+↓
+Réservation créée :
+statut_demande = en_attente
+statut_paiement = non_paye
+↓
+Chauffeur accepte
+↓
+Email au client :
+"Votre demande est acceptée, payez maintenant"
+↓
+Client paie avec Orange Money ou MTN Mobile Money via pawaPay
+↓
+Callback pawaPay reçu :
+paiement = COMPLETED
+↓
+Réservation confirmée
+↓
+Client et chauffeur peuvent discuter
+↓
+Trajet effectué
+↓
+Paiement chauffeur via payout pawaPay
 
 
 

@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../config.php';
 
 header('Content-Type: application/json');
 
-$chauffeurId = (int)($_SESSION['user_id'] ?? $_SESSION['Id_compte'] ?? 0);
+$chauffeurId = (int)($_SESSION['Id_compte'] ?? $_SESSION['user_id'] ?? 0);
 
 if ($chauffeurId <= 0) {
     echo json_encode([

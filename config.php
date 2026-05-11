@@ -35,6 +35,9 @@ define('PAYMENT_API_TOKEN', $_ENV['PAYMENT_API_TOKEN'] ?? '');
 define('PAWAPAY_BASE_URL', $_ENV['PAWAPAY_BASE_URL'] ?? 'https://api.sandbox.pawapay.io');
 define('PAWAPAY_RETURN_URL', $_ENV['PAWAPAY_RETURN_URL'] ?? 'http://localhost/MonProjet/paiement/pawapay-return.php');
 
+
+define('APP_URL', 'https://www.easy-travel.app');
+
 define('MAILJET_PUBLIC_KEY', $_ENV['MAILJET_PUBLIC_KEY'] ?? '');
 define('MAILJET_PRIVATE_KEY', $_ENV['MAILJET_PRIVATE_KEY'] ?? '');
 define('MAIL_FROM_EMAIL', $_ENV['MAIL_FROM_EMAIL'] ?? '');
